@@ -3,7 +3,7 @@ import { ArrowLeft, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getChild, getParent, averageProgress, type ChildState, type ParentState, MODULE_META } from "@/lib/storage";
 
-export const Route = createFileRoute("/parent")({ component: ParentDashboard });
+export const Route = createFileRoute("/parent/")({ component: ParentDashboard });
 
 function ParentDashboard() {
   const navigate = useNavigate();
