@@ -1,4 +1,4 @@
-export type ModuleId = "alphabet" | "chiffres" | "dessin" | "maths" | "histoires";
+export type ModuleId = "alphabet" | "numbers" | "drawing" | "maths" | "stories";
 
 export interface ModuleData {
   id: ModuleId;
@@ -27,7 +27,7 @@ export const MODULES: ModuleData[] = [
     progress: 60,
   },
   {
-    id: "chiffres",
+    id: "numbers",
     emoji: "🔢",
     name: "Les Chiffres",
     desc: "Compte, trace et apprends les nombres !",
@@ -39,7 +39,7 @@ export const MODULES: ModuleData[] = [
     progress: 40,
   },
   {
-    id: "dessin",
+    id: "drawing",
     emoji: "🎨",
     name: "Dessin & Coloriage",
     desc: "Colorie et crée tes dessins préférés !",
@@ -63,7 +63,7 @@ export const MODULES: ModuleData[] = [
     progress: 25,
   },
   {
-    id: "histoires",
+    id: "stories",
     emoji: "📚",
     name: "Histoires",
     desc: "Lis des contes et des histoires magiques !",

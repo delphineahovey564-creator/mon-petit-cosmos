@@ -38,6 +38,32 @@
   --color-card5: var(--card5);
 }
 
+@theme {
+  --color-edu-bg: #FFF9F0;
+  --color-edu-primary: #FF6B35;
+  --color-edu-primary-light: #FFB347;
+  --color-edu-primary-pale: #FFF0E8;
+  --color-edu-accent: #FFE14D;
+  --color-edu-teal: #2EC4B6;
+  --color-edu-dark: #1A1A2E;
+  --color-edu-muted: #6B7280;
+  --color-edu-subtle: #9CA3AF;
+  --color-edu-success: #4CAF50;
+  --color-edu-error: #FF5252;
+  --color-edu-warn: #FFB347;
+  --color-mod-alpha: #FFB3BA;
+  --color-mod-numbers: #B5EAD7;
+  --color-mod-drawing: #C7CEEA;
+  --color-mod-maths: #FFDAC1;
+  --color-mod-stories: #D4EDDA;
+  --radius-card: 24px;
+  --radius-card-sm: 16px;
+  --radius-btn: 14px;
+  --shadow-edu-card: 0px 4px 20px rgba(0,0,0,0.06);
+  --shadow-edu-btn: 0px 6px 16px rgba(255,107,53,0.28);
+  --shadow-edu-float: 0px 12px 40px rgba(0,0,0,0.10);
+}
+
 :root {
   --radius: 1rem;
   --background: oklch(0.984 0.018 90);
@@ -96,3 +122,6 @@
 .animate-float-card { animation: float-card 3s ease-in-out infinite alternate; }
 .animate-bounce-in { animation: bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .spring { transition: all 250ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes loader-fill { from { width: 0%; } to { width: 100%; } }
+.animate-loader-fill { animation: loader-fill 2.3s linear forwards; }
