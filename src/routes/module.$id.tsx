@@ -2,6 +2,7 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowLeft, Lock } from "lucide-react";
 import { getModule } from "@/lib/modules";
+import { BottomNav } from "@/components/educ/BottomNav";
 
 export const Route = createFileRoute("/module/$id")({ component: ModulePage });
 
@@ -15,7 +16,7 @@ function ModulePage() {
         <div>
           <p className="text-6xl mb-4">🤔</p>
           <p className="text-2xl font-black mb-6">Cet univers n'existe pas</p>
-          <Link to="/dashboard" className="inline-flex h-14 px-6 items-center rounded-2xl bg-primary text-primary-foreground font-extrabold">
+          <Link to="/home" className="inline-flex h-14 px-6 items-center rounded-2xl bg-primary text-primary-foreground font-extrabold">
             ← Retour
           </Link>
         </div>
@@ -24,9 +25,9 @@ function ModulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <div className="min-h-screen bg-background pb-28">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
-        <Link to="/dashboard"
+        <Link to="/home"
           className="inline-flex items-center gap-2 h-12 px-4 rounded-2xl bg-card shadow-sm font-extrabold spring hover:scale-[1.03] active:scale-95">
           <ArrowLeft className="w-5 h-5" /> Retour
         </Link>
@@ -79,6 +80,7 @@ function ModulePage() {
           </div>
         </div>
       </div>
+      <BottomNav />
     </div>
   );
 }
