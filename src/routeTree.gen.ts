@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SplashRouteImport } from './routes/splash'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
@@ -17,6 +18,11 @@ import { Route as ModuleIdRouteImport } from './routes/module.$id'
 const SplashRoute = SplashRouteImport.update({
   id: '/splash',
   path: '/splash',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -38,12 +44,14 @@ const ModuleIdRoute = ModuleIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
+  '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/onboarding' | '/splash' | '/module/$id'
+  fullPaths: '/' | '/onboarding' | '/signup' | '/splash' | '/module/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/splash' | '/module/$id'
-  id: '__root__' | '/' | '/onboarding' | '/splash' | '/module/$id'
+  to: '/' | '/onboarding' | '/signup' | '/splash' | '/module/$id'
+  id: '__root__' | '/' | '/onboarding' | '/signup' | '/splash' | '/module/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   OnboardingRoute: typeof OnboardingRoute
+  SignupRoute: typeof SignupRoute
   SplashRoute: typeof SplashRoute
   ModuleIdRoute: typeof ModuleIdRoute
 }
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/splash'
       fullPath: '/splash'
       preLoaderRoute: typeof SplashRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   OnboardingRoute: OnboardingRoute,
+  SignupRoute: SignupRoute,
   SplashRoute: SplashRoute,
   ModuleIdRoute: ModuleIdRoute,
 }
