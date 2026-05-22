@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SplashRouteImport } from './routes/splash'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 
 const SplashRoute = SplashRouteImport.update({
   id: '/splash',
   path: '/splash',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -31,30 +37,34 @@ const ModuleIdRoute = ModuleIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/splash' | '/module/$id'
+  fullPaths: '/' | '/onboarding' | '/splash' | '/module/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/splash' | '/module/$id'
-  id: '__root__' | '/' | '/splash' | '/module/$id'
+  to: '/' | '/onboarding' | '/splash' | '/module/$id'
+  id: '__root__' | '/' | '/onboarding' | '/splash' | '/module/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  OnboardingRoute: typeof OnboardingRoute
   SplashRoute: typeof SplashRoute
   ModuleIdRoute: typeof ModuleIdRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/splash'
       fullPath: '/splash'
       preLoaderRoute: typeof SplashRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  OnboardingRoute: OnboardingRoute,
   SplashRoute: SplashRoute,
   ModuleIdRoute: ModuleIdRoute,
 }
