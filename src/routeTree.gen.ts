@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VictoryRouteImport } from './routes/victory'
 import { Route as SplashRouteImport } from './routes/splash'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -19,8 +20,26 @@ import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
+import { Route as ModuleStoriesRouteImport } from './routes/module.stories'
+import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
+import { Route as ModuleMathsRouteImport } from './routes/module.maths'
+import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
+import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
+import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.index'
+import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.index'
+import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
+import { Route as ModuleAlphabetIndexRouteImport } from './routes/module.alphabet.index'
+import { Route as ModuleStoriesStoryStoryIdRouteImport } from './routes/module.stories.story.$storyId'
+import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
+import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
+import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.alphabet.letter.$letter'
 
+const VictoryRoute = VictoryRouteImport.update({
+  id: '/victory',
+  path: '/victory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SplashRoute = SplashRouteImport.update({
   id: '/splash',
   path: '/splash',
@@ -67,15 +86,82 @@ const ParentIndexRoute = ParentIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ParentSettingsRoute = ParentSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => ParentRoute,
+  id: '/parent/settings',
+  path: '/parent/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModuleStoriesRoute = ModuleStoriesRouteImport.update({
+  id: '/module/stories',
+  path: '/module/stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModuleNumbersRoute = ModuleNumbersRouteImport.update({
+  id: '/module/numbers',
+  path: '/module/numbers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModuleMathsRoute = ModuleMathsRouteImport.update({
+  id: '/module/maths',
+  path: '/module/maths',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModuleDrawingRoute = ModuleDrawingRouteImport.update({
+  id: '/module/drawing',
+  path: '/module/drawing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModuleAlphabetRoute = ModuleAlphabetRouteImport.update({
+  id: '/module/alphabet',
+  path: '/module/alphabet',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ModuleIdRoute = ModuleIdRouteImport.update({
   id: '/module/$id',
   path: '/module/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleStoriesIndexRoute = ModuleStoriesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModuleStoriesRoute,
+} as any)
+const ModuleNumbersIndexRoute = ModuleNumbersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModuleNumbersRoute,
+} as any)
+const ModuleMathsIndexRoute = ModuleMathsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModuleMathsRoute,
+} as any)
+const ModuleAlphabetIndexRoute = ModuleAlphabetIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModuleAlphabetRoute,
+} as any)
+const ModuleStoriesStoryStoryIdRoute =
+  ModuleStoriesStoryStoryIdRouteImport.update({
+    id: '/story/$storyId',
+    path: '/story/$storyId',
+    getParentRoute: () => ModuleStoriesRoute,
+  } as any)
+const ModuleNumbersNumberNumRoute = ModuleNumbersNumberNumRouteImport.update({
+  id: '/number/$num',
+  path: '/number/$num',
+  getParentRoute: () => ModuleNumbersRoute,
+} as any)
+const ModuleMathsExerciseTypeRoute = ModuleMathsExerciseTypeRouteImport.update({
+  id: '/exercise/$type',
+  path: '/exercise/$type',
+  getParentRoute: () => ModuleMathsRoute,
+} as any)
+const ModuleAlphabetLetterLetterRoute =
+  ModuleAlphabetLetterLetterRouteImport.update({
+    id: '/letter/$letter',
+    path: '/letter/$letter',
+    getParentRoute: () => ModuleAlphabetRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -86,9 +172,23 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
+  '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/drawing': typeof ModuleDrawingRoute
+  '/module/maths': typeof ModuleMathsRouteWithChildren
+  '/module/numbers': typeof ModuleNumbersRouteWithChildren
+  '/module/stories': typeof ModuleStoriesRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
+  '/module/alphabet/': typeof ModuleAlphabetIndexRoute
+  '/module/maths/': typeof ModuleMathsIndexRoute
+  '/module/numbers/': typeof ModuleNumbersIndexRoute
+  '/module/stories/': typeof ModuleStoriesIndexRoute
+  '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
+  '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
+  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,9 +199,19 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
+  '/module/drawing': typeof ModuleDrawingRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
+  '/module/alphabet': typeof ModuleAlphabetIndexRoute
+  '/module/maths': typeof ModuleMathsIndexRoute
+  '/module/numbers': typeof ModuleNumbersIndexRoute
+  '/module/stories': typeof ModuleStoriesIndexRoute
+  '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
+  '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
+  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -113,9 +223,23 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
+  '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/drawing': typeof ModuleDrawingRoute
+  '/module/maths': typeof ModuleMathsRouteWithChildren
+  '/module/numbers': typeof ModuleNumbersRouteWithChildren
+  '/module/stories': typeof ModuleStoriesRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
+  '/module/alphabet/': typeof ModuleAlphabetIndexRoute
+  '/module/maths/': typeof ModuleMathsIndexRoute
+  '/module/numbers/': typeof ModuleNumbersIndexRoute
+  '/module/stories/': typeof ModuleStoriesIndexRoute
+  '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
+  '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
+  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -128,9 +252,23 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/victory'
     | '/module/$id'
+    | '/module/alphabet'
+    | '/module/drawing'
+    | '/module/maths'
+    | '/module/numbers'
+    | '/module/stories'
     | '/parent/settings'
     | '/parent/'
+    | '/module/alphabet/'
+    | '/module/maths/'
+    | '/module/numbers/'
+    | '/module/stories/'
+    | '/module/alphabet/letter/$letter'
+    | '/module/maths/exercise/$type'
+    | '/module/numbers/number/$num'
+    | '/module/stories/story/$storyId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -141,9 +279,19 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/victory'
     | '/module/$id'
+    | '/module/drawing'
     | '/parent/settings'
     | '/parent'
+    | '/module/alphabet'
+    | '/module/maths'
+    | '/module/numbers'
+    | '/module/stories'
+    | '/module/alphabet/letter/$letter'
+    | '/module/maths/exercise/$type'
+    | '/module/numbers/number/$num'
+    | '/module/stories/story/$storyId'
   id:
     | '__root__'
     | '/'
@@ -154,9 +302,23 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/victory'
     | '/module/$id'
+    | '/module/alphabet'
+    | '/module/drawing'
+    | '/module/maths'
+    | '/module/numbers'
+    | '/module/stories'
     | '/parent/settings'
     | '/parent/'
+    | '/module/alphabet/'
+    | '/module/maths/'
+    | '/module/numbers/'
+    | '/module/stories/'
+    | '/module/alphabet/letter/$letter'
+    | '/module/maths/exercise/$type'
+    | '/module/numbers/number/$num'
+    | '/module/stories/story/$storyId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -168,12 +330,26 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
   SplashRoute: typeof SplashRoute
+  VictoryRoute: typeof VictoryRoute
   ModuleIdRoute: typeof ModuleIdRoute
+  ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
+  ModuleDrawingRoute: typeof ModuleDrawingRoute
+  ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
+  ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
+  ModuleStoriesRoute: typeof ModuleStoriesRouteWithChildren
+  ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/victory': {
+      id: '/victory'
+      path: '/victory'
+      fullPath: '/victory'
+      preLoaderRoute: typeof VictoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/splash': {
       id: '/splash'
       path: '/splash'
@@ -239,10 +415,45 @@ declare module '@tanstack/react-router' {
     }
     '/parent/settings': {
       id: '/parent/settings'
-      path: '/settings'
+      path: '/parent/settings'
       fullPath: '/parent/settings'
       preLoaderRoute: typeof ParentSettingsRouteImport
-      parentRoute: typeof ParentRoute
+      parentRoute: typeof rootRouteImport
+    }
+    '/module/stories': {
+      id: '/module/stories'
+      path: '/module/stories'
+      fullPath: '/module/stories'
+      preLoaderRoute: typeof ModuleStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/module/numbers': {
+      id: '/module/numbers'
+      path: '/module/numbers'
+      fullPath: '/module/numbers'
+      preLoaderRoute: typeof ModuleNumbersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/module/maths': {
+      id: '/module/maths'
+      path: '/module/maths'
+      fullPath: '/module/maths'
+      preLoaderRoute: typeof ModuleMathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/module/drawing': {
+      id: '/module/drawing'
+      path: '/module/drawing'
+      fullPath: '/module/drawing'
+      preLoaderRoute: typeof ModuleDrawingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/module/alphabet': {
+      id: '/module/alphabet'
+      path: '/module/alphabet'
+      fullPath: '/module/alphabet'
+      preLoaderRoute: typeof ModuleAlphabetRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/module/$id': {
       id: '/module/$id'
@@ -251,8 +462,120 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/module/stories/': {
+      id: '/module/stories/'
+      path: '/'
+      fullPath: '/module/stories/'
+      preLoaderRoute: typeof ModuleStoriesIndexRouteImport
+      parentRoute: typeof ModuleStoriesRoute
+    }
+    '/module/numbers/': {
+      id: '/module/numbers/'
+      path: '/'
+      fullPath: '/module/numbers/'
+      preLoaderRoute: typeof ModuleNumbersIndexRouteImport
+      parentRoute: typeof ModuleNumbersRoute
+    }
+    '/module/maths/': {
+      id: '/module/maths/'
+      path: '/'
+      fullPath: '/module/maths/'
+      preLoaderRoute: typeof ModuleMathsIndexRouteImport
+      parentRoute: typeof ModuleMathsRoute
+    }
+    '/module/alphabet/': {
+      id: '/module/alphabet/'
+      path: '/'
+      fullPath: '/module/alphabet/'
+      preLoaderRoute: typeof ModuleAlphabetIndexRouteImport
+      parentRoute: typeof ModuleAlphabetRoute
+    }
+    '/module/stories/story/$storyId': {
+      id: '/module/stories/story/$storyId'
+      path: '/story/$storyId'
+      fullPath: '/module/stories/story/$storyId'
+      preLoaderRoute: typeof ModuleStoriesStoryStoryIdRouteImport
+      parentRoute: typeof ModuleStoriesRoute
+    }
+    '/module/numbers/number/$num': {
+      id: '/module/numbers/number/$num'
+      path: '/number/$num'
+      fullPath: '/module/numbers/number/$num'
+      preLoaderRoute: typeof ModuleNumbersNumberNumRouteImport
+      parentRoute: typeof ModuleNumbersRoute
+    }
+    '/module/maths/exercise/$type': {
+      id: '/module/maths/exercise/$type'
+      path: '/exercise/$type'
+      fullPath: '/module/maths/exercise/$type'
+      preLoaderRoute: typeof ModuleMathsExerciseTypeRouteImport
+      parentRoute: typeof ModuleMathsRoute
+    }
+    '/module/alphabet/letter/$letter': {
+      id: '/module/alphabet/letter/$letter'
+      path: '/letter/$letter'
+      fullPath: '/module/alphabet/letter/$letter'
+      preLoaderRoute: typeof ModuleAlphabetLetterLetterRouteImport
+      parentRoute: typeof ModuleAlphabetRoute
+    }
   }
 }
+
+interface ModuleAlphabetRouteChildren {
+  ModuleAlphabetIndexRoute: typeof ModuleAlphabetIndexRoute
+  ModuleAlphabetLetterLetterRoute: typeof ModuleAlphabetLetterLetterRoute
+}
+
+const ModuleAlphabetRouteChildren: ModuleAlphabetRouteChildren = {
+  ModuleAlphabetIndexRoute: ModuleAlphabetIndexRoute,
+  ModuleAlphabetLetterLetterRoute: ModuleAlphabetLetterLetterRoute,
+}
+
+const ModuleAlphabetRouteWithChildren = ModuleAlphabetRoute._addFileChildren(
+  ModuleAlphabetRouteChildren,
+)
+
+interface ModuleMathsRouteChildren {
+  ModuleMathsIndexRoute: typeof ModuleMathsIndexRoute
+  ModuleMathsExerciseTypeRoute: typeof ModuleMathsExerciseTypeRoute
+}
+
+const ModuleMathsRouteChildren: ModuleMathsRouteChildren = {
+  ModuleMathsIndexRoute: ModuleMathsIndexRoute,
+  ModuleMathsExerciseTypeRoute: ModuleMathsExerciseTypeRoute,
+}
+
+const ModuleMathsRouteWithChildren = ModuleMathsRoute._addFileChildren(
+  ModuleMathsRouteChildren,
+)
+
+interface ModuleNumbersRouteChildren {
+  ModuleNumbersIndexRoute: typeof ModuleNumbersIndexRoute
+  ModuleNumbersNumberNumRoute: typeof ModuleNumbersNumberNumRoute
+}
+
+const ModuleNumbersRouteChildren: ModuleNumbersRouteChildren = {
+  ModuleNumbersIndexRoute: ModuleNumbersIndexRoute,
+  ModuleNumbersNumberNumRoute: ModuleNumbersNumberNumRoute,
+}
+
+const ModuleNumbersRouteWithChildren = ModuleNumbersRoute._addFileChildren(
+  ModuleNumbersRouteChildren,
+)
+
+interface ModuleStoriesRouteChildren {
+  ModuleStoriesIndexRoute: typeof ModuleStoriesIndexRoute
+  ModuleStoriesStoryStoryIdRoute: typeof ModuleStoriesStoryStoryIdRoute
+}
+
+const ModuleStoriesRouteChildren: ModuleStoriesRouteChildren = {
+  ModuleStoriesIndexRoute: ModuleStoriesIndexRoute,
+  ModuleStoriesStoryStoryIdRoute: ModuleStoriesStoryStoryIdRoute,
+}
+
+const ModuleStoriesRouteWithChildren = ModuleStoriesRoute._addFileChildren(
+  ModuleStoriesRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -263,19 +586,16 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
   SplashRoute: SplashRoute,
+  VictoryRoute: VictoryRoute,
   ModuleIdRoute: ModuleIdRoute,
+  ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
+  ModuleDrawingRoute: ModuleDrawingRoute,
+  ModuleMathsRoute: ModuleMathsRouteWithChildren,
+  ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
+  ModuleStoriesRoute: ModuleStoriesRouteWithChildren,
+  ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
