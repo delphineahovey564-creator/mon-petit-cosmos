@@ -19,6 +19,7 @@ import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
+import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 
 const SplashRoute = SplashRouteImport.update({
@@ -71,6 +72,11 @@ const ParentSettingsRoute = ParentSettingsRouteImport.update({
   path: '/parent/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleAlphabetRoute = ModuleAlphabetRouteImport.update({
+  id: '/module/alphabet',
+  path: '/module/alphabet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleIdRoute = ModuleIdRouteImport.update({
   id: '/module/$id',
   path: '/module/$id',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
+  '/module/alphabet': typeof ModuleAlphabetRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
 }
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
+  '/module/alphabet': typeof ModuleAlphabetRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
 }
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
+  '/module/alphabet': typeof ModuleAlphabetRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
 }
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/splash'
     | '/module/$id'
+    | '/module/alphabet'
     | '/parent/settings'
     | '/parent/'
   fileRoutesByTo: FileRoutesByTo
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/splash'
     | '/module/$id'
+    | '/module/alphabet'
     | '/parent/settings'
     | '/parent'
   id:
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/splash'
     | '/module/$id'
+    | '/module/alphabet'
     | '/parent/settings'
     | '/parent/'
   fileRoutesById: FileRoutesById
@@ -169,6 +181,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   SplashRoute: typeof SplashRoute
   ModuleIdRoute: typeof ModuleIdRoute
+  ModuleAlphabetRoute: typeof ModuleAlphabetRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParentSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/module/alphabet': {
+      id: '/module/alphabet'
+      path: '/module/alphabet'
+      fullPath: '/module/alphabet'
+      preLoaderRoute: typeof ModuleAlphabetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/module/$id': {
       id: '/module/$id'
       path: '/module/$id'
@@ -265,9 +285,20 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   SplashRoute: SplashRoute,
   ModuleIdRoute: ModuleIdRoute,
+  ModuleAlphabetRoute: ModuleAlphabetRoute,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
