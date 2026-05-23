@@ -24,6 +24,7 @@ import { Route as ModuleMathsRouteImport } from './routes/module.maths'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
+import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
 import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.alphabet.letter.$letter'
 
 const SplashRoute = SplashRouteImport.update({
@@ -101,6 +102,11 @@ const ModuleNumbersNumberNumRoute = ModuleNumbersNumberNumRouteImport.update({
   path: '/number/$num',
   getParentRoute: () => ModuleNumbersRoute,
 } as any)
+const ModuleMathsExerciseTypeRoute = ModuleMathsExerciseTypeRouteImport.update({
+  id: '/exercise/$type',
+  path: '/exercise/$type',
+  getParentRoute: () => ModuleMathsRoute,
+} as any)
 const ModuleAlphabetLetterLetterRoute =
   ModuleAlphabetLetterLetterRouteImport.update({
     id: '/letter/$letter',
@@ -119,11 +125,12 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
-  '/module/maths': typeof ModuleMathsRoute
+  '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
 }
 export interface FileRoutesByTo {
@@ -137,11 +144,12 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
-  '/module/maths': typeof ModuleMathsRoute
+  '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
 }
 export interface FileRoutesById {
@@ -156,11 +164,12 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
-  '/module/maths': typeof ModuleMathsRoute
+  '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
 }
 export interface FileRouteTypes {
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/letter/$letter'
+    | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/parent/settings'
     | '/parent'
     | '/module/alphabet/letter/$letter'
+    | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
   id:
     | '__root__'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/letter/$letter'
+    | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
   fileRoutesById: FileRoutesById
 }
@@ -231,7 +243,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
-  ModuleMathsRoute: typeof ModuleMathsRoute
+  ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
@@ -344,6 +356,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleNumbersNumberNumRouteImport
       parentRoute: typeof ModuleNumbersRoute
     }
+    '/module/maths/exercise/$type': {
+      id: '/module/maths/exercise/$type'
+      path: '/exercise/$type'
+      fullPath: '/module/maths/exercise/$type'
+      preLoaderRoute: typeof ModuleMathsExerciseTypeRouteImport
+      parentRoute: typeof ModuleMathsRoute
+    }
     '/module/alphabet/letter/$letter': {
       id: '/module/alphabet/letter/$letter'
       path: '/letter/$letter'
@@ -364,6 +383,18 @@ const ModuleAlphabetRouteChildren: ModuleAlphabetRouteChildren = {
 
 const ModuleAlphabetRouteWithChildren = ModuleAlphabetRoute._addFileChildren(
   ModuleAlphabetRouteChildren,
+)
+
+interface ModuleMathsRouteChildren {
+  ModuleMathsExerciseTypeRoute: typeof ModuleMathsExerciseTypeRoute
+}
+
+const ModuleMathsRouteChildren: ModuleMathsRouteChildren = {
+  ModuleMathsExerciseTypeRoute: ModuleMathsExerciseTypeRoute,
+}
+
+const ModuleMathsRouteWithChildren = ModuleMathsRoute._addFileChildren(
+  ModuleMathsRouteChildren,
 )
 
 interface ModuleNumbersRouteChildren {
@@ -389,7 +420,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
-  ModuleMathsRoute: ModuleMathsRoute,
+  ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
