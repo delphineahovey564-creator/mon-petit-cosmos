@@ -21,6 +21,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
 import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
+import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.index'
 import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.index'
@@ -91,6 +92,11 @@ const ModuleDrawingRoute = ModuleDrawingRouteImport.update({
   path: '/module/drawing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleAlphabetRoute = ModuleAlphabetRouteImport.update({
+  id: '/module/alphabet',
+  path: '/module/alphabet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleIdRoute = ModuleIdRouteImport.update({
   id: '/module/$id',
   path: '/module/$id',
@@ -112,9 +118,9 @@ const ModuleMathsIndexRoute = ModuleMathsIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModuleAlphabetIndexRoute = ModuleAlphabetIndexRouteImport.update({
-  id: '/module/alphabet/',
-  path: '/module/alphabet/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModuleAlphabetRoute,
 } as any)
 const ModuleStoriesStoryStoryIdRoute =
   ModuleStoriesStoryStoryIdRouteImport.update({
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
+  '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
@@ -197,6 +204,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
+  '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
@@ -222,6 +230,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/victory'
     | '/module/$id'
+    | '/module/alphabet'
     | '/module/drawing'
     | '/parent/settings'
     | '/parent/'
@@ -268,6 +277,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/victory'
     | '/module/$id'
+    | '/module/alphabet'
     | '/module/drawing'
     | '/parent/settings'
     | '/parent/'
@@ -292,10 +302,10 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   VictoryRoute: typeof VictoryRoute
   ModuleIdRoute: typeof ModuleIdRoute
+  ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
   ModuleDrawingRoute: typeof ModuleDrawingRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
-  ModuleAlphabetIndexRoute: typeof ModuleAlphabetIndexRoute
   ModuleMathsIndexRoute: typeof ModuleMathsIndexRoute
   ModuleNumbersIndexRoute: typeof ModuleNumbersIndexRoute
   ModuleStoriesIndexRoute: typeof ModuleStoriesIndexRoute
@@ -387,6 +397,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleDrawingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/module/alphabet': {
+      id: '/module/alphabet'
+      path: '/module/alphabet'
+      fullPath: '/module/alphabet'
+      preLoaderRoute: typeof ModuleAlphabetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/module/$id': {
       id: '/module/$id'
       path: '/module/$id'
@@ -417,10 +434,10 @@ declare module '@tanstack/react-router' {
     }
     '/module/alphabet/': {
       id: '/module/alphabet/'
-      path: '/module/alphabet'
+      path: '/'
       fullPath: '/module/alphabet/'
       preLoaderRoute: typeof ModuleAlphabetIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ModuleAlphabetRoute
     }
     '/module/stories/story/$storyId': {
       id: '/module/stories/story/$storyId'
@@ -453,6 +470,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ModuleAlphabetRouteChildren {
+  ModuleAlphabetIndexRoute: typeof ModuleAlphabetIndexRoute
+  ModuleAlphabetLetterLetterRoute: typeof ModuleAlphabetLetterLetterRoute
+}
+
+const ModuleAlphabetRouteChildren: ModuleAlphabetRouteChildren = {
+  ModuleAlphabetIndexRoute: ModuleAlphabetIndexRoute,
+  ModuleAlphabetLetterLetterRoute: ModuleAlphabetLetterLetterRoute,
+}
+
+const ModuleAlphabetRouteWithChildren = ModuleAlphabetRoute._addFileChildren(
+  ModuleAlphabetRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateProfileRoute: CreateProfileRoute,
@@ -464,10 +495,10 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   VictoryRoute: VictoryRoute,
   ModuleIdRoute: ModuleIdRoute,
+  ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
   ModuleDrawingRoute: ModuleDrawingRoute,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
-  ModuleAlphabetIndexRoute: ModuleAlphabetIndexRoute,
   ModuleMathsIndexRoute: ModuleMathsIndexRoute,
   ModuleNumbersIndexRoute: ModuleNumbersIndexRoute,
   ModuleStoriesIndexRoute: ModuleStoriesIndexRoute,
