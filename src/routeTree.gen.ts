@@ -19,6 +19,7 @@ import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
+import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.alphabet.letter.$letter'
@@ -73,6 +74,11 @@ const ParentSettingsRoute = ParentSettingsRouteImport.update({
   path: '/parent/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleNumbersRoute = ModuleNumbersRouteImport.update({
+  id: '/module/numbers',
+  path: '/module/numbers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleAlphabetRoute = ModuleAlphabetRouteImport.update({
   id: '/module/alphabet',
   path: '/module/alphabet',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/numbers': typeof ModuleNumbersRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/numbers': typeof ModuleNumbersRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/numbers': typeof ModuleNumbersRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/numbers'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/letter/$letter'
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/numbers'
     | '/parent/settings'
     | '/parent'
     | '/module/alphabet/letter/$letter'
@@ -179,6 +190,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/numbers'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/letter/$letter'
@@ -195,6 +207,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
+  ModuleNumbersRoute: typeof ModuleNumbersRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
@@ -271,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParentSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/module/numbers': {
+      id: '/module/numbers'
+      path: '/module/numbers'
+      fullPath: '/module/numbers'
+      preLoaderRoute: typeof ModuleNumbersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/module/alphabet': {
       id: '/module/alphabet'
       path: '/module/alphabet'
@@ -318,6 +338,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
+  ModuleNumbersRoute: ModuleNumbersRoute,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
