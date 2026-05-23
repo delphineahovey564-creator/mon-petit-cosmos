@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VictoryRouteImport } from './routes/victory'
 import { Route as SplashRouteImport } from './routes/splash'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -30,6 +31,11 @@ import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numb
 import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
 import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.alphabet.letter.$letter'
 
+const VictoryRoute = VictoryRouteImport.update({
+  id: '/victory',
+  path: '/victory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SplashRoute = SplashRouteImport.update({
   id: '/splash',
   path: '/splash',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -211,6 +220,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/victory'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/victory'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/victory'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -278,6 +290,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
   SplashRoute: typeof SplashRoute
+  VictoryRoute: typeof VictoryRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
   ModuleDrawingRoute: typeof ModuleDrawingRoute
@@ -290,6 +303,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/victory': {
+      id: '/victory'
+      path: '/victory'
+      fullPath: '/victory'
+      preLoaderRoute: typeof VictoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/splash': {
       id: '/splash'
       path: '/splash'
@@ -490,6 +510,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
   SplashRoute: SplashRoute,
+  VictoryRoute: VictoryRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
   ModuleDrawingRoute: ModuleDrawingRoute,
@@ -502,3 +523,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
