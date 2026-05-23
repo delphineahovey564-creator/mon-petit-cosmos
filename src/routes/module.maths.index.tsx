@@ -6,7 +6,7 @@ import { getChild, type ChildState } from "@/lib/storage";
 import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
 
-export const Route = createFileRoute("/module/maths")({ component: MathsModule });
+export const Route = createFileRoute("/module/maths/")({ component: MathsModule });
 
 const LEVELS = [
   { type: "addition", op: "+", title: "Addition", level: "Niveau Facile", bg: "#4CAF50" },

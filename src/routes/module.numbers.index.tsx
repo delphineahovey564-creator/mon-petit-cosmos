@@ -7,7 +7,7 @@ import { getChild, type ChildState } from "@/lib/storage";
 import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
 
-export const Route = createFileRoute("/module/numbers")({ component: ModuleNumbers });
+export const Route = createFileRoute("/module/numbers/")({ component: ModuleNumbers });
 
 function ModuleNumbers() {
   const [child, setC] = useState<ChildState | null>(null);

@@ -6,7 +6,7 @@ import { STORIES } from "@/lib/eduData";
 import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
 
-export const Route = createFileRoute("/module/stories")({ component: StoriesModule });
+export const Route = createFileRoute("/module/stories/")({ component: StoriesModule });
 
 const CATEGORIES = ["Toutes", "Contes africains", "Bible", "Fables", "Imaginaires"];
 
