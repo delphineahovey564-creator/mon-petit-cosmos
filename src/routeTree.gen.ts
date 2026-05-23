@@ -20,6 +20,7 @@ import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
+import { Route as ModuleStoriesRouteImport } from './routes/module.stories'
 import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
 import { Route as ModuleMathsRouteImport } from './routes/module.maths'
 import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
@@ -89,6 +90,11 @@ const ParentSettingsRoute = ParentSettingsRouteImport.update({
   path: '/parent/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleStoriesRoute = ModuleStoriesRouteImport.update({
+  id: '/module/stories',
+  path: '/module/stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleNumbersRoute = ModuleNumbersRouteImport.update({
   id: '/module/numbers',
   path: '/module/numbers',
@@ -115,9 +121,9 @@ const ModuleIdRoute = ModuleIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModuleStoriesIndexRoute = ModuleStoriesIndexRouteImport.update({
-  id: '/module/stories/',
-  path: '/module/stories/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModuleStoriesRoute,
 } as any)
 const ModuleNumbersIndexRoute = ModuleNumbersIndexRouteImport.update({
   id: '/',
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/module/drawing': typeof ModuleDrawingRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
+  '/module/stories': typeof ModuleStoriesRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
@@ -222,6 +229,7 @@ export interface FileRoutesById {
   '/module/drawing': typeof ModuleDrawingRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
+  '/module/stories': typeof ModuleStoriesRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
@@ -250,6 +258,7 @@ export interface FileRouteTypes {
     | '/module/drawing'
     | '/module/maths'
     | '/module/numbers'
+    | '/module/stories'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/'
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/module/drawing'
     | '/module/maths'
     | '/module/numbers'
+    | '/module/stories'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/'
@@ -326,9 +336,9 @@ export interface RootRouteChildren {
   ModuleDrawingRoute: typeof ModuleDrawingRoute
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
+  ModuleStoriesRoute: typeof ModuleStoriesRouteWithChildren
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
-  ModuleStoriesIndexRoute: typeof ModuleStoriesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -410,6 +420,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParentSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/module/stories': {
+      id: '/module/stories'
+      path: '/module/stories'
+      fullPath: '/module/stories'
+      preLoaderRoute: typeof ModuleStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/module/numbers': {
       id: '/module/numbers'
       path: '/module/numbers'
@@ -447,10 +464,10 @@ declare module '@tanstack/react-router' {
     }
     '/module/stories/': {
       id: '/module/stories/'
-      path: '/module/stories'
+      path: '/'
       fullPath: '/module/stories/'
       preLoaderRoute: typeof ModuleStoriesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ModuleStoriesRoute
     }
     '/module/numbers/': {
       id: '/module/numbers/'
@@ -546,6 +563,20 @@ const ModuleNumbersRouteWithChildren = ModuleNumbersRoute._addFileChildren(
   ModuleNumbersRouteChildren,
 )
 
+interface ModuleStoriesRouteChildren {
+  ModuleStoriesIndexRoute: typeof ModuleStoriesIndexRoute
+  ModuleStoriesStoryStoryIdRoute: typeof ModuleStoriesStoryStoryIdRoute
+}
+
+const ModuleStoriesRouteChildren: ModuleStoriesRouteChildren = {
+  ModuleStoriesIndexRoute: ModuleStoriesIndexRoute,
+  ModuleStoriesStoryStoryIdRoute: ModuleStoriesStoryStoryIdRoute,
+}
+
+const ModuleStoriesRouteWithChildren = ModuleStoriesRoute._addFileChildren(
+  ModuleStoriesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateProfileRoute: CreateProfileRoute,
@@ -561,9 +592,9 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleDrawingRoute: ModuleDrawingRoute,
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
+  ModuleStoriesRoute: ModuleStoriesRouteWithChildren,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
-  ModuleStoriesIndexRoute: ModuleStoriesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
