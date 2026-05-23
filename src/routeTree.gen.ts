@@ -67,9 +67,9 @@ const ParentIndexRoute = ParentIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ParentSettingsRoute = ParentSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => ParentRoute,
+  id: '/parent/settings',
+  path: '/parent/settings',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ModuleIdRoute = ModuleIdRouteImport.update({
   id: '/module/$id',
@@ -169,6 +169,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   SplashRoute: typeof SplashRoute
   ModuleIdRoute: typeof ModuleIdRoute
+  ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
 
@@ -239,10 +240,10 @@ declare module '@tanstack/react-router' {
     }
     '/parent/settings': {
       id: '/parent/settings'
-      path: '/settings'
+      path: '/parent/settings'
       fullPath: '/parent/settings'
       preLoaderRoute: typeof ParentSettingsRouteImport
-      parentRoute: typeof ParentRoute
+      parentRoute: typeof rootRouteImport
     }
     '/module/$id': {
       id: '/module/$id'
@@ -264,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   SplashRoute: SplashRoute,
   ModuleIdRoute: ModuleIdRoute,
+  ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 export const routeTree = rootRouteImport
