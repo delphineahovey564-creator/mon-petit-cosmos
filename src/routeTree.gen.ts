@@ -19,6 +19,7 @@ import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
+import { Route as ModuleStoriesRouteImport } from './routes/module.stories'
 import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
 import { Route as ModuleMathsRouteImport } from './routes/module.maths'
 import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
@@ -78,6 +79,11 @@ const ParentSettingsRoute = ParentSettingsRouteImport.update({
   path: '/parent/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleStoriesRoute = ModuleStoriesRouteImport.update({
+  id: '/module/stories',
+  path: '/module/stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleNumbersRoute = ModuleNumbersRouteImport.update({
   id: '/module/numbers',
   path: '/module/numbers',
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/module/drawing': typeof ModuleDrawingRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
+  '/module/stories': typeof ModuleStoriesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/module/drawing': typeof ModuleDrawingRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
+  '/module/stories': typeof ModuleStoriesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/module/drawing': typeof ModuleDrawingRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
+  '/module/stories': typeof ModuleStoriesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/module/drawing'
     | '/module/maths'
     | '/module/numbers'
+    | '/module/stories'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/letter/$letter'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/module/drawing'
     | '/module/maths'
     | '/module/numbers'
+    | '/module/stories'
     | '/parent/settings'
     | '/parent'
     | '/module/alphabet/letter/$letter'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/module/drawing'
     | '/module/maths'
     | '/module/numbers'
+    | '/module/stories'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/letter/$letter'
@@ -258,6 +270,7 @@ export interface RootRouteChildren {
   ModuleDrawingRoute: typeof ModuleDrawingRoute
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
+  ModuleStoriesRoute: typeof ModuleStoriesRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
@@ -332,6 +345,13 @@ declare module '@tanstack/react-router' {
       path: '/parent/settings'
       fullPath: '/parent/settings'
       preLoaderRoute: typeof ParentSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/module/stories': {
+      id: '/module/stories'
+      path: '/module/stories'
+      fullPath: '/module/stories'
+      preLoaderRoute: typeof ModuleStoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/module/numbers': {
@@ -443,6 +463,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleDrawingRoute: ModuleDrawingRoute,
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
+  ModuleStoriesRoute: ModuleStoriesRoute,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
