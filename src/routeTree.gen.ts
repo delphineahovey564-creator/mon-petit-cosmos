@@ -21,6 +21,7 @@ import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
 import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
 import { Route as ModuleMathsRouteImport } from './routes/module.maths'
+import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
@@ -87,6 +88,11 @@ const ModuleMathsRoute = ModuleMathsRouteImport.update({
   path: '/module/maths',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleDrawingRoute = ModuleDrawingRouteImport.update({
+  id: '/module/drawing',
+  path: '/module/drawing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleAlphabetRoute = ModuleAlphabetRouteImport.update({
   id: '/module/alphabet',
   path: '/module/alphabet',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/drawing': typeof ModuleDrawingRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/drawing': typeof ModuleDrawingRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/drawing': typeof ModuleDrawingRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/drawing'
     | '/module/maths'
     | '/module/numbers'
     | '/parent/settings'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/drawing'
     | '/module/maths'
     | '/module/numbers'
     | '/parent/settings'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/drawing'
     | '/module/maths'
     | '/module/numbers'
     | '/parent/settings'
@@ -243,6 +255,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
+  ModuleDrawingRoute: typeof ModuleDrawingRoute
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
   ParentSettingsRoute: typeof ParentSettingsRoute
@@ -335,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleMathsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/module/drawing': {
+      id: '/module/drawing'
+      path: '/module/drawing'
+      fullPath: '/module/drawing'
+      preLoaderRoute: typeof ModuleDrawingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/module/alphabet': {
       id: '/module/alphabet'
       path: '/module/alphabet'
@@ -420,6 +440,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
+  ModuleDrawingRoute: ModuleDrawingRoute,
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
   ParentSettingsRoute: ParentSettingsRoute,
