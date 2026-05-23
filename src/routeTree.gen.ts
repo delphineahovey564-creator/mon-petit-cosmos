@@ -20,6 +20,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
 import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
+import { Route as ModuleMathsRouteImport } from './routes/module.maths'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
@@ -80,6 +81,11 @@ const ModuleNumbersRoute = ModuleNumbersRouteImport.update({
   path: '/module/numbers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleMathsRoute = ModuleMathsRouteImport.update({
+  id: '/module/maths',
+  path: '/module/maths',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleAlphabetRoute = ModuleAlphabetRouteImport.update({
   id: '/module/alphabet',
   path: '/module/alphabet',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/maths': typeof ModuleMathsRoute
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/maths': typeof ModuleMathsRoute
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
+  '/module/maths': typeof ModuleMathsRoute
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/maths'
     | '/module/numbers'
     | '/parent/settings'
     | '/parent/'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/maths'
     | '/module/numbers'
     | '/parent/settings'
     | '/parent'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/module/$id'
     | '/module/alphabet'
+    | '/module/maths'
     | '/module/numbers'
     | '/parent/settings'
     | '/parent/'
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
+  ModuleMathsRoute: typeof ModuleMathsRoute
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleNumbersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/module/maths': {
+      id: '/module/maths'
+      path: '/module/maths'
+      fullPath: '/module/maths'
+      preLoaderRoute: typeof ModuleMathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/module/alphabet': {
       id: '/module/alphabet'
       path: '/module/alphabet'
@@ -369,6 +389,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
+  ModuleMathsRoute: ModuleMathsRoute,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
