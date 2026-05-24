@@ -17,6 +17,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateProfileRouteImport } from './routes/create-profile'
+import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
@@ -73,6 +74,11 @@ const HomeRoute = HomeRouteImport.update({
 const CreateProfileRoute = CreateProfileRouteImport.update({
   id: '/create-profile',
   path: '/create-profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BadgesRoute = BadgesRouteImport.update({
+  id: '/badges',
+  path: '/badges',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -165,6 +171,7 @@ const ModuleAlphabetLetterLetterRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -216,6 +224,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/badges'
     | '/create-profile'
     | '/home'
     | '/login'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/badges'
     | '/create-profile'
     | '/home'
     | '/login'
@@ -295,6 +306,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/badges'
     | '/create-profile'
     | '/home'
     | '/login'
@@ -323,6 +335,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BadgesRoute: typeof BadgesRoute
   CreateProfileRoute: typeof CreateProfileRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
@@ -397,6 +410,13 @@ declare module '@tanstack/react-router' {
       path: '/create-profile'
       fullPath: '/create-profile'
       preLoaderRoute: typeof CreateProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/badges': {
+      id: '/badges'
+      path: '/badges'
+      fullPath: '/badges'
+      preLoaderRoute: typeof BadgesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -579,6 +599,7 @@ const ModuleStoriesRouteWithChildren = ModuleStoriesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BadgesRoute: BadgesRoute,
   CreateProfileRoute: CreateProfileRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
@@ -599,3 +620,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
