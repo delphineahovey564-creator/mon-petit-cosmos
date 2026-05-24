@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
+import { BottomNav } from "@/components/educ/BottomNav";
 import { getChild, getParent, averageProgress, type ChildState, type ParentState, MODULE_META } from "@/lib/storage";
 
 export const Route = createFileRoute("/parent/")({ component: ParentDashboard });
@@ -13,13 +14,13 @@ function ParentDashboard() {
   if (!child || !parent) return <div className="min-h-screen bg-edu-bg" />;
 
   return (
-    <div className="min-h-screen bg-edu-bg pb-10">
+    <div className="min-h-screen bg-edu-bg pb-24">
       <div className="px-5 pt-5 flex items-center justify-between">
         <button onClick={() => navigate({ to: "/home" })} className="p-1.5">
           <ArrowLeft size={24} className="text-edu-primary" />
         </button>
         <p className="text-edu-dark font-bold">Espace parent</p>
-        <Link to="/parent/settings" className="p-1.5"><Settings size={22} className="text-edu-muted" /></Link>
+        <Link to="/parent/reglages" className="p-1.5"><Settings size={22} className="text-edu-muted" /></Link>
       </div>
 
       <div className="px-5 mt-4">
@@ -63,6 +64,7 @@ function ParentDashboard() {
           </div>
         </div>
       </div>
+      <BottomNav context="parent" />
     </div>
   );
 }
