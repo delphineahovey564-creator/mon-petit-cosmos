@@ -1,19 +1,60 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Bell, Hash, Palette, Calculator, BookOpen, Zap, Check } from "lucide-react";
+import { Star, Bell, Hash, Palette, Calculator, BookOpen, Zap, Check, Gift } from "lucide-react";
 import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
-import { getChild, averageProgress, type ChildState } from "@/lib/storage";
+import { getChild, setChild, averageProgress, type ChildState } from "@/lib/storage";
+import { computeLevel, levelProgressPct, ALL_BADGES } from "@/lib/levels";
+import { updateStreak, setPendingBadge } from "@/lib/streak";
 
 export const Route = createFileRoute("/home")({ component: Home });
 
 function Home() {
+  const nav = useNavigate();
   const [child, setC] = useState<ChildState | null>(null);
-  useEffect(() => { setC(getChild()); }, []);
+  useEffect(() => {
+    updateStreak();
+    const c = getChild();
+    // Check unlocks
+    for (const b of ALL_BADGES) {
+      if (b.check(c) && !c.badges.includes(b.id)) {
+        c.badges = [...c.badges, b.id];
+        setChild({ badges: c.badges });
+        setPendingBadge({ id: b.id, name: b.name, desc: b.desc, color: b.color, icon: b.icon });
+        break;
+      }
+    }
+    setC(getChild());
+  }, []);
   if (!child) return <div className="min-h-screen bg-edu-bg" />;
 
   const avg = averageProgress(child);
+  const lvl = computeLevel(child.stars);
+  const lvlPct = levelProgressPct(child.stars);
+  const today = new Date();
+  const isSunday = today.getDay() === 0;
+  const todayStr = today.toDateString();
+  const chestAvailable = isSunday && child.lastChestOpened !== todayStr;
+  const daysUntilSunday = (7 - today.getDay()) % 7 || 7;
+
+  const c = child;
+  function openChest() {
+    const rewards = [
+      { type: "stars", amount: 50, msg: "Tu gagnes 50 étoiles bonus !" },
+      { type: "stars", amount: 30, msg: "Tu gagnes 30 étoiles bonus !" },
+      { type: "badge", id: "early_bird", msg: "Badge Lève-tôt débloqué !" },
+    ] as const;
+    const r = rewards[Math.floor(Math.random() * rewards.length)];
+    if (r.type === "stars") {
+      setChild({ stars: c.stars + r.amount, lastChestOpened: todayStr });
+    } else {
+      const badges = c.badges.includes(r.id) ? c.badges : [...c.badges, r.id];
+      setChild({ badges, lastChestOpened: todayStr });
+    }
+    nav({ to: "/victory", search: { moduleName: "Coffre", starsEarned: r.type === "stars" ? r.amount : 0, achievementText: r.msg } });
+  }
+
   const moduleDots = [
     { color: "#FFB3BA", v: child.progress.alphabet, label: "A" },
     { color: "#B5EAD7", v: child.progress.numbers, label: "1" },
@@ -71,6 +112,23 @@ function Home() {
           </div>
         </section>
 
+        {/* Level / XP card */}
+        <section className="px-4 mt-3">
+          <div className="bg-white rounded-[20px] shadow-edu-card p-4 flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full grid place-items-center shadow-edu-btn" style={{ background: "linear-gradient(135deg,#FF6B35,#FFB347)" }}>
+              <span className="text-white font-black text-[14px]">N.{lvl.current}</span>
+            </div>
+            <div className="flex-1">
+              <p className="font-bold text-[14px] text-edu-dark">{lvl.name}</p>
+              <div className="mt-1 h-2 rounded-full bg-[#F3F4F6] overflow-hidden">
+                <motion.div initial={{ width: 0 }} animate={{ width: `${lvlPct}%` }} transition={{ duration: 1.2, ease: "easeOut" }} className="h-full rounded-full bg-edu-primary" />
+              </div>
+              <p className="mt-1 font-medium text-[11px] text-edu-muted">{lvl.xp} / {lvl.nextLevelXp} XP</p>
+            </div>
+            <Link to="/badges" className="font-bold text-[11px] text-edu-primary shrink-0">Prochain niveau →</Link>
+          </div>
+        </section>
+
         {/* Section header */}
         <div className="px-5 mt-6 flex items-center justify-between">
           <h2 className="text-edu-dark font-extrabold text-[22px]">Mes activités</h2>
@@ -124,6 +182,34 @@ function Home() {
             >
               <Leo size={110} />
             </motion.div>
+          </div>
+        </div>
+
+        {/* Weekly chest */}
+        <div className="px-4 mt-4">
+          <div className="rounded-[24px] bg-white shadow-edu-card p-5 border-2 border-dashed" style={{ borderColor: "#FFE14D" }}>
+            {chestAvailable ? (
+              <>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <span className="inline-block bg-[#FFE14D] text-[#1A1A2E] font-extrabold text-[10px] rounded-full px-2 py-1 uppercase tracking-wider">🎁 Récompense</span>
+                    <h3 className="mt-2 font-extrabold text-[16px] text-edu-dark">Coffre de la semaine !</h3>
+                    <p className="font-medium text-[13px] text-[#6B7280]">Ouvre ton cadeau du dimanche</p>
+                  </div>
+                  <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 1.4, repeat: Infinity }}>
+                    <Gift size={52} color="#FF6B35" />
+                  </motion.div>
+                </div>
+                <button onClick={openChest} className="mt-3 rounded-[12px] px-5 py-2.5 font-extrabold text-[14px]" style={{ background: "#FFE14D", color: "#1A1A2E" }}>
+                  Ouvrir le coffre →
+                </button>
+              </>
+            ) : (
+              <div className="flex items-center gap-3 justify-center text-center">
+                <Gift size={28} color="#D1D5DB" />
+                <p className="font-semibold text-[13px] text-edu-muted">Prochain coffre dans {daysUntilSunday} {daysUntilSunday > 1 ? "jours" : "jour"}</p>
+              </div>
+            )}
           </div>
         </div>
       </main>

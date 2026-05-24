@@ -5,7 +5,8 @@ import { BottomNav } from "@/components/educ/BottomNav";
 import { TracingCanvas, clearCanvas } from "@/components/educ/TracingCanvas";
 import { ExerciseToolbar } from "@/components/educ/ExerciseToolbar";
 import { TOOLS } from "@/lib/eduData";
-import { exportElementAsPdf } from "@/lib/pdfExport";
+import { exportDrawingPDF } from "@/lib/pdfExport";
+import { getChild } from "@/lib/storage";
 
 export const Route = createFileRoute("/module/drawing")({ component: DrawingCanvas });
 
@@ -74,7 +75,7 @@ function DrawingCanvas() {
         </div>
       ) : (
         <>
-          <div ref={traceRef} className="mx-4 mt-4 rounded-[20px] bg-white border-[1.5px] border-[#E5E7EB] overflow-hidden">
+          <div id="drawing-canvas-area" ref={traceRef} className="mx-4 mt-4 rounded-[20px] bg-white border-[1.5px] border-[#E5E7EB] overflow-hidden">
             <TracingCanvas guide={guide} color={color} strokeWidth={tool.strokeWidth} erase={toolId === "gomme"} height={400} bg="#FFFFFF" />
           </div>
           <ExerciseToolbar toolId={toolId} onTool={setToolId} color={color} onColor={setColor} />
@@ -87,8 +88,9 @@ function DrawingCanvas() {
             </button>
           </div>
           <button
-            onClick={() => traceRef.current && exportElementAsPdf(traceRef.current, { title: "Mon dessin — EducEnfant", subtitle: new Date().toLocaleDateString("fr-FR"), filename: "dessin_EducEnfant.pdf" })}
-            className="mx-auto mt-3 flex items-center gap-1.5 text-[#9CA3AF] font-medium text-[13px] underline"
+            id="pdf-btn"
+            onClick={() => exportDrawingPDF(getChild().name)}
+            className="mx-auto mt-3 flex items-center gap-1.5 text-[#9CA3AF] font-medium text-[13px] underline disabled:opacity-50"
           >
             <FileDown size={16} /> Exporter en PDF
           </button>

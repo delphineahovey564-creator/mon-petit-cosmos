@@ -50,8 +50,7 @@ function LetterExercise() {
       backTo="/module/alphabet"
       closeTo="/module/alphabet"
       onValidate={handleValidate}
-      pdfTitle={`Ma lettre ${letter} — EducEnfant`}
-      pdfFile={`lettre_${letter}_EducEnfant.pdf`}
+      pdfKind="letter"
     />
   );
 }

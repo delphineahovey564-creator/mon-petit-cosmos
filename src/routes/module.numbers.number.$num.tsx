@@ -54,8 +54,7 @@ function NumberExercise() {
       closeTo="/module/numbers"
       onValidate={handleValidate}
       extra={extra}
-      pdfTitle={`Mon chiffre ${num} — EducEnfant`}
-      pdfFile={`chiffre_${num}_EducEnfant.pdf`}
+      pdfKind="number"
     />
   );
 }

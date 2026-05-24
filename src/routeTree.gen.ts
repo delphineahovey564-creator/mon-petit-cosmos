@@ -15,11 +15,17 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateProfileRouteImport } from './routes/create-profile'
+import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
+import { Route as ParentReglagesRouteImport } from './routes/parent.reglages'
+import { Route as ParentRapportRouteImport } from './routes/parent.rapport'
+import { Route as ParentProgressionRouteImport } from './routes/parent.progression'
+import { Route as ParentActivitesRouteImport } from './routes/parent.activites'
 import { Route as ModuleStoriesRouteImport } from './routes/module.stories'
 import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
 import { Route as ModuleMathsRouteImport } from './routes/module.maths'
@@ -65,6 +71,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -73,6 +84,11 @@ const HomeRoute = HomeRouteImport.update({
 const CreateProfileRoute = CreateProfileRouteImport.update({
   id: '/create-profile',
   path: '/create-profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BadgesRoute = BadgesRouteImport.update({
+  id: '/badges',
+  path: '/badges',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -88,6 +104,26 @@ const ParentIndexRoute = ParentIndexRouteImport.update({
 const ParentSettingsRoute = ParentSettingsRouteImport.update({
   id: '/parent/settings',
   path: '/parent/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentReglagesRoute = ParentReglagesRouteImport.update({
+  id: '/parent/reglages',
+  path: '/parent/reglages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentRapportRoute = ParentRapportRouteImport.update({
+  id: '/parent/rapport',
+  path: '/parent/rapport',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentProgressionRoute = ParentProgressionRouteImport.update({
+  id: '/parent/progression',
+  path: '/parent/progression',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentActivitesRoute = ParentActivitesRouteImport.update({
+  id: '/parent/activites',
+  path: '/parent/activites',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModuleStoriesRoute = ModuleStoriesRouteImport.update({
@@ -165,8 +201,10 @@ const ModuleAlphabetLetterLetterRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -179,6 +217,10 @@ export interface FileRoutesByFullPath {
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
+  '/parent/activites': typeof ParentActivitesRoute
+  '/parent/progression': typeof ParentProgressionRoute
+  '/parent/rapport': typeof ParentRapportRoute
+  '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
@@ -192,8 +234,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -202,6 +246,10 @@ export interface FileRoutesByTo {
   '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
+  '/parent/activites': typeof ParentActivitesRoute
+  '/parent/progression': typeof ParentProgressionRoute
+  '/parent/rapport': typeof ParentRapportRoute
+  '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
   '/module/alphabet': typeof ModuleAlphabetIndexRoute
@@ -216,8 +264,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
@@ -230,6 +280,10 @@ export interface FileRoutesById {
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
+  '/parent/activites': typeof ParentActivitesRoute
+  '/parent/progression': typeof ParentProgressionRoute
+  '/parent/rapport': typeof ParentRapportRoute
+  '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
@@ -245,8 +299,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/badges'
     | '/create-profile'
     | '/home'
+    | '/leaderboard'
     | '/login'
     | '/onboarding'
     | '/profile'
@@ -259,6 +315,10 @@ export interface FileRouteTypes {
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
+    | '/parent/activites'
+    | '/parent/progression'
+    | '/parent/rapport'
+    | '/parent/reglages'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/'
@@ -272,8 +332,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/badges'
     | '/create-profile'
     | '/home'
+    | '/leaderboard'
     | '/login'
     | '/onboarding'
     | '/profile'
@@ -282,6 +344,10 @@ export interface FileRouteTypes {
     | '/victory'
     | '/module/$id'
     | '/module/drawing'
+    | '/parent/activites'
+    | '/parent/progression'
+    | '/parent/rapport'
+    | '/parent/reglages'
     | '/parent/settings'
     | '/parent'
     | '/module/alphabet'
@@ -295,8 +361,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/badges'
     | '/create-profile'
     | '/home'
+    | '/leaderboard'
     | '/login'
     | '/onboarding'
     | '/profile'
@@ -309,6 +377,10 @@ export interface FileRouteTypes {
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
+    | '/parent/activites'
+    | '/parent/progression'
+    | '/parent/rapport'
+    | '/parent/reglages'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/'
@@ -323,8 +395,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BadgesRoute: typeof BadgesRoute
   CreateProfileRoute: typeof CreateProfileRoute
   HomeRoute: typeof HomeRoute
+  LeaderboardRoute: typeof LeaderboardRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
@@ -337,6 +411,10 @@ export interface RootRouteChildren {
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
   ModuleStoriesRoute: typeof ModuleStoriesRouteWithChildren
+  ParentActivitesRoute: typeof ParentActivitesRoute
+  ParentProgressionRoute: typeof ParentProgressionRoute
+  ParentRapportRoute: typeof ParentRapportRoute
+  ParentReglagesRoute: typeof ParentReglagesRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
@@ -385,6 +463,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/home': {
       id: '/home'
       path: '/home'
@@ -397,6 +482,13 @@ declare module '@tanstack/react-router' {
       path: '/create-profile'
       fullPath: '/create-profile'
       preLoaderRoute: typeof CreateProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/badges': {
+      id: '/badges'
+      path: '/badges'
+      fullPath: '/badges'
+      preLoaderRoute: typeof BadgesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -418,6 +510,34 @@ declare module '@tanstack/react-router' {
       path: '/parent/settings'
       fullPath: '/parent/settings'
       preLoaderRoute: typeof ParentSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent/reglages': {
+      id: '/parent/reglages'
+      path: '/parent/reglages'
+      fullPath: '/parent/reglages'
+      preLoaderRoute: typeof ParentReglagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent/rapport': {
+      id: '/parent/rapport'
+      path: '/parent/rapport'
+      fullPath: '/parent/rapport'
+      preLoaderRoute: typeof ParentRapportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent/progression': {
+      id: '/parent/progression'
+      path: '/parent/progression'
+      fullPath: '/parent/progression'
+      preLoaderRoute: typeof ParentProgressionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent/activites': {
+      id: '/parent/activites'
+      path: '/parent/activites'
+      fullPath: '/parent/activites'
+      preLoaderRoute: typeof ParentActivitesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/module/stories': {
@@ -579,8 +699,10 @@ const ModuleStoriesRouteWithChildren = ModuleStoriesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BadgesRoute: BadgesRoute,
   CreateProfileRoute: CreateProfileRoute,
   HomeRoute: HomeRoute,
+  LeaderboardRoute: LeaderboardRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
@@ -593,6 +715,10 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
   ModuleStoriesRoute: ModuleStoriesRouteWithChildren,
+  ParentActivitesRoute: ParentActivitesRoute,
+  ParentProgressionRoute: ParentProgressionRoute,
+  ParentRapportRoute: ParentRapportRoute,
+  ParentReglagesRoute: ParentReglagesRoute,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
