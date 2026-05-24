@@ -66,9 +66,9 @@ function LeaderboardPage() {
       ) : (
         <>
           <div className="mx-4 mt-6 flex items-end justify-center gap-3">
-            <Podium rank={2} {...globalLeaders[1]} h={100} bg="#E5E7EB" avatarSize={56} />
-            <Podium rank={1} {...globalLeaders[0]} h={130} bg="#FFE14D" avatarSize={72} crown />
-            <Podium rank={3} {...globalLeaders[2]} h={80} bg="#FFDAC1" avatarSize={48} />
+            <Podium {...globalLeaders[1]} h={100} bg="#E5E7EB" avatarSize={56} />
+            <Podium {...globalLeaders[0]} h={130} bg="#FFE14D" avatarSize={72} crown />
+            <Podium {...globalLeaders[2]} h={80} bg="#FFDAC1" avatarSize={48} />
           </div>
           <div className="mx-4 mt-6 space-y-2">
             {globalLeaders.slice(3).map((l) => (
