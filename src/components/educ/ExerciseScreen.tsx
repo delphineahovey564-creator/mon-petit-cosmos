@@ -4,7 +4,8 @@ import { ArrowLeft, X, Volume2, RotateCcw, Check, FileDown, Loader2 } from "luci
 import { TracingCanvas, clearCanvas } from "./TracingCanvas";
 import { ExerciseToolbar } from "./ExerciseToolbar";
 import { TOOLS, speak } from "@/lib/eduData";
-import { exportElementAsPdf } from "@/lib/pdfExport";
+import { exportLetterPDF, exportNumberPDF } from "@/lib/pdfExport";
+import { getChild } from "@/lib/storage";
 import { Leo } from "./Leo";
 
 type Props = {
@@ -16,8 +17,9 @@ type Props = {
   closeTo: string;
   onValidate: () => void;
   extra?: React.ReactNode;
-  pdfTitle: string;
-  pdfFile: string;
+  pdfTitle?: string;
+  pdfFile?: string;
+  pdfKind?: "letter" | "number";
 };
 
 export function ExerciseScreen(p: Props) {
@@ -58,7 +60,7 @@ export function ExerciseScreen(p: Props) {
         </div>
       </div>
 
-      <div ref={traceRef} className="mx-4 mt-4 rounded-[24px] bg-white border-[1.5px] border-[#F3F4F6] shadow-edu-card overflow-hidden">
+      <div id="tracing-area" ref={traceRef} className="mx-4 mt-4 rounded-[24px] bg-white border-[1.5px] border-[#F3F4F6] shadow-edu-card overflow-hidden">
         <div className="grid grid-cols-2" style={{ height: 260 }}>
           <div className="p-2 flex flex-col">
             <p className="text-center font-medium text-[12px] text-[#9CA3AF] mb-1">Modèle</p>
@@ -95,8 +97,17 @@ export function ExerciseScreen(p: Props) {
       </div>
 
       <button
-        onClick={() => traceRef.current && exportElementAsPdf(traceRef.current, { title: p.pdfTitle, subtitle: new Date().toLocaleDateString("fr-FR"), filename: p.pdfFile })}
-        className="mx-auto mt-3 flex items-center gap-1.5 text-[#9CA3AF] font-medium text-[13px] underline"
+        id="pdf-btn"
+        onClick={() => {
+          const c = getChild();
+          if (p.pdfKind === "number") {
+            const n = parseInt(p.guide, 10);
+            exportNumberPDF(isNaN(n) ? 0 : n, c.name);
+          } else {
+            exportLetterPDF(p.guide, c.name);
+          }
+        }}
+        className="mx-auto mt-3 flex items-center gap-1.5 text-[#9CA3AF] font-medium text-[13px] underline disabled:opacity-50"
       >
         <FileDown size={16} /> Exporter en PDF
       </button>
