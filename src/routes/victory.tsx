@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Star, Award, Printer } from "lucide-react";
+import { exportVictoryPDF } from "@/lib/pdfExport";
 import { z } from "zod";
 import { Leo } from "@/components/educ/Leo";
 import { getChild } from "@/lib/storage";
@@ -78,7 +79,7 @@ function VictoryScreen() {
         </motion.h1>
         <p className="mt-2 font-semibold text-[16px] text-[#6B7280] max-w-xs">{message}</p>
 
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.6, type: "spring" }} className="mt-7 w-full max-w-xs bg-[#FFF9F0] rounded-[24px] p-6 border-2 border-[#FFE14D]">
+        <motion.div id="victory-card" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.6, type: "spring" }} className="mt-7 w-full max-w-xs bg-[#FFF9F0] rounded-[24px] p-6 border-2 border-[#FFE14D]">
           <div className="flex justify-center gap-2">
             {[0, 0.1, 0.2].map((d, i) => (
               <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: [0, 1.3, 1] }} transition={{ delay: 0.7 + d, duration: 0.4 }}>
@@ -109,8 +110,9 @@ function VictoryScreen() {
         </div>
 
         <button
-          onClick={() => window.print()}
-          className="mt-4 flex items-center gap-1.5 text-[#9CA3AF] font-medium text-[13px] underline"
+          id="pdf-btn"
+          onClick={() => exportVictoryPDF(moduleName, child.name)}
+          className="mt-4 flex items-center gap-1.5 text-[#9CA3AF] font-medium text-[13px] underline disabled:opacity-50"
         >
           <Printer size={16} /> Imprimer ma réalisation (PDF)
         </button>
