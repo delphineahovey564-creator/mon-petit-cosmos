@@ -23,6 +23,9 @@ export type ChildState = {
   completedLetters: string[];
   completedNumbers: number[];
   activities: Activity[];
+  level?: { current: number; name: string; xp: number; nextLevelXp: number };
+  lastActiveDate?: string;
+  lastChestOpened?: string;
 };
 
 export type ParentState = {
