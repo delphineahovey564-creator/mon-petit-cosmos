@@ -38,6 +38,7 @@ function Home() {
   const chestAvailable = isSunday && child.lastChestOpened !== todayStr;
   const daysUntilSunday = (7 - today.getDay()) % 7 || 7;
 
+  const c = child;
   function openChest() {
     const rewards = [
       { type: "stars", amount: 50, msg: "Tu gagnes 50 étoiles bonus !" },
@@ -46,9 +47,9 @@ function Home() {
     ] as const;
     const r = rewards[Math.floor(Math.random() * rewards.length)];
     if (r.type === "stars") {
-      setChild({ stars: child.stars + r.amount, lastChestOpened: todayStr });
+      setChild({ stars: c.stars + r.amount, lastChestOpened: todayStr });
     } else {
-      const badges = child.badges.includes(r.id) ? child.badges : [...child.badges, r.id];
+      const badges = c.badges.includes(r.id) ? c.badges : [...c.badges, r.id];
       setChild({ badges, lastChestOpened: todayStr });
     }
     nav({ to: "/victory", search: { moduleName: "Coffre", starsEarned: r.type === "stars" ? r.amount : 0, achievementText: r.msg } });
