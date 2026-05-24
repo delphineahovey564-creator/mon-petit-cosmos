@@ -23,6 +23,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
 import { Route as ParentReglagesRouteImport } from './routes/parent.reglages'
+import { Route as ParentRapportRouteImport } from './routes/parent.rapport'
 import { Route as ParentProgressionRouteImport } from './routes/parent.progression'
 import { Route as ParentActivitesRouteImport } from './routes/parent.activites'
 import { Route as ModuleStoriesRouteImport } from './routes/module.stories'
@@ -108,6 +109,11 @@ const ParentSettingsRoute = ParentSettingsRouteImport.update({
 const ParentReglagesRoute = ParentReglagesRouteImport.update({
   id: '/parent/reglages',
   path: '/parent/reglages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentRapportRoute = ParentRapportRouteImport.update({
+  id: '/parent/rapport',
+  path: '/parent/rapport',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ParentProgressionRoute = ParentProgressionRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/module/stories': typeof ModuleStoriesRouteWithChildren
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
+  '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/module/drawing': typeof ModuleDrawingRoute
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
+  '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/module/stories': typeof ModuleStoriesRouteWithChildren
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
+  '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
@@ -308,6 +317,7 @@ export interface FileRouteTypes {
     | '/module/stories'
     | '/parent/activites'
     | '/parent/progression'
+    | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent/'
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/module/drawing'
     | '/parent/activites'
     | '/parent/progression'
+    | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent'
@@ -368,6 +379,7 @@ export interface FileRouteTypes {
     | '/module/stories'
     | '/parent/activites'
     | '/parent/progression'
+    | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent/'
@@ -401,6 +413,7 @@ export interface RootRouteChildren {
   ModuleStoriesRoute: typeof ModuleStoriesRouteWithChildren
   ParentActivitesRoute: typeof ParentActivitesRoute
   ParentProgressionRoute: typeof ParentProgressionRoute
+  ParentRapportRoute: typeof ParentRapportRoute
   ParentReglagesRoute: typeof ParentReglagesRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
@@ -504,6 +517,13 @@ declare module '@tanstack/react-router' {
       path: '/parent/reglages'
       fullPath: '/parent/reglages'
       preLoaderRoute: typeof ParentReglagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent/rapport': {
+      id: '/parent/rapport'
+      path: '/parent/rapport'
+      fullPath: '/parent/rapport'
+      preLoaderRoute: typeof ParentRapportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/parent/progression': {
@@ -697,6 +717,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleStoriesRoute: ModuleStoriesRouteWithChildren,
   ParentActivitesRoute: ParentActivitesRoute,
   ParentProgressionRoute: ParentProgressionRoute,
+  ParentRapportRoute: ParentRapportRoute,
   ParentReglagesRoute: ParentReglagesRoute,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
