@@ -22,6 +22,7 @@ import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
+import { Route as ParentProgressionRouteImport } from './routes/parent.progression'
 import { Route as ModuleStoriesRouteImport } from './routes/module.stories'
 import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
 import { Route as ModuleMathsRouteImport } from './routes/module.maths'
@@ -100,6 +101,11 @@ const ParentIndexRoute = ParentIndexRouteImport.update({
 const ParentSettingsRoute = ParentSettingsRouteImport.update({
   id: '/parent/settings',
   path: '/parent/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentProgressionRoute = ParentProgressionRouteImport.update({
+  id: '/parent/progression',
+  path: '/parent/progression',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModuleStoriesRoute = ModuleStoriesRouteImport.update({
@@ -193,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
+  '/parent/progression': typeof ParentProgressionRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
+  '/parent/progression': typeof ParentProgressionRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
   '/module/alphabet': typeof ModuleAlphabetIndexRoute
@@ -248,6 +256,7 @@ export interface FileRoutesById {
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
+  '/parent/progression': typeof ParentProgressionRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
@@ -279,6 +288,7 @@ export interface FileRouteTypes {
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
+    | '/parent/progression'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/'
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/victory'
     | '/module/$id'
     | '/module/drawing'
+    | '/parent/progression'
     | '/parent/settings'
     | '/parent'
     | '/module/alphabet'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
+    | '/parent/progression'
     | '/parent/settings'
     | '/parent/'
     | '/module/alphabet/'
@@ -363,6 +375,7 @@ export interface RootRouteChildren {
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
   ModuleStoriesRoute: typeof ModuleStoriesRouteWithChildren
+  ParentProgressionRoute: typeof ParentProgressionRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
@@ -458,6 +471,13 @@ declare module '@tanstack/react-router' {
       path: '/parent/settings'
       fullPath: '/parent/settings'
       preLoaderRoute: typeof ParentSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent/progression': {
+      id: '/parent/progression'
+      path: '/parent/progression'
+      fullPath: '/parent/progression'
+      preLoaderRoute: typeof ParentProgressionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/module/stories': {
@@ -635,9 +655,20 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
   ModuleStoriesRoute: ModuleStoriesRouteWithChildren,
+  ParentProgressionRoute: ParentProgressionRoute,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
