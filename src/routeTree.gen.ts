@@ -36,6 +36,10 @@ import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.
 import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.index'
 import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
 import { Route as ModuleAlphabetIndexRouteImport } from './routes/module.alphabet.index'
+import { Route as ModuleAlphabetWordsRouteImport } from './routes/module.alphabet.words'
+import { Route as ModuleAlphabetReviewRouteImport } from './routes/module.alphabet.review'
+import { Route as ModuleAlphabetListenRouteImport } from './routes/module.alphabet.listen'
+import { Route as ModuleAlphabetDictionaryRouteImport } from './routes/module.alphabet.dictionary'
 import { Route as ModuleStoriesStoryStoryIdRouteImport } from './routes/module.stories.story.$storyId'
 import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
 import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
@@ -176,6 +180,27 @@ const ModuleAlphabetIndexRoute = ModuleAlphabetIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ModuleAlphabetRoute,
 } as any)
+const ModuleAlphabetWordsRoute = ModuleAlphabetWordsRouteImport.update({
+  id: '/words',
+  path: '/words',
+  getParentRoute: () => ModuleAlphabetRoute,
+} as any)
+const ModuleAlphabetReviewRoute = ModuleAlphabetReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => ModuleAlphabetRoute,
+} as any)
+const ModuleAlphabetListenRoute = ModuleAlphabetListenRouteImport.update({
+  id: '/listen',
+  path: '/listen',
+  getParentRoute: () => ModuleAlphabetRoute,
+} as any)
+const ModuleAlphabetDictionaryRoute =
+  ModuleAlphabetDictionaryRouteImport.update({
+    id: '/dictionary',
+    path: '/dictionary',
+    getParentRoute: () => ModuleAlphabetRoute,
+  } as any)
 const ModuleStoriesStoryStoryIdRoute =
   ModuleStoriesStoryStoryIdRouteImport.update({
     id: '/story/$storyId',
@@ -223,6 +248,10 @@ export interface FileRoutesByFullPath {
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
+  '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
+  '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
+  '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
+  '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
   '/module/numbers/': typeof ModuleNumbersIndexRoute
@@ -252,6 +281,10 @@ export interface FileRoutesByTo {
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent': typeof ParentIndexRoute
+  '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
+  '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
+  '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
+  '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
   '/module/alphabet': typeof ModuleAlphabetIndexRoute
   '/module/maths': typeof ModuleMathsIndexRoute
   '/module/numbers': typeof ModuleNumbersIndexRoute
@@ -286,6 +319,10 @@ export interface FileRoutesById {
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/': typeof ParentIndexRoute
+  '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
+  '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
+  '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
+  '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
   '/module/numbers/': typeof ModuleNumbersIndexRoute
@@ -321,6 +358,10 @@ export interface FileRouteTypes {
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent/'
+    | '/module/alphabet/dictionary'
+    | '/module/alphabet/listen'
+    | '/module/alphabet/review'
+    | '/module/alphabet/words'
     | '/module/alphabet/'
     | '/module/maths/'
     | '/module/numbers/'
@@ -350,6 +391,10 @@ export interface FileRouteTypes {
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent'
+    | '/module/alphabet/dictionary'
+    | '/module/alphabet/listen'
+    | '/module/alphabet/review'
+    | '/module/alphabet/words'
     | '/module/alphabet'
     | '/module/maths'
     | '/module/numbers'
@@ -383,6 +428,10 @@ export interface FileRouteTypes {
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent/'
+    | '/module/alphabet/dictionary'
+    | '/module/alphabet/listen'
+    | '/module/alphabet/review'
+    | '/module/alphabet/words'
     | '/module/alphabet/'
     | '/module/maths/'
     | '/module/numbers/'
@@ -610,6 +659,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleAlphabetIndexRouteImport
       parentRoute: typeof ModuleAlphabetRoute
     }
+    '/module/alphabet/words': {
+      id: '/module/alphabet/words'
+      path: '/words'
+      fullPath: '/module/alphabet/words'
+      preLoaderRoute: typeof ModuleAlphabetWordsRouteImport
+      parentRoute: typeof ModuleAlphabetRoute
+    }
+    '/module/alphabet/review': {
+      id: '/module/alphabet/review'
+      path: '/review'
+      fullPath: '/module/alphabet/review'
+      preLoaderRoute: typeof ModuleAlphabetReviewRouteImport
+      parentRoute: typeof ModuleAlphabetRoute
+    }
+    '/module/alphabet/listen': {
+      id: '/module/alphabet/listen'
+      path: '/listen'
+      fullPath: '/module/alphabet/listen'
+      preLoaderRoute: typeof ModuleAlphabetListenRouteImport
+      parentRoute: typeof ModuleAlphabetRoute
+    }
+    '/module/alphabet/dictionary': {
+      id: '/module/alphabet/dictionary'
+      path: '/dictionary'
+      fullPath: '/module/alphabet/dictionary'
+      preLoaderRoute: typeof ModuleAlphabetDictionaryRouteImport
+      parentRoute: typeof ModuleAlphabetRoute
+    }
     '/module/stories/story/$storyId': {
       id: '/module/stories/story/$storyId'
       path: '/story/$storyId'
@@ -642,11 +719,19 @@ declare module '@tanstack/react-router' {
 }
 
 interface ModuleAlphabetRouteChildren {
+  ModuleAlphabetDictionaryRoute: typeof ModuleAlphabetDictionaryRoute
+  ModuleAlphabetListenRoute: typeof ModuleAlphabetListenRoute
+  ModuleAlphabetReviewRoute: typeof ModuleAlphabetReviewRoute
+  ModuleAlphabetWordsRoute: typeof ModuleAlphabetWordsRoute
   ModuleAlphabetIndexRoute: typeof ModuleAlphabetIndexRoute
   ModuleAlphabetLetterLetterRoute: typeof ModuleAlphabetLetterLetterRoute
 }
 
 const ModuleAlphabetRouteChildren: ModuleAlphabetRouteChildren = {
+  ModuleAlphabetDictionaryRoute: ModuleAlphabetDictionaryRoute,
+  ModuleAlphabetListenRoute: ModuleAlphabetListenRoute,
+  ModuleAlphabetReviewRoute: ModuleAlphabetReviewRoute,
+  ModuleAlphabetWordsRoute: ModuleAlphabetWordsRoute,
   ModuleAlphabetIndexRoute: ModuleAlphabetIndexRoute,
   ModuleAlphabetLetterLetterRoute: ModuleAlphabetLetterLetterRoute,
 }
