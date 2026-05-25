@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Trophy, Flame, Lock } from "lucide-react";
+import { ArrowLeft, Star, Trophy, Flame, Lock, Pencil, Layers, ArrowLeftRight, List } from "lucide-react";
 import { NUMBERS } from "@/lib/eduData";
 import { getChild, type ChildState } from "@/lib/storage";
 import { BottomNav } from "@/components/educ/BottomNav";
@@ -55,7 +55,24 @@ function ModuleNumbers() {
         <Stat icon={<Flame size={20} color="#FF5252" />} value={child.streak} label="JOURS" color="#FF5252" />
       </section>
 
-      <h3 className="px-4 mt-5 font-extrabold text-[20px] text-[#1A1A2E]">Choisis un chiffre</h3>
+      <h3 className="px-4 mt-5 font-extrabold text-[18px] text-[#1A1A2E]">Comment veux-tu apprendre ?</h3>
+      <div className="mt-3 pl-4 flex gap-3 overflow-x-auto pb-2 pr-4">
+        {[
+          { id:"trace", bg:"#B5EAD7", Icon:Pencil, title:"Tracer les chiffres", sub:"Suis les pointillés", onClick:() => document.getElementById("numbers-grid")?.scrollIntoView({ behavior: "smooth" }) },
+          { id:"count", bg:"#FFB3BA", Icon:Layers, title:"Compter", sub:"Compter les objets", onClick:() => nav({ to: "/module/numbers/count" }) },
+          { id:"compare", bg:"#C7CEEA", Icon:ArrowLeftRight, title:"Comparer", sub:"Plus grand ou plus petit ?", onClick:() => nav({ to: "/module/numbers/compare" }) },
+          { id:"seq", bg:"#FFDAC1", Icon:List, title:"Séquences", sub:"Nombres manquants", onClick:() => nav({ to: "/module/numbers/sequence" }) },
+        ].map((m) => (
+          <motion.button key={m.id} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} onClick={m.onClick}
+            className="shrink-0 min-w-[130px] h-[90px] rounded-[20px] p-3.5 text-left text-white" style={{ background: m.bg }}>
+            <m.Icon size={24} color="white" />
+            <p className="mt-1 font-extrabold text-[14px]">{m.title}</p>
+            <p className="font-medium text-[11px] text-white/80">{m.sub}</p>
+          </motion.button>
+        ))}
+      </div>
+
+      <h3 id="numbers-grid" className="px-4 mt-5 font-extrabold text-[20px] text-[#1A1A2E]">Choisis un chiffre</h3>
       <div className="px-4 mt-3 grid grid-cols-5 gap-2">
         {NUMBERS.map((n, i) => {
           const state = done.has(n) ? "completed" : i === currentIdx ? "current" : "locked";
