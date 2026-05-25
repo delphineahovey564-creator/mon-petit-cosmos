@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Trophy, Flame, Lock } from "lucide-react";
+import { ArrowLeft, Star, Trophy, Flame, Lock, Pencil, Headphones, Image as ImageIcon, RotateCcw, BookOpen } from "lucide-react";
 import { ALPHABET } from "@/lib/eduData";
 import { getChild, type ChildState } from "@/lib/storage";
 import { BottomNav } from "@/components/educ/BottomNav";
@@ -61,7 +61,29 @@ function ModuleAlphabet() {
         <Stat icon={<Flame size={20} color="#FF5252" />} value={child.streak} label="JOURS" color="#FF5252" />
       </section>
 
-      <h3 className="px-4 mt-5 font-extrabold text-[20px] text-[#1A1A2E]">Choisis une lettre</h3>
+      <div className="px-4 mt-5 flex items-center justify-between">
+        <h3 className="font-extrabold text-[18px] text-[#1A1A2E]">Comment veux-tu apprendre ?</h3>
+        <button onClick={() => nav({ to: "/module/alphabet/dictionary" })} className="flex items-center gap-1.5 bg-[#FFF0E8] rounded-full px-3.5 py-1.5">
+          <BookOpen size={14} color="#FF6B35" /><span className="font-bold text-[13px] text-[#FF6B35]">Dictionnaire</span>
+        </button>
+      </div>
+      <div className="mt-3 pl-4 flex gap-3 overflow-x-auto pb-2 pr-4">
+        {[
+          { id:"trace", bg:"#FFB3BA", Icon:Pencil, title:"Tracer", sub:"Suis les pointillés", onClick:() => document.getElementById("alphabet-grid")?.scrollIntoView({ behavior: "smooth" }) },
+          { id:"listen", bg:"#B5EAD7", Icon:Headphones, title:"Écouter", sub:"Quel son entends-tu ?", onClick:() => nav({ to: "/module/alphabet/listen" }) },
+          { id:"words", bg:"#C7CEEA", Icon:ImageIcon, title:"Mots illustrés", sub:"Trouve la lettre", onClick:() => nav({ to: "/module/alphabet/words" }) },
+          { id:"review", bg:"#FFDAC1", Icon:RotateCcw, title:"Révision", sub:"Quiz éclair", onClick:() => nav({ to: "/module/alphabet/review" }) },
+        ].map((m) => (
+          <motion.button key={m.id} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} onClick={m.onClick}
+            className="shrink-0 min-w-[130px] h-[90px] rounded-[20px] p-3.5 text-left text-white" style={{ background: m.bg }}>
+            <m.Icon size={24} color="white" />
+            <p className="mt-1 font-extrabold text-[14px]">{m.title}</p>
+            <p className="font-medium text-[11px] text-white/80">{m.sub}</p>
+          </motion.button>
+        ))}
+      </div>
+
+      <h3 id="alphabet-grid" className="px-4 mt-5 font-extrabold text-[20px] text-[#1A1A2E]">Choisis une lettre</h3>
       <div className="px-4 mt-3 grid grid-cols-5 gap-2">
         {ALPHABET.map((letter, i) => {
           const state = getState(letter, i);

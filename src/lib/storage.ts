@@ -1,9 +1,14 @@
 export type Activity = {
+  id: string; moduleId: string; title: string; starsEarned: number; timestamp: string;
+};
+
+export type Creation = {
   id: string;
-  moduleId: string;
-  title: string;
-  starsEarned: number;
+  type: "drawing" | "letter" | "number";
+  label: string;
+  imageBase64?: string;
   timestamp: string;
+  starsEarned?: number;
 };
 
 export type ChildState = {
@@ -13,39 +18,24 @@ export type ChildState = {
   stars: number;
   streak: number;
   badges: string[];
-  progress: {
-    alphabet: number;
-    numbers: number;
-    drawing: number;
-    maths: number;
-    stories: number;
-  };
+  progress: { alphabet: number; numbers: number; drawing: number; maths: number; stories: number };
   completedLetters: string[];
   completedNumbers: number[];
   activities: Activity[];
   level?: { current: number; name: string; xp: number; nextLevelXp: number };
   lastActiveDate?: string;
   lastChestOpened?: string;
+  favoriteStories: string[];
+  completedQuizzes: string[];
+  creations: Creation[];
 };
 
-export type ParentState = {
-  firstName: string;
-  email: string;
-  isLoggedIn: boolean;
-};
+export type ParentState = { firstName: string; email: string; isLoggedIn: boolean };
 
-const KEYS = {
-  parent: "educenfant_parent",
-  child: "educenfant_child",
-  onboarding: "educenfant_onboarding_done",
-};
+const KEYS = { parent: "educenfant_parent", child: "educenfant_child", onboarding: "educenfant_onboarding_done" };
 
 const DEFAULT_CHILD: ChildState = {
-  name: "Toni",
-  age: 7,
-  avatar: "lion",
-  stars: 248,
-  streak: 7,
+  name: "Toni", age: 7, avatar: "lion", stars: 248, streak: 7,
   badges: ["early_bird", "perfect_week", "alphabet_king"],
   progress: { alphabet: 69, numbers: 42, drawing: 90, maths: 26, stories: 55 },
   completedLetters: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"],
@@ -55,6 +45,9 @@ const DEFAULT_CHILD: ChildState = {
     { id: "2", moduleId: "maths", title: "Addition 5+3=8", starsEarned: 10, timestamp: "2025-05-22T10:15:00" },
     { id: "3", moduleId: "drawing", title: "Coloriage : Lion", starsEarned: 20, timestamp: "2025-05-22T14:20:00" },
   ],
+  favoriteStories: [],
+  completedQuizzes: [],
+  creations: [],
 };
 
 const isBrowser = () => typeof window !== "undefined";
@@ -64,10 +57,9 @@ function read<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return fallback;
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
+    const parsed = JSON.parse(raw) as T;
+    return { ...(fallback as any), ...(parsed as any) } as T;
+  } catch { return fallback; }
 }
 function write(key: string, value: unknown) {
   if (!isBrowser()) return;
@@ -89,6 +81,24 @@ export function setChild(c: Partial<ChildState>) {
   return merged;
 }
 
+export function toggleFavoriteStory(id: string) {
+  const c = getChild();
+  const favs = c.favoriteStories.includes(id)
+    ? c.favoriteStories.filter((x) => x !== id)
+    : [...c.favoriteStories, id];
+  return setChild({ favoriteStories: favs });
+}
+
+export function addCreation(cr: Omit<Creation, "id" | "timestamp">) {
+  const c = getChild();
+  const next: Creation = { ...cr, id: Date.now().toString(), timestamp: new Date().toISOString() };
+  return setChild({ creations: [next, ...c.creations].slice(0, 100) });
+}
+export function removeCreation(id: string) {
+  const c = getChild();
+  return setChild({ creations: c.creations.filter((x) => x.id !== id) });
+}
+
 export function getParent(): ParentState {
   return read<ParentState>(KEYS.parent, { firstName: "", email: "", isLoggedIn: false });
 }
@@ -98,12 +108,8 @@ export function setParent(p: Partial<ParentState>) {
   return merged;
 }
 
-export function getOnboardingDone(): boolean {
-  return read<boolean>(KEYS.onboarding, false);
-}
-export function setOnboardingDone(v: boolean) {
-  write(KEYS.onboarding, v);
-}
+export function getOnboardingDone(): boolean { return read<boolean>(KEYS.onboarding, false); }
+export function setOnboardingDone(v: boolean) { write(KEYS.onboarding, v); }
 
 export function averageProgress(c: ChildState): number {
   const p = c.progress;
