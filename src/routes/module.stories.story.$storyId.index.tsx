@@ -1,25 +1,23 @@
-import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Bookmark, Play, Pause } from "lucide-react";
+import { ArrowLeft, Bookmark, Play, Pause, BookOpen } from "lucide-react";
 import { getStory, speak } from "@/lib/eduData";
 import { getChild, setChild } from "@/lib/storage";
 
 export const Route = createFileRoute("/module/stories/story/$storyId/")({ component: StoryReader });
 
 function StoryReader() {
-  const { storyId } = useParams({ from: "/module/stories/story/$storyId" });
+  const { storyId } = useParams({ from: "/module/stories/story/$storyId/" });
   const story = getStory(storyId);
   const nav = useNavigate();
   const [playing, setPlaying] = useState(false);
   const [activeWord, setActiveWord] = useState(-1);
   const [speed, setSpeed] = useState<0.7 | 1 | 1.3>(1);
+  const [soloMode, setSoloMode] = useState(false);
+  const [tappedIdx, setTappedIdx] = useState(-1);
 
   if (!story) {
-    return (
-      <div className="min-h-screen grid place-items-center bg-[#FFF9F0]">
-        <p className="font-bold">Histoire introuvable</p>
-      </div>
-    );
+    return <div className="min-h-screen grid place-items-center bg-[#FFF9F0]"><p className="font-bold">Histoire introuvable</p></div>;
   }
 
   const words = story.content.split(/\s+/);
@@ -35,13 +33,8 @@ function StoryReader() {
     window.speechSynthesis.speak(u);
     setPlaying(true);
   }
-  function pause() {
-    window.speechSynthesis?.cancel();
-    setPlaying(false);
-  }
-  function cycleSpeed() {
-    setSpeed((s) => (s === 1 ? 0.7 : s === 0.7 ? 1.3 : 1));
-  }
+  function pause() { window.speechSynthesis?.cancel(); setPlaying(false); }
+  function cycleSpeed() { setSpeed((s) => (s === 1 ? 0.7 : s === 0.7 ? 1.3 : 1)); }
   function finish() {
     const c = getChild();
     setChild({
@@ -67,10 +60,9 @@ function StoryReader() {
       </div>
 
       <div className="mx-4 mt-4 bg-white rounded-[20px] shadow-edu-card p-4 flex items-center gap-3">
-        <button
-          onClick={playing ? pause : play}
+        <button onClick={playing ? pause : play} disabled={soloMode}
           className="w-14 h-14 rounded-full bg-edu-primary text-white grid place-items-center shadow-edu-btn"
-        >
+          style={{ opacity: soloMode ? 0.3 : 1 }}>
           {playing ? <Pause size={24} /> : <Play size={24} fill="white" />}
         </button>
         <div className="flex-1">
@@ -82,16 +74,38 @@ function StoryReader() {
         <button onClick={cycleSpeed} className="px-3 py-1.5 rounded-full border-[1.5px] border-[#E5E7EB] font-bold text-[12px]">{speed}×</button>
       </div>
 
+      <div className="mx-4 mt-3 bg-white rounded-[14px] shadow-edu-card p-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <BookOpen size={16} color="#6B7280" />
+          <span className="font-semibold text-[14px] text-[#6B7280]">Lire tout seul</span>
+        </div>
+        <button onClick={() => setSoloMode((v) => !v)} className="relative w-11 h-6 rounded-full transition-colors" style={{ background: soloMode ? "#FF6B35" : "#E5E7EB" }}>
+          <span className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all" style={{ left: soloMode ? "22px" : "2px" }} />
+        </button>
+      </div>
+
       <div className="mx-4 mt-4 bg-white rounded-[20px] shadow-edu-card p-5">
         <div className="flex flex-wrap gap-1 leading-[1.8]">
           {words.map((w, i) => (
-            <span
-              key={i}
-              className={`text-[16px] font-semibold ${i === activeWord ? "bg-[#FFE14D] rounded font-bold px-1" : "text-[#1A1A2E]"}`}
-            >
+            <span key={i}
+              onClick={() => { if (soloMode) { speak(w.replace(/[.,!?]/g, ""), { rate: 0.7 }); setTappedIdx(i); setTimeout(() => setTappedIdx(-1), 500); } }}
+              className={`text-[16px] font-semibold transition-colors ${soloMode ? "cursor-pointer" : ""} ${i === activeWord || i === tappedIdx ? "bg-[#FFE14D] rounded font-bold px-1" : "text-[#1A1A2E]"}`}>
               {w}
             </span>
           ))}
+        </div>
+      </div>
+
+      <div className="mx-4 mt-4 rounded-[20px] p-5" style={{ background: "linear-gradient(135deg,#1A1A2E,#2D3748)" }}>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <span className="inline-block bg-edu-primary text-white font-bold text-[10px] uppercase rounded-full px-2 py-0.5">Quiz</span>
+            <p className="mt-1 font-extrabold text-[16px] text-white">Tu as bien lu ?</p>
+            <p className="font-medium text-[13px] text-white/70">Teste ta compréhension !</p>
+          </div>
+          <Link to="/module/stories/story/$storyId/quiz" params={{ storyId }} className="shrink-0 bg-edu-primary text-white rounded-[12px] px-4 py-2.5 font-bold text-[13px]">
+            Commencer →
+          </Link>
         </div>
       </div>
 
