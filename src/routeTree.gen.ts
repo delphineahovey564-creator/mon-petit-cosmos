@@ -50,6 +50,7 @@ import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numb
 import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
 import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.alphabet.letter.$letter'
 import { Route as ModuleStoriesStoryStoryIdIndexRouteImport } from './routes/module.stories.story.$storyId.index'
+import { Route as ModuleStoriesStoryStoryIdQuizRouteImport } from './routes/module.stories.story.$storyId.quiz'
 
 const VictoryRoute = VictoryRouteImport.update({
   id: '/victory',
@@ -260,6 +261,12 @@ const ModuleStoriesStoryStoryIdIndexRoute =
     path: '/',
     getParentRoute: () => ModuleStoriesStoryStoryIdRoute,
   } as any)
+const ModuleStoriesStoryStoryIdQuizRoute =
+  ModuleStoriesStoryStoryIdQuizRouteImport.update({
+    id: '/quiz',
+    path: '/quiz',
+    getParentRoute: () => ModuleStoriesStoryStoryIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
   '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRouteWithChildren
+  '/module/stories/story/$storyId/quiz': typeof ModuleStoriesStoryStoryIdQuizRoute
   '/module/stories/story/$storyId/': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -340,6 +348,7 @@ export interface FileRoutesByTo {
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
+  '/module/stories/story/$storyId/quiz': typeof ModuleStoriesStoryStoryIdQuizRoute
   '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
 export interface FileRoutesById {
@@ -384,6 +393,7 @@ export interface FileRoutesById {
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
   '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRouteWithChildren
+  '/module/stories/story/$storyId/quiz': typeof ModuleStoriesStoryStoryIdQuizRoute
   '/module/stories/story/$storyId/': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -429,6 +439,7 @@ export interface FileRouteTypes {
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId'
+    | '/module/stories/story/$storyId/quiz'
     | '/module/stories/story/$storyId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -467,6 +478,7 @@ export interface FileRouteTypes {
     | '/module/alphabet/letter/$letter'
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
+    | '/module/stories/story/$storyId/quiz'
     | '/module/stories/story/$storyId'
   id:
     | '__root__'
@@ -510,6 +522,7 @@ export interface FileRouteTypes {
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId'
+    | '/module/stories/story/$storyId/quiz'
     | '/module/stories/story/$storyId/'
   fileRoutesById: FileRoutesById
 }
@@ -829,6 +842,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleStoriesStoryStoryIdIndexRouteImport
       parentRoute: typeof ModuleStoriesStoryStoryIdRoute
     }
+    '/module/stories/story/$storyId/quiz': {
+      id: '/module/stories/story/$storyId/quiz'
+      path: '/quiz'
+      fullPath: '/module/stories/story/$storyId/quiz'
+      preLoaderRoute: typeof ModuleStoriesStoryStoryIdQuizRouteImport
+      parentRoute: typeof ModuleStoriesStoryStoryIdRoute
+    }
   }
 }
 
@@ -889,11 +909,13 @@ const ModuleNumbersRouteWithChildren = ModuleNumbersRoute._addFileChildren(
 )
 
 interface ModuleStoriesStoryStoryIdRouteChildren {
+  ModuleStoriesStoryStoryIdQuizRoute: typeof ModuleStoriesStoryStoryIdQuizRoute
   ModuleStoriesStoryStoryIdIndexRoute: typeof ModuleStoriesStoryStoryIdIndexRoute
 }
 
 const ModuleStoriesStoryStoryIdRouteChildren: ModuleStoriesStoryStoryIdRouteChildren =
   {
+    ModuleStoriesStoryStoryIdQuizRoute: ModuleStoriesStoryStoryIdQuizRoute,
     ModuleStoriesStoryStoryIdIndexRoute: ModuleStoriesStoryStoryIdIndexRoute,
   }
 
