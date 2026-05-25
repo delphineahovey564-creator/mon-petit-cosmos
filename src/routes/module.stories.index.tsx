@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Clock } from "lucide-react";
+import { ArrowLeft, Star, Clock, Heart } from "lucide-react";
 import { STORIES } from "@/lib/eduData";
+import { getChild, toggleFavoriteStory } from "@/lib/storage";
 import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
 
@@ -12,7 +13,17 @@ const CATEGORIES = ["Toutes", "Contes africains", "Bible", "Fables", "Imaginaire
 
 function StoriesModule() {
   const [cat, setCat] = useState("Toutes");
+  const [tab, setTab] = useState<"all" | "favs">("all");
+  const [favs, setFavs] = useState<string[]>([]);
   const nav = useNavigate();
+
+  useEffect(() => { setFavs(getChild().favoriteStories); }, []);
+
+  function toggle(id: string) {
+    const next = toggleFavoriteStory(id);
+    setFavs(next.favoriteStories);
+  }
+
   const filtered = cat === "Toutes" ? STORIES : STORIES.filter((s) => s.category === cat);
 
   return (
@@ -34,15 +45,22 @@ function StoriesModule() {
         </div>
       </section>
 
-      <div className="mx-4 mt-4 flex gap-2 overflow-x-auto pb-1">
+      <div className="mx-4 mt-4 flex gap-2">
+        {(["all","favs"] as const).map((t) => (
+          <button key={t} onClick={() => { if (t === "favs") nav({ to: "/module/stories/favorites" }); else setTab(t); }}
+            className="flex-1 h-10 rounded-xl font-bold text-[14px]"
+            style={{ background: tab === t ? "#FF6B35" : "#FFFFFF", color: tab === t ? "#FFFFFF" : "#6B7280", border: tab === t ? "none" : "1.5px solid #E5E7EB" }}>
+            {t === "all" ? "Toutes" : "Mes favoris"}
+          </button>
+        ))}
+      </div>
+
+      <div className="mx-4 mt-3 flex gap-2 overflow-x-auto pb-1">
         {CATEGORIES.map((c) => {
           const active = c === cat;
           return (
-            <button
-              key={c}
-              onClick={() => setCat(c)}
-              className={`shrink-0 rounded-full px-4 py-2 font-bold text-[13px] border ${active ? "bg-edu-primary text-white border-edu-primary" : "bg-white text-[#6B7280] border-[#E5E7EB]"}`}
-            >
+            <button key={c} onClick={() => setCat(c)}
+              className={`shrink-0 rounded-full px-4 py-2 font-bold text-[13px] border ${active ? "bg-edu-primary text-white border-edu-primary" : "bg-white text-[#6B7280] border-[#E5E7EB]"}`}>
               {c}
             </button>
           );
@@ -50,24 +68,24 @@ function StoriesModule() {
       </div>
 
       <div className="px-4 mt-4 grid grid-cols-2 gap-3">
-        {filtered.map((s, i) => (
-          <motion.button
-            key={s.id}
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => nav({ to: "/module/stories/story/$storyId", params: { storyId: s.id } })}
-            className="relative rounded-[20px] p-4 text-left flex flex-col"
-            style={{ background: s.bg, height: 170 }}
-          >
-            <span className="absolute top-2 right-2 bg-white text-[#6B7280] font-bold text-[10px] rounded-full px-2 py-0.5">{s.category}</span>
-            <span className="text-[40px] leading-none">{s.emoji}</span>
-            <p className="mt-2 font-extrabold text-[15px] text-[#1A1A2E] leading-tight">{s.title}</p>
-            <div className="mt-auto flex items-center justify-between text-[12px]">
-              <span className="flex items-center gap-1 text-[#6B7280] font-medium"><Clock size={12} /> {s.duration}</span>
-              <span className="flex items-center gap-1 font-bold text-[#1A1A2E]"><Star size={12} fill="#FFE14D" color="#FFE14D" /> +{s.stars}</span>
-            </div>
-          </motion.button>
-        ))}
+        {filtered.map((s, i) => {
+          const isFav = favs.includes(s.id);
+          return (
+            <motion.div key={s.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+              className="relative rounded-[20px] p-4 text-left flex flex-col" style={{ background: s.bg, height: 170 }}>
+              <motion.button whileTap={{ scale: 1.4 }} onClick={(e) => { e.stopPropagation(); toggle(s.id); }} className="absolute top-2 right-2 z-10">
+                <Heart size={20} fill={isFav ? "#FF5252" : "transparent"} color={isFav ? "#FF5252" : "#D1D5DB"} />
+              </motion.button>
+              <button onClick={() => nav({ to: "/module/stories/story/$storyId", params: { storyId: s.id } })} className="absolute inset-0 z-0" />
+              <span className="text-[40px] leading-none relative">{s.emoji}</span>
+              <p className="mt-2 font-extrabold text-[15px] text-[#1A1A2E] leading-tight relative">{s.title}</p>
+              <div className="mt-auto flex items-center justify-between text-[12px] relative">
+                <span className="flex items-center gap-1 text-[#6B7280] font-medium"><Clock size={12} /> {s.duration}</span>
+                <span className="flex items-center gap-1 font-bold text-[#1A1A2E]"><Star size={12} fill="#FFE14D" color="#FFE14D" /> +{s.stars}</span>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
       <BottomNav />
     </div>
