@@ -14,6 +14,7 @@ import { Route as SplashRouteImport } from './routes/splash'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MyCreationsRouteImport } from './routes/my-creations'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as HomeRouteImport } from './routes/home'
@@ -36,6 +37,10 @@ import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.
 import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.index'
 import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
 import { Route as ModuleAlphabetIndexRouteImport } from './routes/module.alphabet.index'
+import { Route as ModuleStoriesFavoritesRouteImport } from './routes/module.stories.favorites'
+import { Route as ModuleNumbersSequenceRouteImport } from './routes/module.numbers.sequence'
+import { Route as ModuleNumbersCountRouteImport } from './routes/module.numbers.count'
+import { Route as ModuleNumbersCompareRouteImport } from './routes/module.numbers.compare'
 import { Route as ModuleAlphabetWordsRouteImport } from './routes/module.alphabet.words'
 import { Route as ModuleAlphabetReviewRouteImport } from './routes/module.alphabet.review'
 import { Route as ModuleAlphabetListenRouteImport } from './routes/module.alphabet.listen'
@@ -44,6 +49,7 @@ import { Route as ModuleStoriesStoryStoryIdRouteImport } from './routes/module.s
 import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
 import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
 import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.alphabet.letter.$letter'
+import { Route as ModuleStoriesStoryStoryIdIndexRouteImport } from './routes/module.stories.story.$storyId.index'
 
 const VictoryRoute = VictoryRouteImport.update({
   id: '/victory',
@@ -68,6 +74,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyCreationsRoute = MyCreationsRouteImport.update({
+  id: '/my-creations',
+  path: '/my-creations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -180,6 +191,26 @@ const ModuleAlphabetIndexRoute = ModuleAlphabetIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ModuleAlphabetRoute,
 } as any)
+const ModuleStoriesFavoritesRoute = ModuleStoriesFavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => ModuleStoriesRoute,
+} as any)
+const ModuleNumbersSequenceRoute = ModuleNumbersSequenceRouteImport.update({
+  id: '/sequence',
+  path: '/sequence',
+  getParentRoute: () => ModuleNumbersRoute,
+} as any)
+const ModuleNumbersCountRoute = ModuleNumbersCountRouteImport.update({
+  id: '/count',
+  path: '/count',
+  getParentRoute: () => ModuleNumbersRoute,
+} as any)
+const ModuleNumbersCompareRoute = ModuleNumbersCompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => ModuleNumbersRoute,
+} as any)
 const ModuleAlphabetWordsRoute = ModuleAlphabetWordsRouteImport.update({
   id: '/words',
   path: '/words',
@@ -223,6 +254,12 @@ const ModuleAlphabetLetterLetterRoute =
     path: '/letter/$letter',
     getParentRoute: () => ModuleAlphabetRoute,
   } as any)
+const ModuleStoriesStoryStoryIdIndexRoute =
+  ModuleStoriesStoryStoryIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ModuleStoriesStoryStoryIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -231,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
+  '/my-creations': typeof MyCreationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -252,6 +290,10 @@ export interface FileRoutesByFullPath {
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
   '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
+  '/module/numbers/compare': typeof ModuleNumbersCompareRoute
+  '/module/numbers/count': typeof ModuleNumbersCountRoute
+  '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
+  '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
   '/module/numbers/': typeof ModuleNumbersIndexRoute
@@ -259,7 +301,8 @@ export interface FileRoutesByFullPath {
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
-  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRoute
+  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRouteWithChildren
+  '/module/stories/story/$storyId/': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -268,6 +311,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
+  '/my-creations': typeof MyCreationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -285,6 +329,10 @@ export interface FileRoutesByTo {
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
   '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
+  '/module/numbers/compare': typeof ModuleNumbersCompareRoute
+  '/module/numbers/count': typeof ModuleNumbersCountRoute
+  '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
+  '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
   '/module/alphabet': typeof ModuleAlphabetIndexRoute
   '/module/maths': typeof ModuleMathsIndexRoute
   '/module/numbers': typeof ModuleNumbersIndexRoute
@@ -292,7 +340,7 @@ export interface FileRoutesByTo {
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
-  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRoute
+  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -302,6 +350,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
+  '/my-creations': typeof MyCreationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -323,6 +372,10 @@ export interface FileRoutesById {
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
   '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
+  '/module/numbers/compare': typeof ModuleNumbersCompareRoute
+  '/module/numbers/count': typeof ModuleNumbersCountRoute
+  '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
+  '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
   '/module/numbers/': typeof ModuleNumbersIndexRoute
@@ -330,7 +383,8 @@ export interface FileRoutesById {
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
-  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRoute
+  '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRouteWithChildren
+  '/module/stories/story/$storyId/': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -341,6 +395,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/leaderboard'
     | '/login'
+    | '/my-creations'
     | '/onboarding'
     | '/profile'
     | '/signup'
@@ -362,6 +417,10 @@ export interface FileRouteTypes {
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
     | '/module/alphabet/words'
+    | '/module/numbers/compare'
+    | '/module/numbers/count'
+    | '/module/numbers/sequence'
+    | '/module/stories/favorites'
     | '/module/alphabet/'
     | '/module/maths/'
     | '/module/numbers/'
@@ -370,6 +429,7 @@ export interface FileRouteTypes {
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId'
+    | '/module/stories/story/$storyId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -378,6 +438,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/leaderboard'
     | '/login'
+    | '/my-creations'
     | '/onboarding'
     | '/profile'
     | '/signup'
@@ -395,6 +456,10 @@ export interface FileRouteTypes {
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
     | '/module/alphabet/words'
+    | '/module/numbers/compare'
+    | '/module/numbers/count'
+    | '/module/numbers/sequence'
+    | '/module/stories/favorites'
     | '/module/alphabet'
     | '/module/maths'
     | '/module/numbers'
@@ -411,6 +476,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/leaderboard'
     | '/login'
+    | '/my-creations'
     | '/onboarding'
     | '/profile'
     | '/signup'
@@ -432,6 +498,10 @@ export interface FileRouteTypes {
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
     | '/module/alphabet/words'
+    | '/module/numbers/compare'
+    | '/module/numbers/count'
+    | '/module/numbers/sequence'
+    | '/module/stories/favorites'
     | '/module/alphabet/'
     | '/module/maths/'
     | '/module/numbers/'
@@ -440,6 +510,7 @@ export interface FileRouteTypes {
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId'
+    | '/module/stories/story/$storyId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -449,6 +520,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LeaderboardRoute: typeof LeaderboardRoute
   LoginRoute: typeof LoginRoute
+  MyCreationsRoute: typeof MyCreationsRoute
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
@@ -503,6 +575,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-creations': {
+      id: '/my-creations'
+      path: '/my-creations'
+      fullPath: '/my-creations'
+      preLoaderRoute: typeof MyCreationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -659,6 +738,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleAlphabetIndexRouteImport
       parentRoute: typeof ModuleAlphabetRoute
     }
+    '/module/stories/favorites': {
+      id: '/module/stories/favorites'
+      path: '/favorites'
+      fullPath: '/module/stories/favorites'
+      preLoaderRoute: typeof ModuleStoriesFavoritesRouteImport
+      parentRoute: typeof ModuleStoriesRoute
+    }
+    '/module/numbers/sequence': {
+      id: '/module/numbers/sequence'
+      path: '/sequence'
+      fullPath: '/module/numbers/sequence'
+      preLoaderRoute: typeof ModuleNumbersSequenceRouteImport
+      parentRoute: typeof ModuleNumbersRoute
+    }
+    '/module/numbers/count': {
+      id: '/module/numbers/count'
+      path: '/count'
+      fullPath: '/module/numbers/count'
+      preLoaderRoute: typeof ModuleNumbersCountRouteImport
+      parentRoute: typeof ModuleNumbersRoute
+    }
+    '/module/numbers/compare': {
+      id: '/module/numbers/compare'
+      path: '/compare'
+      fullPath: '/module/numbers/compare'
+      preLoaderRoute: typeof ModuleNumbersCompareRouteImport
+      parentRoute: typeof ModuleNumbersRoute
+    }
     '/module/alphabet/words': {
       id: '/module/alphabet/words'
       path: '/words'
@@ -715,6 +822,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleAlphabetLetterLetterRouteImport
       parentRoute: typeof ModuleAlphabetRoute
     }
+    '/module/stories/story/$storyId/': {
+      id: '/module/stories/story/$storyId/'
+      path: '/'
+      fullPath: '/module/stories/story/$storyId/'
+      preLoaderRoute: typeof ModuleStoriesStoryStoryIdIndexRouteImport
+      parentRoute: typeof ModuleStoriesStoryStoryIdRoute
+    }
   }
 }
 
@@ -755,11 +869,17 @@ const ModuleMathsRouteWithChildren = ModuleMathsRoute._addFileChildren(
 )
 
 interface ModuleNumbersRouteChildren {
+  ModuleNumbersCompareRoute: typeof ModuleNumbersCompareRoute
+  ModuleNumbersCountRoute: typeof ModuleNumbersCountRoute
+  ModuleNumbersSequenceRoute: typeof ModuleNumbersSequenceRoute
   ModuleNumbersIndexRoute: typeof ModuleNumbersIndexRoute
   ModuleNumbersNumberNumRoute: typeof ModuleNumbersNumberNumRoute
 }
 
 const ModuleNumbersRouteChildren: ModuleNumbersRouteChildren = {
+  ModuleNumbersCompareRoute: ModuleNumbersCompareRoute,
+  ModuleNumbersCountRoute: ModuleNumbersCountRoute,
+  ModuleNumbersSequenceRoute: ModuleNumbersSequenceRoute,
   ModuleNumbersIndexRoute: ModuleNumbersIndexRoute,
   ModuleNumbersNumberNumRoute: ModuleNumbersNumberNumRoute,
 }
@@ -768,14 +888,30 @@ const ModuleNumbersRouteWithChildren = ModuleNumbersRoute._addFileChildren(
   ModuleNumbersRouteChildren,
 )
 
+interface ModuleStoriesStoryStoryIdRouteChildren {
+  ModuleStoriesStoryStoryIdIndexRoute: typeof ModuleStoriesStoryStoryIdIndexRoute
+}
+
+const ModuleStoriesStoryStoryIdRouteChildren: ModuleStoriesStoryStoryIdRouteChildren =
+  {
+    ModuleStoriesStoryStoryIdIndexRoute: ModuleStoriesStoryStoryIdIndexRoute,
+  }
+
+const ModuleStoriesStoryStoryIdRouteWithChildren =
+  ModuleStoriesStoryStoryIdRoute._addFileChildren(
+    ModuleStoriesStoryStoryIdRouteChildren,
+  )
+
 interface ModuleStoriesRouteChildren {
+  ModuleStoriesFavoritesRoute: typeof ModuleStoriesFavoritesRoute
   ModuleStoriesIndexRoute: typeof ModuleStoriesIndexRoute
-  ModuleStoriesStoryStoryIdRoute: typeof ModuleStoriesStoryStoryIdRoute
+  ModuleStoriesStoryStoryIdRoute: typeof ModuleStoriesStoryStoryIdRouteWithChildren
 }
 
 const ModuleStoriesRouteChildren: ModuleStoriesRouteChildren = {
+  ModuleStoriesFavoritesRoute: ModuleStoriesFavoritesRoute,
   ModuleStoriesIndexRoute: ModuleStoriesIndexRoute,
-  ModuleStoriesStoryStoryIdRoute: ModuleStoriesStoryStoryIdRoute,
+  ModuleStoriesStoryStoryIdRoute: ModuleStoriesStoryStoryIdRouteWithChildren,
 }
 
 const ModuleStoriesRouteWithChildren = ModuleStoriesRoute._addFileChildren(
@@ -789,6 +925,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LeaderboardRoute: LeaderboardRoute,
   LoginRoute: LoginRoute,
+  MyCreationsRoute: MyCreationsRoute,
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
