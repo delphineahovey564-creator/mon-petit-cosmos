@@ -13,6 +13,7 @@ import { Route as VictoryRouteImport } from './routes/victory'
 import { Route as SplashRouteImport } from './routes/splash'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MyCreationsRouteImport } from './routes/my-creations'
@@ -72,6 +73,11 @@ const SignupRoute = SignupRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -290,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/my-creations': typeof MyCreationsRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
@@ -336,6 +343,7 @@ export interface FileRoutesByTo {
   '/my-creations': typeof MyCreationsRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
@@ -378,6 +386,7 @@ export interface FileRoutesById {
   '/my-creations': typeof MyCreationsRoute
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
@@ -426,6 +435,7 @@ export interface FileRouteTypes {
     | '/my-creations'
     | '/notifications'
     | '/onboarding'
+    | '/pricing'
     | '/profile'
     | '/signup'
     | '/splash'
@@ -472,6 +482,7 @@ export interface FileRouteTypes {
     | '/my-creations'
     | '/notifications'
     | '/onboarding'
+    | '/pricing'
     | '/profile'
     | '/signup'
     | '/splash'
@@ -513,6 +524,7 @@ export interface FileRouteTypes {
     | '/my-creations'
     | '/notifications'
     | '/onboarding'
+    | '/pricing'
     | '/profile'
     | '/signup'
     | '/splash'
@@ -560,6 +572,7 @@ export interface RootRouteChildren {
   MyCreationsRoute: typeof MyCreationsRoute
   NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
+  PricingRoute: typeof PricingRoute
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
   SplashRoute: typeof SplashRoute
@@ -607,6 +620,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -990,6 +1010,7 @@ const rootRouteChildren: RootRouteChildren = {
   MyCreationsRoute: MyCreationsRoute,
   NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
+  PricingRoute: PricingRoute,
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
   SplashRoute: SplashRoute,
