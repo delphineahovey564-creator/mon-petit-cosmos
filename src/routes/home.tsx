@@ -7,6 +7,8 @@ import { Leo } from "@/components/educ/Leo";
 import { getChild, setChild, averageProgress, type ChildState } from "@/lib/storage";
 import { computeLevel, levelProgressPct, ALL_BADGES } from "@/lib/levels";
 import { updateStreak, setPendingBadge } from "@/lib/streak";
+import { initNotifications, unreadCount } from "@/lib/notifications";
+import { trackSessionStart, trackSessionEnd } from "@/lib/screenTime";
 
 export const Route = createFileRoute("/home")({ component: Home });
 
@@ -26,10 +28,16 @@ function Home() {
       }
     }
     setC(getChild());
+    initNotifications(c.name, c.streak || 0);
+    trackSessionStart();
+    const onVis = () => { if (document.hidden) trackSessionEnd(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => { document.removeEventListener("visibilitychange", onVis); trackSessionEnd(); };
   }, []);
   if (!child) return <div className="min-h-screen bg-edu-bg" />;
 
   const avg = averageProgress(child);
+  const unread = unreadCount();
   const lvl = computeLevel(child.stars);
   const lvlPct = levelProgressPct(child.stars);
   const today = new Date();
