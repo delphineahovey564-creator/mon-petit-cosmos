@@ -38,6 +38,7 @@ import { Route as ModuleMathsRouteImport } from './routes/module.maths'
 import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
+import { Route as CertificateTypeRouteImport } from './routes/certificate.$type'
 import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.index'
 import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.index'
 import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
@@ -202,6 +203,11 @@ const ModuleIdRoute = ModuleIdRouteImport.update({
   path: '/module/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CertificateTypeRoute = CertificateTypeRouteImport.update({
+  id: '/certificate/$type',
+  path: '/certificate/$type',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleStoriesIndexRoute = ModuleStoriesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -314,6 +320,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -363,6 +370,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
   '/parent/activites': typeof ParentActivitesRoute
@@ -408,6 +416,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -459,6 +468,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/certificate/$type'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -508,6 +518,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/certificate/$type'
     | '/module/$id'
     | '/module/drawing'
     | '/parent/activites'
@@ -552,6 +563,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/certificate/$type'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -602,6 +614,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   SubscribeRoute: typeof SubscribeRouteWithChildren
   VictoryRoute: typeof VictoryRoute
+  CertificateTypeRoute: typeof CertificateTypeRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
   ModuleDrawingRoute: typeof ModuleDrawingRoute
@@ -820,6 +833,13 @@ declare module '@tanstack/react-router' {
       path: '/module/$id'
       fullPath: '/module/$id'
       preLoaderRoute: typeof ModuleIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificate/$type': {
+      id: '/certificate/$type'
+      path: '/certificate/$type'
+      fullPath: '/certificate/$type'
+      preLoaderRoute: typeof CertificateTypeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/module/stories/': {
@@ -1067,6 +1087,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   SubscribeRoute: SubscribeRouteWithChildren,
   VictoryRoute: VictoryRoute,
+  CertificateTypeRoute: CertificateTypeRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
   ModuleDrawingRoute: ModuleDrawingRoute,
