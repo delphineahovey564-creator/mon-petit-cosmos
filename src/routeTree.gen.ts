@@ -14,6 +14,7 @@ import { Route as SplashRouteImport } from './routes/splash'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MyCreationsRouteImport } from './routes/my-creations'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
@@ -22,6 +23,7 @@ import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
+import { Route as ParentTourRouteImport } from './routes/parent.tour'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
 import { Route as ParentReglagesRouteImport } from './routes/parent.reglages'
 import { Route as ParentRapportRouteImport } from './routes/parent.rapport'
@@ -77,6 +79,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MyCreationsRoute = MyCreationsRouteImport.update({
   id: '/my-creations',
   path: '/my-creations',
@@ -115,6 +122,11 @@ const IndexRoute = IndexRouteImport.update({
 const ParentIndexRoute = ParentIndexRouteImport.update({
   id: '/parent/',
   path: '/parent/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParentTourRoute = ParentTourRouteImport.update({
+  id: '/parent/tour',
+  path: '/parent/tour',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ParentSettingsRoute = ParentSettingsRouteImport.update({
@@ -276,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -292,6 +305,7 @@ export interface FileRoutesByFullPath {
   '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
+  '/parent/tour': typeof ParentTourRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -320,6 +334,7 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -332,6 +347,7 @@ export interface FileRoutesByTo {
   '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
+  '/parent/tour': typeof ParentTourRoute
   '/parent': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -360,6 +376,7 @@ export interface FileRoutesById {
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
@@ -376,6 +393,7 @@ export interface FileRoutesById {
   '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
+  '/parent/tour': typeof ParentTourRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -406,6 +424,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/login'
     | '/my-creations'
+    | '/notifications'
     | '/onboarding'
     | '/profile'
     | '/signup'
@@ -422,6 +441,7 @@ export interface FileRouteTypes {
     | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
+    | '/parent/tour'
     | '/parent/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -450,6 +470,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/login'
     | '/my-creations'
+    | '/notifications'
     | '/onboarding'
     | '/profile'
     | '/signup'
@@ -462,6 +483,7 @@ export interface FileRouteTypes {
     | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
+    | '/parent/tour'
     | '/parent'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -489,6 +511,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/login'
     | '/my-creations'
+    | '/notifications'
     | '/onboarding'
     | '/profile'
     | '/signup'
@@ -505,6 +528,7 @@ export interface FileRouteTypes {
     | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
+    | '/parent/tour'
     | '/parent/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -534,6 +558,7 @@ export interface RootRouteChildren {
   LeaderboardRoute: typeof LeaderboardRoute
   LoginRoute: typeof LoginRoute
   MyCreationsRoute: typeof MyCreationsRoute
+  NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
@@ -550,6 +575,7 @@ export interface RootRouteChildren {
   ParentRapportRoute: typeof ParentRapportRoute
   ParentReglagesRoute: typeof ParentReglagesRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
+  ParentTourRoute: typeof ParentTourRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
 
@@ -588,6 +614,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my-creations': {
@@ -644,6 +677,13 @@ declare module '@tanstack/react-router' {
       path: '/parent'
       fullPath: '/parent/'
       preLoaderRoute: typeof ParentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parent/tour': {
+      id: '/parent/tour'
+      path: '/parent/tour'
+      fullPath: '/parent/tour'
+      preLoaderRoute: typeof ParentTourRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/parent/settings': {
@@ -948,6 +988,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeaderboardRoute: LeaderboardRoute,
   LoginRoute: LoginRoute,
   MyCreationsRoute: MyCreationsRoute,
+  NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
@@ -964,8 +1005,19 @@ const rootRouteChildren: RootRouteChildren = {
   ParentRapportRoute: ParentRapportRoute,
   ParentReglagesRoute: ParentReglagesRoute,
   ParentSettingsRoute: ParentSettingsRoute,
+  ParentTourRoute: ParentTourRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
