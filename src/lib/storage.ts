@@ -30,7 +30,16 @@ export type ChildState = {
   creations: Creation[];
 };
 
-export type ParentState = { firstName: string; email: string; isLoggedIn: boolean };
+export type ParentState = {
+  firstName: string;
+  email: string;
+  isLoggedIn: boolean;
+  plan?: "free" | "premium";
+  planExpiry?: string;
+  subscriptionId?: string;
+  referralCode?: string;
+  tourDone?: boolean;
+};
 
 const KEYS = { parent: "educenfant_parent", child: "educenfant_child", onboarding: "educenfant_onboarding_done" };
 
@@ -100,7 +109,7 @@ export function removeCreation(id: string) {
 }
 
 export function getParent(): ParentState {
-  return read<ParentState>(KEYS.parent, { firstName: "", email: "", isLoggedIn: false });
+  return read<ParentState>(KEYS.parent, { firstName: "", email: "", isLoggedIn: false, plan: "free" });
 }
 export function setParent(p: Partial<ParentState>) {
   const merged = { ...getParent(), ...p };
