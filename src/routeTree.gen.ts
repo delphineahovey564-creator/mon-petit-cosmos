@@ -20,6 +20,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MyCreationsRouteImport } from './routes/my-creations'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as InviteRouteImport } from './routes/invite'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as BadgesRouteImport } from './routes/badges'
@@ -111,6 +112,11 @@ const LoginRoute = LoginRouteImport.update({
 const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteRoute = InviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -309,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
@@ -359,6 +366,7 @@ export interface FileRoutesByTo {
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
@@ -405,6 +413,7 @@ export interface FileRoutesById {
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
@@ -457,6 +466,7 @@ export interface FileRouteTypes {
     | '/badges'
     | '/create-profile'
     | '/home'
+    | '/invite'
     | '/leaderboard'
     | '/login'
     | '/my-creations'
@@ -507,6 +517,7 @@ export interface FileRouteTypes {
     | '/badges'
     | '/create-profile'
     | '/home'
+    | '/invite'
     | '/leaderboard'
     | '/login'
     | '/my-creations'
@@ -552,6 +563,7 @@ export interface FileRouteTypes {
     | '/badges'
     | '/create-profile'
     | '/home'
+    | '/invite'
     | '/leaderboard'
     | '/login'
     | '/my-creations'
@@ -603,6 +615,7 @@ export interface RootRouteChildren {
   BadgesRoute: typeof BadgesRoute
   CreateProfileRoute: typeof CreateProfileRoute
   HomeRoute: typeof HomeRoute
+  InviteRoute: typeof InviteRoute
   LeaderboardRoute: typeof LeaderboardRoute
   LoginRoute: typeof LoginRoute
   MyCreationsRoute: typeof MyCreationsRoute
@@ -707,6 +720,13 @@ declare module '@tanstack/react-router' {
       path: '/leaderboard'
       fullPath: '/leaderboard'
       preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -1076,6 +1096,7 @@ const rootRouteChildren: RootRouteChildren = {
   BadgesRoute: BadgesRoute,
   CreateProfileRoute: CreateProfileRoute,
   HomeRoute: HomeRoute,
+  InviteRoute: InviteRoute,
   LeaderboardRoute: LeaderboardRoute,
   LoginRoute: LoginRoute,
   MyCreationsRoute: MyCreationsRoute,
