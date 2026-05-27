@@ -10,18 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VictoryRouteImport } from './routes/victory'
+import { Route as SubscribeRouteImport } from './routes/subscribe'
 import { Route as SplashRouteImport } from './routes/splash'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MyCreationsRouteImport } from './routes/my-creations'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as InviteRouteImport } from './routes/invite'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
+import { Route as SubscribeSuccessRouteImport } from './routes/subscribe.success'
+import { Route as ParentTourRouteImport } from './routes/parent.tour'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
 import { Route as ParentReglagesRouteImport } from './routes/parent.reglages'
 import { Route as ParentRapportRouteImport } from './routes/parent.rapport'
@@ -33,6 +39,7 @@ import { Route as ModuleMathsRouteImport } from './routes/module.maths'
 import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
+import { Route as CertificateTypeRouteImport } from './routes/certificate.$type'
 import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.index'
 import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.index'
 import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
@@ -57,6 +64,11 @@ const VictoryRoute = VictoryRouteImport.update({
   path: '/victory',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SubscribeRoute = SubscribeRouteImport.update({
+  id: '/subscribe',
+  path: '/subscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SplashRoute = SplashRouteImport.update({
   id: '/splash',
   path: '/splash',
@@ -72,9 +84,19 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyCreationsRoute = MyCreationsRouteImport.update({
@@ -90,6 +112,11 @@ const LoginRoute = LoginRouteImport.update({
 const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteRoute = InviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -115,6 +142,16 @@ const IndexRoute = IndexRouteImport.update({
 const ParentIndexRoute = ParentIndexRouteImport.update({
   id: '/parent/',
   path: '/parent/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscribeSuccessRoute = SubscribeSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => SubscribeRoute,
+} as any)
+const ParentTourRoute = ParentTourRouteImport.update({
+  id: '/parent/tour',
+  path: '/parent/tour',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ParentSettingsRoute = ParentSettingsRouteImport.update({
@@ -170,6 +207,11 @@ const ModuleAlphabetRoute = ModuleAlphabetRouteImport.update({
 const ModuleIdRoute = ModuleIdRouteImport.update({
   id: '/module/$id',
   path: '/module/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificateTypeRoute = CertificateTypeRouteImport.update({
+  id: '/certificate/$type',
+  path: '/certificate/$type',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModuleStoriesIndexRoute = ModuleStoriesIndexRouteImport.update({
@@ -273,14 +315,19 @@ export interface FileRoutesByFullPath {
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -292,6 +339,8 @@ export interface FileRoutesByFullPath {
   '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
+  '/parent/tour': typeof ParentTourRoute
+  '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -317,14 +366,19 @@ export interface FileRoutesByTo {
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
   '/parent/activites': typeof ParentActivitesRoute
@@ -332,6 +386,8 @@ export interface FileRoutesByTo {
   '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
+  '/parent/tour': typeof ParentTourRoute
+  '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -357,14 +413,19 @@ export interface FileRoutesById {
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
   '/home': typeof HomeRoute
+  '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
   '/login': typeof LoginRoute
   '/my-creations': typeof MyCreationsRoute
+  '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -376,6 +437,8 @@ export interface FileRoutesById {
   '/parent/rapport': typeof ParentRapportRoute
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
+  '/parent/tour': typeof ParentTourRoute
+  '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -403,14 +466,19 @@ export interface FileRouteTypes {
     | '/badges'
     | '/create-profile'
     | '/home'
+    | '/invite'
     | '/leaderboard'
     | '/login'
     | '/my-creations'
+    | '/notifications'
     | '/onboarding'
+    | '/pricing'
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/subscribe'
     | '/victory'
+    | '/certificate/$type'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -422,6 +490,8 @@ export interface FileRouteTypes {
     | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
+    | '/parent/tour'
+    | '/subscribe/success'
     | '/parent/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -447,14 +517,19 @@ export interface FileRouteTypes {
     | '/badges'
     | '/create-profile'
     | '/home'
+    | '/invite'
     | '/leaderboard'
     | '/login'
     | '/my-creations'
+    | '/notifications'
     | '/onboarding'
+    | '/pricing'
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/subscribe'
     | '/victory'
+    | '/certificate/$type'
     | '/module/$id'
     | '/module/drawing'
     | '/parent/activites'
@@ -462,6 +537,8 @@ export interface FileRouteTypes {
     | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
+    | '/parent/tour'
+    | '/subscribe/success'
     | '/parent'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -486,14 +563,19 @@ export interface FileRouteTypes {
     | '/badges'
     | '/create-profile'
     | '/home'
+    | '/invite'
     | '/leaderboard'
     | '/login'
     | '/my-creations'
+    | '/notifications'
     | '/onboarding'
+    | '/pricing'
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/subscribe'
     | '/victory'
+    | '/certificate/$type'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -505,6 +587,8 @@ export interface FileRouteTypes {
     | '/parent/rapport'
     | '/parent/reglages'
     | '/parent/settings'
+    | '/parent/tour'
+    | '/subscribe/success'
     | '/parent/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -531,14 +615,19 @@ export interface RootRouteChildren {
   BadgesRoute: typeof BadgesRoute
   CreateProfileRoute: typeof CreateProfileRoute
   HomeRoute: typeof HomeRoute
+  InviteRoute: typeof InviteRoute
   LeaderboardRoute: typeof LeaderboardRoute
   LoginRoute: typeof LoginRoute
   MyCreationsRoute: typeof MyCreationsRoute
+  NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
+  PricingRoute: typeof PricingRoute
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
   SplashRoute: typeof SplashRoute
+  SubscribeRoute: typeof SubscribeRouteWithChildren
   VictoryRoute: typeof VictoryRoute
+  CertificateTypeRoute: typeof CertificateTypeRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
   ModuleDrawingRoute: typeof ModuleDrawingRoute
@@ -550,6 +639,7 @@ export interface RootRouteChildren {
   ParentRapportRoute: typeof ParentRapportRoute
   ParentReglagesRoute: typeof ParentReglagesRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
+  ParentTourRoute: typeof ParentTourRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
 
@@ -560,6 +650,13 @@ declare module '@tanstack/react-router' {
       path: '/victory'
       fullPath: '/victory'
       preLoaderRoute: typeof VictoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscribe': {
+      id: '/subscribe'
+      path: '/subscribe'
+      fullPath: '/subscribe'
+      preLoaderRoute: typeof SubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/splash': {
@@ -583,11 +680,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my-creations': {
@@ -609,6 +720,13 @@ declare module '@tanstack/react-router' {
       path: '/leaderboard'
       fullPath: '/leaderboard'
       preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -644,6 +762,20 @@ declare module '@tanstack/react-router' {
       path: '/parent'
       fullPath: '/parent/'
       preLoaderRoute: typeof ParentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscribe/success': {
+      id: '/subscribe/success'
+      path: '/success'
+      fullPath: '/subscribe/success'
+      preLoaderRoute: typeof SubscribeSuccessRouteImport
+      parentRoute: typeof SubscribeRoute
+    }
+    '/parent/tour': {
+      id: '/parent/tour'
+      path: '/parent/tour'
+      fullPath: '/parent/tour'
+      preLoaderRoute: typeof ParentTourRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/parent/settings': {
@@ -721,6 +853,13 @@ declare module '@tanstack/react-router' {
       path: '/module/$id'
       fullPath: '/module/$id'
       preLoaderRoute: typeof ModuleIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificate/$type': {
+      id: '/certificate/$type'
+      path: '/certificate/$type'
+      fullPath: '/certificate/$type'
+      preLoaderRoute: typeof CertificateTypeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/module/stories/': {
@@ -852,6 +991,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface SubscribeRouteChildren {
+  SubscribeSuccessRoute: typeof SubscribeSuccessRoute
+}
+
+const SubscribeRouteChildren: SubscribeRouteChildren = {
+  SubscribeSuccessRoute: SubscribeSuccessRoute,
+}
+
+const SubscribeRouteWithChildren = SubscribeRoute._addFileChildren(
+  SubscribeRouteChildren,
+)
+
 interface ModuleAlphabetRouteChildren {
   ModuleAlphabetDictionaryRoute: typeof ModuleAlphabetDictionaryRoute
   ModuleAlphabetListenRoute: typeof ModuleAlphabetListenRoute
@@ -945,14 +1096,19 @@ const rootRouteChildren: RootRouteChildren = {
   BadgesRoute: BadgesRoute,
   CreateProfileRoute: CreateProfileRoute,
   HomeRoute: HomeRoute,
+  InviteRoute: InviteRoute,
   LeaderboardRoute: LeaderboardRoute,
   LoginRoute: LoginRoute,
   MyCreationsRoute: MyCreationsRoute,
+  NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
+  PricingRoute: PricingRoute,
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
   SplashRoute: SplashRoute,
+  SubscribeRoute: SubscribeRouteWithChildren,
   VictoryRoute: VictoryRoute,
+  CertificateTypeRoute: CertificateTypeRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
   ModuleDrawingRoute: ModuleDrawingRoute,
@@ -964,6 +1120,7 @@ const rootRouteChildren: RootRouteChildren = {
   ParentRapportRoute: ParentRapportRoute,
   ParentReglagesRoute: ParentReglagesRoute,
   ParentSettingsRoute: ParentSettingsRoute,
+  ParentTourRoute: ParentTourRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 export const routeTree = rootRouteImport

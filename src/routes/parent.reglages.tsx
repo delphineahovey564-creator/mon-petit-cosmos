@@ -6,6 +6,7 @@ import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
 import { getChild, type ChildState, MODULE_META, setParent } from "@/lib/storage";
 import { exportParentReportPDF } from "@/lib/pdfExport";
+import { applyTheme, isDarkMode } from "@/lib/darkMode";
 
 export const Route = createFileRoute("/parent/reglages")({ component: ParentReglages });
 
@@ -19,7 +20,7 @@ function ParentReglages() {
   const [reminderTime, setReminderTime] = useState("17:00");
   const [modules, setModules] = useState({ alphabet: true, numbers: true, drawing: true, maths: true, stories: true });
 
-  useEffect(() => { setC(getChild()); }, []);
+  useEffect(() => { setC(getChild()); setDark(isDarkMode()); }, []);
   if (!child) return <div className="min-h-screen bg-edu-bg" />;
 
   function logout() {
@@ -58,7 +59,7 @@ function ParentReglages() {
             {["30 min", "1h", "1h30", "2h", "Illimité"].map((o) => <option key={o}>{o}</option>)}
           </select>
         </Row>
-        <Row icon={<Moon size={20} color="#6B7280" />} label="Mode nuit"><Toggle on={darkMode} onChange={setDark} /></Row>
+        <Row icon={<Moon size={20} color="#6B7280" />} label="Mode nuit"><Toggle on={darkMode} onChange={(v) => { setDark(v); applyTheme(v); }} /></Row>
         <Row icon={<Volume2 size={20} color="#6B7280" />} label="Sons & Audio"><Toggle on={sound} onChange={setSound} /></Row>
         <Row icon={<Bell size={20} color="#6B7280" />} label="Rappels quotidiens"><Toggle on={reminders} onChange={setReminders} /></Row>
         {reminders && (

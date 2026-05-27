@@ -11,6 +11,11 @@ function ParentDashboard() {
   const [child, setC] = useState<ChildState | null>(null);
   const [parent, setP] = useState<ParentState | null>(null);
   useEffect(() => { setC(getChild()); setP(getParent()); }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("educenfant_parent_tour_done")) {
+      navigate({ to: "/parent/tour" });
+    }
+  }, []);
   if (!child || !parent) return <div className="min-h-screen bg-edu-bg" />;
 
   return (
