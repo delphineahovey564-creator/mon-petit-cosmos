@@ -10,6 +10,10 @@ import {
 
 import appCss from "../styles.css?url";
 import { BadgeUnlockModal } from "@/components/educ/BadgeUnlockModal";
+import { useEffect } from "react";
+import { loadTheme } from "@/lib/darkMode";
+import { seedNotifications } from "@/lib/notifications";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -114,11 +118,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useEffect(() => { loadTheme(); seedNotifications(); }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
       <BadgeUnlockModal />
+      <Toaster />
     </QueryClientProvider>
   );
 }
