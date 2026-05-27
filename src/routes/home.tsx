@@ -84,7 +84,10 @@ function Home() {
             <Star size={16} fill="#FFE14D" color="#FFE14D" />
             <span className="text-edu-dark font-extrabold text-sm">{child.stars}</span>
           </div>
-          <Bell size={22} className="text-edu-muted" />
+          <Link to="/notifications" className="relative">
+            <Bell size={22} className="text-edu-muted" />
+            {unread > 0 && <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-edu-primary text-white text-[10px] font-extrabold grid place-items-center">{unread}</span>}
+          </Link>
         </div>
       </header>
 
