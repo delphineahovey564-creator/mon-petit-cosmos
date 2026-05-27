@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VictoryRouteImport } from './routes/victory'
+import { Route as SubscribeRouteImport } from './routes/subscribe'
 import { Route as SplashRouteImport } from './routes/splash'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -24,6 +25,7 @@ import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
+import { Route as SubscribeSuccessRouteImport } from './routes/subscribe.success'
 import { Route as ParentTourRouteImport } from './routes/parent.tour'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
 import { Route as ParentReglagesRouteImport } from './routes/parent.reglages'
@@ -58,6 +60,11 @@ import { Route as ModuleStoriesStoryStoryIdQuizRouteImport } from './routes/modu
 const VictoryRoute = VictoryRouteImport.update({
   id: '/victory',
   path: '/victory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscribeRoute = SubscribeRouteImport.update({
+  id: '/subscribe',
+  path: '/subscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplashRoute = SplashRouteImport.update({
@@ -129,6 +136,11 @@ const ParentIndexRoute = ParentIndexRouteImport.update({
   id: '/parent/',
   path: '/parent/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SubscribeSuccessRoute = SubscribeSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => SubscribeRoute,
 } as any)
 const ParentTourRoute = ParentTourRouteImport.update({
   id: '/parent/tour',
@@ -300,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
@@ -313,6 +326,7 @@ export interface FileRoutesByFullPath {
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/tour': typeof ParentTourRoute
+  '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -347,6 +361,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
@@ -356,6 +371,7 @@ export interface FileRoutesByTo {
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/tour': typeof ParentTourRoute
+  '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -390,6 +406,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/signup': typeof SignupRoute
   '/splash': typeof SplashRoute
+  '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
@@ -403,6 +420,7 @@ export interface FileRoutesById {
   '/parent/reglages': typeof ParentReglagesRoute
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/tour': typeof ParentTourRoute
+  '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent/': typeof ParentIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
@@ -439,6 +457,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/subscribe'
     | '/victory'
     | '/module/$id'
     | '/module/alphabet'
@@ -452,6 +471,7 @@ export interface FileRouteTypes {
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent/tour'
+    | '/subscribe/success'
     | '/parent/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -486,6 +506,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/subscribe'
     | '/victory'
     | '/module/$id'
     | '/module/drawing'
@@ -495,6 +516,7 @@ export interface FileRouteTypes {
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent/tour'
+    | '/subscribe/success'
     | '/parent'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -528,6 +550,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/signup'
     | '/splash'
+    | '/subscribe'
     | '/victory'
     | '/module/$id'
     | '/module/alphabet'
@@ -541,6 +564,7 @@ export interface FileRouteTypes {
     | '/parent/reglages'
     | '/parent/settings'
     | '/parent/tour'
+    | '/subscribe/success'
     | '/parent/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
@@ -576,6 +600,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   SignupRoute: typeof SignupRoute
   SplashRoute: typeof SplashRoute
+  SubscribeRoute: typeof SubscribeRouteWithChildren
   VictoryRoute: typeof VictoryRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
@@ -599,6 +624,13 @@ declare module '@tanstack/react-router' {
       path: '/victory'
       fullPath: '/victory'
       preLoaderRoute: typeof VictoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscribe': {
+      id: '/subscribe'
+      path: '/subscribe'
+      fullPath: '/subscribe'
+      preLoaderRoute: typeof SubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/splash': {
@@ -698,6 +730,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/parent/'
       preLoaderRoute: typeof ParentIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/subscribe/success': {
+      id: '/subscribe/success'
+      path: '/success'
+      fullPath: '/subscribe/success'
+      preLoaderRoute: typeof SubscribeSuccessRouteImport
+      parentRoute: typeof SubscribeRoute
     }
     '/parent/tour': {
       id: '/parent/tour'
@@ -912,6 +951,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface SubscribeRouteChildren {
+  SubscribeSuccessRoute: typeof SubscribeSuccessRoute
+}
+
+const SubscribeRouteChildren: SubscribeRouteChildren = {
+  SubscribeSuccessRoute: SubscribeSuccessRoute,
+}
+
+const SubscribeRouteWithChildren = SubscribeRoute._addFileChildren(
+  SubscribeRouteChildren,
+)
+
 interface ModuleAlphabetRouteChildren {
   ModuleAlphabetDictionaryRoute: typeof ModuleAlphabetDictionaryRoute
   ModuleAlphabetListenRoute: typeof ModuleAlphabetListenRoute
@@ -1014,6 +1065,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   SignupRoute: SignupRoute,
   SplashRoute: SplashRoute,
+  SubscribeRoute: SubscribeRouteWithChildren,
   VictoryRoute: VictoryRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
@@ -1032,3 +1084,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
