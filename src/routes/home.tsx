@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Bell, Hash, Palette, Calculator, BookOpen, Zap, Check, Gift } from "lucide-react";
+import { Star, Bell, Hash, Palette, Calculator, BookOpen, Zap, Check, Gift, Apple, Type } from "lucide-react";
 import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
 import { getChild, setChild, averageProgress, type ChildState } from "@/lib/storage";
@@ -69,6 +69,8 @@ function Home() {
     { color: "#C7CEEA", v: child.progress.drawing, label: "✎" },
     { color: "#FFDAC1", v: child.progress.maths, label: "+" },
     { color: "#D4EDDA", v: child.progress.stories, label: "📖" },
+    { color: "#FFEAA7", v: child.progress.fruits || 0, label: "🍎" },
+    { color: "#E8CCFF", v: child.progress.syllables || 0, label: "💬" },
   ];
 
   return (
@@ -171,6 +173,8 @@ function Home() {
             <HalfCard delay={2} bg="#C7CEEA" icon={Palette} title="Dessin" sub="Colorie !" stars={`${child.progress.drawing}%`} to="/module/$id" params={{ id: "drawing" }} />
             <HalfCard delay={3} bg="#FFDAC1" icon={Calculator} title="Maths" sub="Calcule !" stars={`${child.progress.maths}%`} to="/module/$id" params={{ id: "maths" }} />
             <HalfCard delay={4} bg="#D4EDDA" icon={BookOpen} title="Histoires" sub="Lis et écoute" stars={`${child.progress.stories}%`} to="/module/$id" params={{ id: "stories" }} />
+            <HalfCard delay={5} bg="#FFEAA7" icon={Apple} title="Les Fruits" sub="Découvre !" stars={`${child.progress.fruits || 0}%`} to="/module/$id" params={{ id: "fruits" }} />
+            <HalfCard delay={6} bg="#E8CCFF" icon={Type} title="Syllabes" sub="PA-PA-PA !" stars={`${child.progress.syllables || 0}%`} to="/module/$id" params={{ id: "syllables" }} />
           </div>
         </div>
 
