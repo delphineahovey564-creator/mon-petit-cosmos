@@ -18,7 +18,7 @@ function ParentReglages() {
   const [sound, setSound] = useState(true);
   const [reminders, setReminders] = useState(true);
   const [reminderTime, setReminderTime] = useState("17:00");
-  const [modules, setModules] = useState({ alphabet: true, numbers: true, drawing: true, maths: true, stories: true });
+  const [modules, setModules] = useState<Record<string, boolean>>({ alphabet: true, numbers: true, drawing: true, maths: true, stories: true, fruits: true, syllables: true });
 
   useEffect(() => { setC(getChild()); setDark(isDarkMode()); }, []);
   if (!child) return <div className="min-h-screen bg-edu-bg" />;
