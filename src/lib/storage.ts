@@ -18,7 +18,7 @@ export type ChildState = {
   stars: number;
   streak: number;
   badges: string[];
-  progress: { alphabet: number; numbers: number; drawing: number; maths: number; stories: number };
+  progress: { alphabet: number; numbers: number; drawing: number; maths: number; stories: number; fruits: number; syllables: number };
   completedLetters: string[];
   completedNumbers: number[];
   activities: Activity[];
@@ -28,6 +28,8 @@ export type ChildState = {
   favoriteStories: string[];
   completedQuizzes: string[];
   creations: Creation[];
+  completedFruits: string[];
+  completedSyllableLevels: number[];
 };
 
 export type ParentState = {
@@ -46,7 +48,7 @@ const KEYS = { parent: "educenfant_parent", child: "educenfant_child", onboardin
 const DEFAULT_CHILD: ChildState = {
   name: "Toni", age: 7, avatar: "lion", stars: 248, streak: 7,
   badges: ["early_bird", "perfect_week", "alphabet_king"],
-  progress: { alphabet: 69, numbers: 42, drawing: 90, maths: 26, stories: 55 },
+  progress: { alphabet: 69, numbers: 42, drawing: 90, maths: 26, stories: 55, fruits: 0, syllables: 0 },
   completedLetters: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"],
   completedNumbers: [0,1,2,3,4,5,6,7,8],
   activities: [
@@ -57,6 +59,8 @@ const DEFAULT_CHILD: ChildState = {
   favoriteStories: [],
   completedQuizzes: [],
   creations: [],
+  completedFruits: [],
+  completedSyllableLevels: [],
 };
 
 const isBrowser = () => typeof window !== "undefined";
@@ -122,7 +126,7 @@ export function setOnboardingDone(v: boolean) { write(KEYS.onboarding, v); }
 
 export function averageProgress(c: ChildState): number {
   const p = c.progress;
-  return Math.round((p.alphabet + p.numbers + p.drawing + p.maths + p.stories) / 5);
+  return Math.round((p.alphabet + p.numbers + p.drawing + p.maths + p.stories + (p.fruits || 0) + (p.syllables || 0)) / 7);
 }
 
 export const MODULE_META = {
@@ -131,6 +135,8 @@ export const MODULE_META = {
   drawing:  { id: "drawing",  name: "Dessin", color: "#C7CEEA", subtitle: "Colorie !" },
   maths:    { id: "maths",    name: "Maths", color: "#FFDAC1", subtitle: "Calcule !" },
   stories:  { id: "stories",  name: "Histoires", color: "#D4EDDA", subtitle: "Lis et écoute" },
+  fruits:   { id: "fruits",   name: "Les Fruits", color: "#FFEAA7", subtitle: "20 fruits à découvrir" },
+  syllables:{ id: "syllables",name: "Syllabes",  color: "#E8CCFF", subtitle: "PA-PA-PA !" },
 } as const;
 
 export type ModuleId = keyof typeof MODULE_META;

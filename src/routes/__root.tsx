@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { loadTheme } from "@/lib/darkMode";
 import { seedNotifications } from "@/lib/notifications";
 import { Toaster } from "@/components/ui/sonner";
+import { unlockAudio } from "@/lib/audio";
 
 function NotFoundComponent() {
   return (
@@ -118,7 +119,21 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  useEffect(() => { loadTheme(); seedNotifications(); }, []);
+  useEffect(() => {
+    loadTheme();
+    seedNotifications();
+    const onFirst = () => {
+      unlockAudio();
+      document.removeEventListener("touchstart", onFirst);
+      document.removeEventListener("click", onFirst);
+    };
+    document.addEventListener("touchstart", onFirst, { once: true });
+    document.addEventListener("click", onFirst, { once: true });
+    return () => {
+      document.removeEventListener("touchstart", onFirst);
+      document.removeEventListener("click", onFirst);
+    };
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -1,4 +1,4 @@
-export type ModuleId = "alphabet" | "numbers" | "drawing" | "maths" | "stories";
+export type ModuleId = "alphabet" | "numbers" | "drawing" | "maths" | "stories" | "fruits" | "syllables";
 
 export interface ModuleData {
   id: ModuleId;
@@ -73,6 +73,30 @@ export const MODULES: ModuleData[] = [
     stars: 4,
     action: "8 histoires à lire",
     progress: 50,
+  },
+  {
+    id: "fruits",
+    emoji: "🍎",
+    name: "Les Fruits",
+    desc: "Découvre 20 fruits du monde !",
+    color: "#FFEAA7",
+    description: "Apprends les noms des fruits, leurs sons et leurs secrets.",
+    activities: ["Découvrir les fruits", "Écouter et reconnaître", "Quiz des fruits", "Colorier un fruit"],
+    stars: 0,
+    action: "20 fruits à découvrir",
+    progress: 0,
+  },
+  {
+    id: "syllables",
+    emoji: "💬",
+    name: "Syllabes",
+    desc: "Forme des syllabes : PA-PA-PA !",
+    color: "#E8CCFF",
+    description: "Apprends à combiner les consonnes et les voyelles pour former des mots.",
+    activities: ["Les voyelles", "PA, PE, PI, PO, PU", "Former des mots", "Lire des phrases"],
+    stars: 0,
+    action: "10 niveaux progressifs",
+    progress: 0,
   },
 ];
 

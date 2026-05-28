@@ -33,6 +33,8 @@ function ParentProgression() {
     { name: "Dessin", value: child.progress.drawing, fill: "#C7CEEA" },
     { name: "Maths", value: child.progress.maths, fill: "#FFDAC1" },
     { name: "Histoires", value: child.progress.stories, fill: "#D4EDDA" },
+    { name: "Fruits", value: child.progress.fruits || 0, fill: "#FFEAA7" },
+    { name: "Syllabes", value: child.progress.syllables || 0, fill: "#E8CCFF" },
   ];
   const weekData = [
     { day: "Lun", stars: 12 },{ day: "Mar", stars: 28 },{ day: "Mer", stars: 8 },
