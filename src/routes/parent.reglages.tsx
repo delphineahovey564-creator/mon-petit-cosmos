@@ -1,12 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Clock, Moon, Volume2, Bell, User, Lock, Download, LogOut, Trash2, Info, Shield, FileText, ChevronRight } from "lucide-react";
+import { ArrowLeft, Clock, Moon, Volume2, Bell, User, Lock, Download, LogOut, Trash2, Info, Shield, FileText, ChevronRight, Mic } from "lucide-react";
 import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
 import { getChild, type ChildState, MODULE_META, setParent } from "@/lib/storage";
 import { exportParentReportPDF } from "@/lib/pdfExport";
 import { applyTheme, isDarkMode } from "@/lib/darkMode";
+import { audioEngine } from "@/lib/audio";
 
 export const Route = createFileRoute("/parent/reglages")({ component: ParentReglages });
 
@@ -62,6 +63,10 @@ function ParentReglages() {
         <Row icon={<Moon size={20} color="#6B7280" />} label="Mode nuit"><Toggle on={darkMode} onChange={(v) => { setDark(v); applyTheme(v); }} /></Row>
         <Row icon={<Volume2 size={20} color="#6B7280" />} label="Sons & Audio"><Toggle on={sound} onChange={setSound} /></Row>
         <Row icon={<Bell size={20} color="#6B7280" />} label="Rappels quotidiens"><Toggle on={reminders} onChange={setReminders} /></Row>
+        <Row icon={<Mic size={20} color="#6B7280" />} label="Voix de l'assistant" onClick={() => nav({ to: "/voice-settings" })}>
+          <span className="font-bold text-[13px] text-edu-primary mr-1">{audioEngine.getProfile().displayName}</span>
+          <ChevronRight size={20} color="#D1D5DB" />
+        </Row>
         {reminders && (
           <Row icon={<span className="w-5" />} label="Heure du rappel">
             <input type="time" value={reminderTime} onChange={(e) => setReminderTime(e.target.value)} className="bg-[#F3F4F6] rounded-lg px-3 py-1.5 font-bold text-[14px]" />

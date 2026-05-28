@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VoiceSettingsRouteImport } from './routes/voice-settings'
 import { Route as VictoryRouteImport } from './routes/victory'
 import { Route as SubscribeRouteImport } from './routes/subscribe'
 import { Route as SplashRouteImport } from './routes/splash'
@@ -59,6 +60,11 @@ import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.
 import { Route as ModuleStoriesStoryStoryIdIndexRouteImport } from './routes/module.stories.story.$storyId.index'
 import { Route as ModuleStoriesStoryStoryIdQuizRouteImport } from './routes/module.stories.story.$storyId.quiz'
 
+const VoiceSettingsRoute = VoiceSettingsRouteImport.update({
+  id: '/voice-settings',
+  path: '/voice-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VictoryRoute = VictoryRouteImport.update({
   id: '/victory',
   path: '/victory',
@@ -327,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
@@ -378,6 +385,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
@@ -425,6 +433,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
@@ -478,6 +487,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
     | '/module/alphabet'
@@ -529,6 +539,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
     | '/module/drawing'
@@ -575,6 +586,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
     | '/module/alphabet'
@@ -627,6 +639,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   SubscribeRoute: typeof SubscribeRouteWithChildren
   VictoryRoute: typeof VictoryRoute
+  VoiceSettingsRoute: typeof VoiceSettingsRoute
   CertificateTypeRoute: typeof CertificateTypeRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
@@ -645,6 +658,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/voice-settings': {
+      id: '/voice-settings'
+      path: '/voice-settings'
+      fullPath: '/voice-settings'
+      preLoaderRoute: typeof VoiceSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/victory': {
       id: '/victory'
       path: '/victory'
@@ -1108,6 +1128,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   SubscribeRoute: SubscribeRouteWithChildren,
   VictoryRoute: VictoryRoute,
+  VoiceSettingsRoute: VoiceSettingsRoute,
   CertificateTypeRoute: CertificateTypeRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
