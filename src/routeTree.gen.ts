@@ -59,6 +59,7 @@ import { Route as ModuleAlphabetWordsRouteImport } from './routes/module.alphabe
 import { Route as ModuleAlphabetReviewRouteImport } from './routes/module.alphabet.review'
 import { Route as ModuleAlphabetListenRouteImport } from './routes/module.alphabet.listen'
 import { Route as ModuleAlphabetDictionaryRouteImport } from './routes/module.alphabet.dictionary'
+import { Route as ModuleSyllablesLevelLevelIdRouteImport } from './routes/module.syllables.level.$levelId'
 import { Route as ModuleStoriesStoryStoryIdRouteImport } from './routes/module.stories.story.$storyId'
 import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
 import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
@@ -318,6 +319,12 @@ const ModuleAlphabetDictionaryRoute =
     path: '/dictionary',
     getParentRoute: () => ModuleAlphabetRoute,
   } as any)
+const ModuleSyllablesLevelLevelIdRoute =
+  ModuleSyllablesLevelLevelIdRouteImport.update({
+    id: '/level/$levelId',
+    path: '/level/$levelId',
+    getParentRoute: () => ModuleSyllablesRoute,
+  } as any)
 const ModuleStoriesStoryStoryIdRoute =
   ModuleStoriesStoryStoryIdRouteImport.update({
     id: '/story/$storyId',
@@ -414,6 +421,7 @@ export interface FileRoutesByFullPath {
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
   '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRouteWithChildren
+  '/module/syllables/level/$levelId': typeof ModuleSyllablesLevelLevelIdRoute
   '/module/stories/story/$storyId/quiz': typeof ModuleStoriesStoryStoryIdQuizRoute
   '/module/stories/story/$storyId/': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
@@ -466,6 +474,7 @@ export interface FileRoutesByTo {
   '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
+  '/module/syllables/level/$levelId': typeof ModuleSyllablesLevelLevelIdRoute
   '/module/stories/story/$storyId/quiz': typeof ModuleStoriesStoryStoryIdQuizRoute
   '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
@@ -526,6 +535,7 @@ export interface FileRoutesById {
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
   '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRouteWithChildren
+  '/module/syllables/level/$levelId': typeof ModuleSyllablesLevelLevelIdRoute
   '/module/stories/story/$storyId/quiz': typeof ModuleStoriesStoryStoryIdQuizRoute
   '/module/stories/story/$storyId/': typeof ModuleStoriesStoryStoryIdIndexRoute
 }
@@ -587,6 +597,7 @@ export interface FileRouteTypes {
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId'
+    | '/module/syllables/level/$levelId'
     | '/module/stories/story/$storyId/quiz'
     | '/module/stories/story/$storyId/'
   fileRoutesByTo: FileRoutesByTo
@@ -639,6 +650,7 @@ export interface FileRouteTypes {
     | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
+    | '/module/syllables/level/$levelId'
     | '/module/stories/story/$storyId/quiz'
     | '/module/stories/story/$storyId'
   id:
@@ -698,6 +710,7 @@ export interface FileRouteTypes {
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId'
+    | '/module/syllables/level/$levelId'
     | '/module/stories/story/$storyId/quiz'
     | '/module/stories/story/$storyId/'
   fileRoutesById: FileRoutesById
@@ -1090,6 +1103,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleAlphabetDictionaryRouteImport
       parentRoute: typeof ModuleAlphabetRoute
     }
+    '/module/syllables/level/$levelId': {
+      id: '/module/syllables/level/$levelId'
+      path: '/level/$levelId'
+      fullPath: '/module/syllables/level/$levelId'
+      preLoaderRoute: typeof ModuleSyllablesLevelLevelIdRouteImport
+      parentRoute: typeof ModuleSyllablesRoute
+    }
     '/module/stories/story/$storyId': {
       id: '/module/stories/story/$storyId'
       path: '/story/$storyId'
@@ -1262,10 +1282,12 @@ const ModuleStoriesRouteWithChildren = ModuleStoriesRoute._addFileChildren(
 
 interface ModuleSyllablesRouteChildren {
   ModuleSyllablesIndexRoute: typeof ModuleSyllablesIndexRoute
+  ModuleSyllablesLevelLevelIdRoute: typeof ModuleSyllablesLevelLevelIdRoute
 }
 
 const ModuleSyllablesRouteChildren: ModuleSyllablesRouteChildren = {
   ModuleSyllablesIndexRoute: ModuleSyllablesIndexRoute,
+  ModuleSyllablesLevelLevelIdRoute: ModuleSyllablesLevelLevelIdRoute,
 }
 
 const ModuleSyllablesRouteWithChildren = ModuleSyllablesRoute._addFileChildren(
@@ -1310,3 +1332,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
