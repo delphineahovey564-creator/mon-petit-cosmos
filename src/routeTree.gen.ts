@@ -43,6 +43,7 @@ import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 import { Route as CertificateTypeRouteImport } from './routes/certificate.$type'
+import { Route as ModuleSyllablesIndexRouteImport } from './routes/module.syllables.index'
 import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.index'
 import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.index'
 import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
@@ -236,6 +237,11 @@ const CertificateTypeRoute = CertificateTypeRouteImport.update({
   path: '/certificate/$type',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleSyllablesIndexRoute = ModuleSyllablesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModuleSyllablesRoute,
+} as any)
 const ModuleStoriesIndexRoute = ModuleStoriesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -378,7 +384,7 @@ export interface FileRoutesByFullPath {
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
-  '/module/syllables': typeof ModuleSyllablesRoute
+  '/module/syllables': typeof ModuleSyllablesRouteWithChildren
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
   '/parent/rapport': typeof ParentRapportRoute
@@ -402,6 +408,7 @@ export interface FileRoutesByFullPath {
   '/module/maths/': typeof ModuleMathsIndexRoute
   '/module/numbers/': typeof ModuleNumbersIndexRoute
   '/module/stories/': typeof ModuleStoriesIndexRoute
+  '/module/syllables/': typeof ModuleSyllablesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
   '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
@@ -431,7 +438,6 @@ export interface FileRoutesByTo {
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
-  '/module/syllables': typeof ModuleSyllablesRoute
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
   '/parent/rapport': typeof ParentRapportRoute
@@ -455,6 +461,7 @@ export interface FileRoutesByTo {
   '/module/maths': typeof ModuleMathsIndexRoute
   '/module/numbers': typeof ModuleNumbersIndexRoute
   '/module/stories': typeof ModuleStoriesIndexRoute
+  '/module/syllables': typeof ModuleSyllablesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
   '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
@@ -489,7 +496,7 @@ export interface FileRoutesById {
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
-  '/module/syllables': typeof ModuleSyllablesRoute
+  '/module/syllables': typeof ModuleSyllablesRouteWithChildren
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
   '/parent/rapport': typeof ParentRapportRoute
@@ -513,6 +520,7 @@ export interface FileRoutesById {
   '/module/maths/': typeof ModuleMathsIndexRoute
   '/module/numbers/': typeof ModuleNumbersIndexRoute
   '/module/stories/': typeof ModuleStoriesIndexRoute
+  '/module/syllables/': typeof ModuleSyllablesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
   '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
@@ -573,6 +581,7 @@ export interface FileRouteTypes {
     | '/module/maths/'
     | '/module/numbers/'
     | '/module/stories/'
+    | '/module/syllables/'
     | '/module/alphabet/letter/$letter'
     | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
@@ -602,7 +611,6 @@ export interface FileRouteTypes {
     | '/certificate/$type'
     | '/module/$id'
     | '/module/drawing'
-    | '/module/syllables'
     | '/parent/activites'
     | '/parent/progression'
     | '/parent/rapport'
@@ -626,6 +634,7 @@ export interface FileRouteTypes {
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
+    | '/module/syllables'
     | '/module/alphabet/letter/$letter'
     | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
@@ -683,6 +692,7 @@ export interface FileRouteTypes {
     | '/module/maths/'
     | '/module/numbers/'
     | '/module/stories/'
+    | '/module/syllables/'
     | '/module/alphabet/letter/$letter'
     | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
@@ -718,7 +728,7 @@ export interface RootRouteChildren {
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
   ModuleStoriesRoute: typeof ModuleStoriesRouteWithChildren
-  ModuleSyllablesRoute: typeof ModuleSyllablesRoute
+  ModuleSyllablesRoute: typeof ModuleSyllablesRouteWithChildren
   ParentActivitesRoute: typeof ParentActivitesRoute
   ParentProgressionRoute: typeof ParentProgressionRoute
   ParentRapportRoute: typeof ParentRapportRoute
@@ -967,6 +977,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/certificate/$type'
       preLoaderRoute: typeof CertificateTypeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/module/syllables/': {
+      id: '/module/syllables/'
+      path: '/'
+      fullPath: '/module/syllables/'
+      preLoaderRoute: typeof ModuleSyllablesIndexRouteImport
+      parentRoute: typeof ModuleSyllablesRoute
     }
     '/module/stories/': {
       id: '/module/stories/'
@@ -1243,6 +1260,18 @@ const ModuleStoriesRouteWithChildren = ModuleStoriesRoute._addFileChildren(
   ModuleStoriesRouteChildren,
 )
 
+interface ModuleSyllablesRouteChildren {
+  ModuleSyllablesIndexRoute: typeof ModuleSyllablesIndexRoute
+}
+
+const ModuleSyllablesRouteChildren: ModuleSyllablesRouteChildren = {
+  ModuleSyllablesIndexRoute: ModuleSyllablesIndexRoute,
+}
+
+const ModuleSyllablesRouteWithChildren = ModuleSyllablesRoute._addFileChildren(
+  ModuleSyllablesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BadgesRoute: BadgesRoute,
@@ -1269,7 +1298,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
   ModuleStoriesRoute: ModuleStoriesRouteWithChildren,
-  ModuleSyllablesRoute: ModuleSyllablesRoute,
+  ModuleSyllablesRoute: ModuleSyllablesRouteWithChildren,
   ParentActivitesRoute: ParentActivitesRoute,
   ParentProgressionRoute: ParentProgressionRoute,
   ParentRapportRoute: ParentRapportRoute,
