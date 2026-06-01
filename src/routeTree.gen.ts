@@ -37,6 +37,7 @@ import { Route as ParentActivitesRouteImport } from './routes/parent.activites'
 import { Route as ModuleStoriesRouteImport } from './routes/module.stories'
 import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
 import { Route as ModuleMathsRouteImport } from './routes/module.maths'
+import { Route as ModuleFruitsRouteImport } from './routes/module.fruits'
 import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
@@ -200,6 +201,11 @@ const ModuleMathsRoute = ModuleMathsRouteImport.update({
   path: '/module/maths',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleFruitsRoute = ModuleFruitsRouteImport.update({
+  id: '/module/fruits',
+  path: '/module/fruits',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleDrawingRoute = ModuleDrawingRouteImport.update({
   id: '/module/drawing',
   path: '/module/drawing',
@@ -338,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
+  '/module/fruits': typeof ModuleFruitsRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
@@ -389,6 +396,7 @@ export interface FileRoutesByTo {
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
+  '/module/fruits': typeof ModuleFruitsRoute
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
   '/parent/rapport': typeof ParentRapportRoute
@@ -438,6 +446,7 @@ export interface FileRoutesById {
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
+  '/module/fruits': typeof ModuleFruitsRoute
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
@@ -492,6 +501,7 @@ export interface FileRouteTypes {
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
+    | '/module/fruits'
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
@@ -543,6 +553,7 @@ export interface FileRouteTypes {
     | '/certificate/$type'
     | '/module/$id'
     | '/module/drawing'
+    | '/module/fruits'
     | '/parent/activites'
     | '/parent/progression'
     | '/parent/rapport'
@@ -591,6 +602,7 @@ export interface FileRouteTypes {
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
+    | '/module/fruits'
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
@@ -644,6 +656,7 @@ export interface RootRouteChildren {
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
   ModuleDrawingRoute: typeof ModuleDrawingRoute
+  ModuleFruitsRoute: typeof ModuleFruitsRoute
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
   ModuleStoriesRoute: typeof ModuleStoriesRouteWithChildren
@@ -852,6 +865,13 @@ declare module '@tanstack/react-router' {
       path: '/module/maths'
       fullPath: '/module/maths'
       preLoaderRoute: typeof ModuleMathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/module/fruits': {
+      id: '/module/fruits'
+      path: '/module/fruits'
+      fullPath: '/module/fruits'
+      preLoaderRoute: typeof ModuleFruitsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/module/drawing': {
@@ -1133,6 +1153,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
   ModuleDrawingRoute: ModuleDrawingRoute,
+  ModuleFruitsRoute: ModuleFruitsRoute,
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
   ModuleStoriesRoute: ModuleStoriesRouteWithChildren,
@@ -1147,13 +1168,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
