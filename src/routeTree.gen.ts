@@ -34,6 +34,7 @@ import { Route as ParentReglagesRouteImport } from './routes/parent.reglages'
 import { Route as ParentRapportRouteImport } from './routes/parent.rapport'
 import { Route as ParentProgressionRouteImport } from './routes/parent.progression'
 import { Route as ParentActivitesRouteImport } from './routes/parent.activites'
+import { Route as ModuleSyllablesRouteImport } from './routes/module.syllables'
 import { Route as ModuleStoriesRouteImport } from './routes/module.stories'
 import { Route as ModuleNumbersRouteImport } from './routes/module.numbers'
 import { Route as ModuleMathsRouteImport } from './routes/module.maths'
@@ -45,6 +46,7 @@ import { Route as CertificateTypeRouteImport } from './routes/certificate.$type'
 import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.index'
 import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.index'
 import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
+import { Route as ModuleFruitsIndexRouteImport } from './routes/module.fruits.index'
 import { Route as ModuleAlphabetIndexRouteImport } from './routes/module.alphabet.index'
 import { Route as ModuleStoriesFavoritesRouteImport } from './routes/module.stories.favorites'
 import { Route as ModuleNumbersSequenceRouteImport } from './routes/module.numbers.sequence'
@@ -186,6 +188,11 @@ const ParentActivitesRoute = ParentActivitesRouteImport.update({
   path: '/parent/activites',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModuleSyllablesRoute = ModuleSyllablesRouteImport.update({
+  id: '/module/syllables',
+  path: '/module/syllables',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModuleStoriesRoute = ModuleStoriesRouteImport.update({
   id: '/module/stories',
   path: '/module/stories',
@@ -240,6 +247,11 @@ const ModuleMathsIndexRoute = ModuleMathsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ModuleMathsRoute,
+} as any)
+const ModuleFruitsIndexRoute = ModuleFruitsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModuleFruitsRoute,
 } as any)
 const ModuleAlphabetIndexRoute = ModuleAlphabetIndexRouteImport.update({
   id: '/',
@@ -344,10 +356,11 @@ export interface FileRoutesByFullPath {
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
-  '/module/fruits': typeof ModuleFruitsRoute
+  '/module/fruits': typeof ModuleFruitsRouteWithChildren
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
+  '/module/syllables': typeof ModuleSyllablesRoute
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
   '/parent/rapport': typeof ParentRapportRoute
@@ -365,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
+  '/module/fruits/': typeof ModuleFruitsIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
   '/module/numbers/': typeof ModuleNumbersIndexRoute
   '/module/stories/': typeof ModuleStoriesIndexRoute
@@ -396,7 +410,7 @@ export interface FileRoutesByTo {
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
-  '/module/fruits': typeof ModuleFruitsRoute
+  '/module/syllables': typeof ModuleSyllablesRoute
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
   '/parent/rapport': typeof ParentRapportRoute
@@ -414,6 +428,7 @@ export interface FileRoutesByTo {
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
   '/module/alphabet': typeof ModuleAlphabetIndexRoute
+  '/module/fruits': typeof ModuleFruitsIndexRoute
   '/module/maths': typeof ModuleMathsIndexRoute
   '/module/numbers': typeof ModuleNumbersIndexRoute
   '/module/stories': typeof ModuleStoriesIndexRoute
@@ -446,10 +461,11 @@ export interface FileRoutesById {
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
-  '/module/fruits': typeof ModuleFruitsRoute
+  '/module/fruits': typeof ModuleFruitsRouteWithChildren
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
   '/module/stories': typeof ModuleStoriesRouteWithChildren
+  '/module/syllables': typeof ModuleSyllablesRoute
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
   '/parent/rapport': typeof ParentRapportRoute
@@ -467,6 +483,7 @@ export interface FileRoutesById {
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
+  '/module/fruits/': typeof ModuleFruitsIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
   '/module/numbers/': typeof ModuleNumbersIndexRoute
   '/module/stories/': typeof ModuleStoriesIndexRoute
@@ -505,6 +522,7 @@ export interface FileRouteTypes {
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
+    | '/module/syllables'
     | '/parent/activites'
     | '/parent/progression'
     | '/parent/rapport'
@@ -522,6 +540,7 @@ export interface FileRouteTypes {
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
     | '/module/alphabet/'
+    | '/module/fruits/'
     | '/module/maths/'
     | '/module/numbers/'
     | '/module/stories/'
@@ -553,7 +572,7 @@ export interface FileRouteTypes {
     | '/certificate/$type'
     | '/module/$id'
     | '/module/drawing'
-    | '/module/fruits'
+    | '/module/syllables'
     | '/parent/activites'
     | '/parent/progression'
     | '/parent/rapport'
@@ -571,6 +590,7 @@ export interface FileRouteTypes {
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
     | '/module/alphabet'
+    | '/module/fruits'
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
@@ -606,6 +626,7 @@ export interface FileRouteTypes {
     | '/module/maths'
     | '/module/numbers'
     | '/module/stories'
+    | '/module/syllables'
     | '/parent/activites'
     | '/parent/progression'
     | '/parent/rapport'
@@ -623,6 +644,7 @@ export interface FileRouteTypes {
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
     | '/module/alphabet/'
+    | '/module/fruits/'
     | '/module/maths/'
     | '/module/numbers/'
     | '/module/stories/'
@@ -656,10 +678,11 @@ export interface RootRouteChildren {
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
   ModuleDrawingRoute: typeof ModuleDrawingRoute
-  ModuleFruitsRoute: typeof ModuleFruitsRoute
+  ModuleFruitsRoute: typeof ModuleFruitsRouteWithChildren
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
   ModuleStoriesRoute: typeof ModuleStoriesRouteWithChildren
+  ModuleSyllablesRoute: typeof ModuleSyllablesRoute
   ParentActivitesRoute: typeof ParentActivitesRoute
   ParentProgressionRoute: typeof ParentProgressionRoute
   ParentRapportRoute: typeof ParentRapportRoute
@@ -846,6 +869,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ParentActivitesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/module/syllables': {
+      id: '/module/syllables'
+      path: '/module/syllables'
+      fullPath: '/module/syllables'
+      preLoaderRoute: typeof ModuleSyllablesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/module/stories': {
       id: '/module/stories'
       path: '/module/stories'
@@ -922,6 +952,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/module/maths/'
       preLoaderRoute: typeof ModuleMathsIndexRouteImport
       parentRoute: typeof ModuleMathsRoute
+    }
+    '/module/fruits/': {
+      id: '/module/fruits/'
+      path: '/'
+      fullPath: '/module/fruits/'
+      preLoaderRoute: typeof ModuleFruitsIndexRouteImport
+      parentRoute: typeof ModuleFruitsRoute
     }
     '/module/alphabet/': {
       id: '/module/alphabet/'
@@ -1065,6 +1102,18 @@ const ModuleAlphabetRouteWithChildren = ModuleAlphabetRoute._addFileChildren(
   ModuleAlphabetRouteChildren,
 )
 
+interface ModuleFruitsRouteChildren {
+  ModuleFruitsIndexRoute: typeof ModuleFruitsIndexRoute
+}
+
+const ModuleFruitsRouteChildren: ModuleFruitsRouteChildren = {
+  ModuleFruitsIndexRoute: ModuleFruitsIndexRoute,
+}
+
+const ModuleFruitsRouteWithChildren = ModuleFruitsRoute._addFileChildren(
+  ModuleFruitsRouteChildren,
+)
+
 interface ModuleMathsRouteChildren {
   ModuleMathsIndexRoute: typeof ModuleMathsIndexRoute
   ModuleMathsExerciseTypeRoute: typeof ModuleMathsExerciseTypeRoute
@@ -1153,10 +1202,11 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
   ModuleDrawingRoute: ModuleDrawingRoute,
-  ModuleFruitsRoute: ModuleFruitsRoute,
+  ModuleFruitsRoute: ModuleFruitsRouteWithChildren,
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
   ModuleStoriesRoute: ModuleStoriesRouteWithChildren,
+  ModuleSyllablesRoute: ModuleSyllablesRoute,
   ParentActivitesRoute: ParentActivitesRoute,
   ParentProgressionRoute: ParentProgressionRoute,
   ParentRapportRoute: ParentRapportRoute,
@@ -1168,3 +1218,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
