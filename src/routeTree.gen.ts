@@ -52,6 +52,8 @@ import { Route as ModuleStoriesFavoritesRouteImport } from './routes/module.stor
 import { Route as ModuleNumbersSequenceRouteImport } from './routes/module.numbers.sequence'
 import { Route as ModuleNumbersCountRouteImport } from './routes/module.numbers.count'
 import { Route as ModuleNumbersCompareRouteImport } from './routes/module.numbers.compare'
+import { Route as ModuleFruitsQuizRouteImport } from './routes/module.fruits.quiz'
+import { Route as ModuleFruitsListenRouteImport } from './routes/module.fruits.listen'
 import { Route as ModuleAlphabetWordsRouteImport } from './routes/module.alphabet.words'
 import { Route as ModuleAlphabetReviewRouteImport } from './routes/module.alphabet.review'
 import { Route as ModuleAlphabetListenRouteImport } from './routes/module.alphabet.listen'
@@ -279,6 +281,16 @@ const ModuleNumbersCompareRoute = ModuleNumbersCompareRouteImport.update({
   path: '/compare',
   getParentRoute: () => ModuleNumbersRoute,
 } as any)
+const ModuleFruitsQuizRoute = ModuleFruitsQuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => ModuleFruitsRoute,
+} as any)
+const ModuleFruitsListenRoute = ModuleFruitsListenRouteImport.update({
+  id: '/listen',
+  path: '/listen',
+  getParentRoute: () => ModuleFruitsRoute,
+} as any)
 const ModuleAlphabetWordsRoute = ModuleAlphabetWordsRouteImport.update({
   id: '/words',
   path: '/words',
@@ -379,6 +391,8 @@ export interface FileRoutesByFullPath {
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
   '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
+  '/module/fruits/listen': typeof ModuleFruitsListenRoute
+  '/module/fruits/quiz': typeof ModuleFruitsQuizRoute
   '/module/numbers/compare': typeof ModuleNumbersCompareRoute
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
@@ -430,6 +444,8 @@ export interface FileRoutesByTo {
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
   '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
+  '/module/fruits/listen': typeof ModuleFruitsListenRoute
+  '/module/fruits/quiz': typeof ModuleFruitsQuizRoute
   '/module/numbers/compare': typeof ModuleNumbersCompareRoute
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
@@ -486,6 +502,8 @@ export interface FileRoutesById {
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
   '/module/alphabet/words': typeof ModuleAlphabetWordsRoute
+  '/module/fruits/listen': typeof ModuleFruitsListenRoute
+  '/module/fruits/quiz': typeof ModuleFruitsQuizRoute
   '/module/numbers/compare': typeof ModuleNumbersCompareRoute
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
@@ -544,6 +562,8 @@ export interface FileRouteTypes {
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
     | '/module/alphabet/words'
+    | '/module/fruits/listen'
+    | '/module/fruits/quiz'
     | '/module/numbers/compare'
     | '/module/numbers/count'
     | '/module/numbers/sequence'
@@ -595,6 +615,8 @@ export interface FileRouteTypes {
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
     | '/module/alphabet/words'
+    | '/module/fruits/listen'
+    | '/module/fruits/quiz'
     | '/module/numbers/compare'
     | '/module/numbers/count'
     | '/module/numbers/sequence'
@@ -650,6 +672,8 @@ export interface FileRouteTypes {
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
     | '/module/alphabet/words'
+    | '/module/fruits/listen'
+    | '/module/fruits/quiz'
     | '/module/numbers/compare'
     | '/module/numbers/count'
     | '/module/numbers/sequence'
@@ -1007,6 +1031,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleNumbersCompareRouteImport
       parentRoute: typeof ModuleNumbersRoute
     }
+    '/module/fruits/quiz': {
+      id: '/module/fruits/quiz'
+      path: '/quiz'
+      fullPath: '/module/fruits/quiz'
+      preLoaderRoute: typeof ModuleFruitsQuizRouteImport
+      parentRoute: typeof ModuleFruitsRoute
+    }
+    '/module/fruits/listen': {
+      id: '/module/fruits/listen'
+      path: '/listen'
+      fullPath: '/module/fruits/listen'
+      preLoaderRoute: typeof ModuleFruitsListenRouteImport
+      parentRoute: typeof ModuleFruitsRoute
+    }
     '/module/alphabet/words': {
       id: '/module/alphabet/words'
       path: '/words'
@@ -1122,11 +1160,15 @@ const ModuleAlphabetRouteWithChildren = ModuleAlphabetRoute._addFileChildren(
 )
 
 interface ModuleFruitsRouteChildren {
+  ModuleFruitsListenRoute: typeof ModuleFruitsListenRoute
+  ModuleFruitsQuizRoute: typeof ModuleFruitsQuizRoute
   ModuleFruitsIndexRoute: typeof ModuleFruitsIndexRoute
   ModuleFruitsFruitIdRoute: typeof ModuleFruitsFruitIdRoute
 }
 
 const ModuleFruitsRouteChildren: ModuleFruitsRouteChildren = {
+  ModuleFruitsListenRoute: ModuleFruitsListenRoute,
+  ModuleFruitsQuizRoute: ModuleFruitsQuizRoute,
   ModuleFruitsIndexRoute: ModuleFruitsIndexRoute,
   ModuleFruitsFruitIdRoute: ModuleFruitsFruitIdRoute,
 }
@@ -1239,3 +1281,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
