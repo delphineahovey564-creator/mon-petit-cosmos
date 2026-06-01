@@ -59,6 +59,7 @@ import { Route as ModuleAlphabetDictionaryRouteImport } from './routes/module.al
 import { Route as ModuleStoriesStoryStoryIdRouteImport } from './routes/module.stories.story.$storyId'
 import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
 import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
+import { Route as ModuleFruitsFruitIdRouteImport } from './routes/module.fruits.fruit.$id'
 import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.alphabet.letter.$letter'
 import { Route as ModuleStoriesStoryStoryIdIndexRouteImport } from './routes/module.stories.story.$storyId.index'
 import { Route as ModuleStoriesStoryStoryIdQuizRouteImport } from './routes/module.stories.story.$storyId.quiz'
@@ -315,6 +316,11 @@ const ModuleMathsExerciseTypeRoute = ModuleMathsExerciseTypeRouteImport.update({
   path: '/exercise/$type',
   getParentRoute: () => ModuleMathsRoute,
 } as any)
+const ModuleFruitsFruitIdRoute = ModuleFruitsFruitIdRouteImport.update({
+  id: '/fruit/$id',
+  path: '/fruit/$id',
+  getParentRoute: () => ModuleFruitsRoute,
+} as any)
 const ModuleAlphabetLetterLetterRoute =
   ModuleAlphabetLetterLetterRouteImport.update({
     id: '/letter/$letter',
@@ -383,6 +389,7 @@ export interface FileRoutesByFullPath {
   '/module/numbers/': typeof ModuleNumbersIndexRoute
   '/module/stories/': typeof ModuleStoriesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
   '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRouteWithChildren
@@ -433,6 +440,7 @@ export interface FileRoutesByTo {
   '/module/numbers': typeof ModuleNumbersIndexRoute
   '/module/stories': typeof ModuleStoriesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
   '/module/stories/story/$storyId/quiz': typeof ModuleStoriesStoryStoryIdQuizRoute
@@ -488,6 +496,7 @@ export interface FileRoutesById {
   '/module/numbers/': typeof ModuleNumbersIndexRoute
   '/module/stories/': typeof ModuleStoriesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
   '/module/stories/story/$storyId': typeof ModuleStoriesStoryStoryIdRouteWithChildren
@@ -545,6 +554,7 @@ export interface FileRouteTypes {
     | '/module/numbers/'
     | '/module/stories/'
     | '/module/alphabet/letter/$letter'
+    | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId'
@@ -595,6 +605,7 @@ export interface FileRouteTypes {
     | '/module/numbers'
     | '/module/stories'
     | '/module/alphabet/letter/$letter'
+    | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId/quiz'
@@ -649,6 +660,7 @@ export interface FileRouteTypes {
     | '/module/numbers/'
     | '/module/stories/'
     | '/module/alphabet/letter/$letter'
+    | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
     | '/module/stories/story/$storyId'
@@ -1044,6 +1056,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleMathsExerciseTypeRouteImport
       parentRoute: typeof ModuleMathsRoute
     }
+    '/module/fruits/fruit/$id': {
+      id: '/module/fruits/fruit/$id'
+      path: '/fruit/$id'
+      fullPath: '/module/fruits/fruit/$id'
+      preLoaderRoute: typeof ModuleFruitsFruitIdRouteImport
+      parentRoute: typeof ModuleFruitsRoute
+    }
     '/module/alphabet/letter/$letter': {
       id: '/module/alphabet/letter/$letter'
       path: '/letter/$letter'
@@ -1104,10 +1123,12 @@ const ModuleAlphabetRouteWithChildren = ModuleAlphabetRoute._addFileChildren(
 
 interface ModuleFruitsRouteChildren {
   ModuleFruitsIndexRoute: typeof ModuleFruitsIndexRoute
+  ModuleFruitsFruitIdRoute: typeof ModuleFruitsFruitIdRoute
 }
 
 const ModuleFruitsRouteChildren: ModuleFruitsRouteChildren = {
   ModuleFruitsIndexRoute: ModuleFruitsIndexRoute,
+  ModuleFruitsFruitIdRoute: ModuleFruitsFruitIdRoute,
 }
 
 const ModuleFruitsRouteWithChildren = ModuleFruitsRoute._addFileChildren(
