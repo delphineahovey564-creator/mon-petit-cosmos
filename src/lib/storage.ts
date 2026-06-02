@@ -30,6 +30,23 @@ export type ChildState = {
   creations: Creation[];
   completedFruits: string[];
   completedSyllableLevels: number[];
+  watchedVideos: string[];
+  gameHistory: GameSession[];
+  highScores: HighScores;
+};
+
+export type GameSession = {
+  gameId: string;
+  score: number;
+  starsEarned: number;
+  timestamp: string;
+};
+
+export type HighScores = {
+  memory: { moves: number; time: number; stars: number } | null;
+  find: { totalTime: number; stars: number } | null;
+  puzzle: { moves: number; stars: number } | null;
+  quiz: { score: number; maxStreak: number; stars: number } | null;
 };
 
 export type ParentState = {
@@ -61,6 +78,9 @@ const DEFAULT_CHILD: ChildState = {
   creations: [],
   completedFruits: [],
   completedSyllableLevels: [],
+  watchedVideos: [],
+  gameHistory: [],
+  highScores: { memory: null, find: null, puzzle: null, quiz: null },
 };
 
 const isBrowser = () => typeof window !== "undefined";
