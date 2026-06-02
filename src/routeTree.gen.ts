@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VoiceSettingsRouteImport } from './routes/voice-settings'
+import { Route as VideosRouteImport } from './routes/videos'
 import { Route as VictoryRouteImport } from './routes/victory'
 import { Route as SubscribeRouteImport } from './routes/subscribe'
 import { Route as SplashRouteImport } from './routes/splash'
@@ -26,6 +27,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VideosIndexRouteImport } from './routes/videos.index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as SubscribeSuccessRouteImport } from './routes/subscribe.success'
 import { Route as ParentTourRouteImport } from './routes/parent.tour'
@@ -49,6 +51,7 @@ import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.
 import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
 import { Route as ModuleFruitsIndexRouteImport } from './routes/module.fruits.index'
 import { Route as ModuleAlphabetIndexRouteImport } from './routes/module.alphabet.index'
+import { Route as VideosWatchVideoIdRouteImport } from './routes/videos.watch.$videoId'
 import { Route as ModuleStoriesFavoritesRouteImport } from './routes/module.stories.favorites'
 import { Route as ModuleNumbersSequenceRouteImport } from './routes/module.numbers.sequence'
 import { Route as ModuleNumbersCountRouteImport } from './routes/module.numbers.count'
@@ -71,6 +74,11 @@ import { Route as ModuleStoriesStoryStoryIdQuizRouteImport } from './routes/modu
 const VoiceSettingsRoute = VoiceSettingsRouteImport.update({
   id: '/voice-settings',
   path: '/voice-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideosRoute = VideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VictoryRoute = VictoryRouteImport.update({
@@ -152,6 +160,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const VideosIndexRoute = VideosIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VideosRoute,
 } as any)
 const ParentIndexRoute = ParentIndexRouteImport.update({
   id: '/parent/',
@@ -268,6 +281,11 @@ const ModuleAlphabetIndexRoute = ModuleAlphabetIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ModuleAlphabetRoute,
 } as any)
+const VideosWatchVideoIdRoute = VideosWatchVideoIdRouteImport.update({
+  id: '/watch/$videoId',
+  path: '/watch/$videoId',
+  getParentRoute: () => VideosRoute,
+} as any)
 const ModuleStoriesFavoritesRoute = ModuleStoriesFavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
@@ -382,6 +400,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/videos': typeof VideosRouteWithChildren
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
@@ -400,6 +419,7 @@ export interface FileRoutesByFullPath {
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent/': typeof ParentIndexRoute
+  '/videos/': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
@@ -410,6 +430,7 @@ export interface FileRoutesByFullPath {
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
+  '/videos/watch/$videoId': typeof VideosWatchVideoIdRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
   '/module/fruits/': typeof ModuleFruitsIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
@@ -454,6 +475,7 @@ export interface FileRoutesByTo {
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent': typeof ParentIndexRoute
+  '/videos': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
@@ -464,6 +486,7 @@ export interface FileRoutesByTo {
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
+  '/videos/watch/$videoId': typeof VideosWatchVideoIdRoute
   '/module/alphabet': typeof ModuleAlphabetIndexRoute
   '/module/fruits': typeof ModuleFruitsIndexRoute
   '/module/maths': typeof ModuleMathsIndexRoute
@@ -496,6 +519,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/videos': typeof VideosRouteWithChildren
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
@@ -514,6 +538,7 @@ export interface FileRoutesById {
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent/': typeof ParentIndexRoute
+  '/videos/': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
@@ -524,6 +549,7 @@ export interface FileRoutesById {
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
+  '/videos/watch/$videoId': typeof VideosWatchVideoIdRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
   '/module/fruits/': typeof ModuleFruitsIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
@@ -558,6 +584,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
@@ -576,6 +603,7 @@ export interface FileRouteTypes {
     | '/parent/tour'
     | '/subscribe/success'
     | '/parent/'
+    | '/videos/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
@@ -586,6 +614,7 @@ export interface FileRouteTypes {
     | '/module/numbers/count'
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
+    | '/videos/watch/$videoId'
     | '/module/alphabet/'
     | '/module/fruits/'
     | '/module/maths/'
@@ -630,6 +659,7 @@ export interface FileRouteTypes {
     | '/parent/tour'
     | '/subscribe/success'
     | '/parent'
+    | '/videos'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
@@ -640,6 +670,7 @@ export interface FileRouteTypes {
     | '/module/numbers/count'
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
+    | '/videos/watch/$videoId'
     | '/module/alphabet'
     | '/module/fruits'
     | '/module/maths'
@@ -671,6 +702,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
@@ -689,6 +721,7 @@ export interface FileRouteTypes {
     | '/parent/tour'
     | '/subscribe/success'
     | '/parent/'
+    | '/videos/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
@@ -699,6 +732,7 @@ export interface FileRouteTypes {
     | '/module/numbers/count'
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
+    | '/videos/watch/$videoId'
     | '/module/alphabet/'
     | '/module/fruits/'
     | '/module/maths/'
@@ -732,6 +766,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   SubscribeRoute: typeof SubscribeRouteWithChildren
   VictoryRoute: typeof VictoryRoute
+  VideosRoute: typeof VideosRouteWithChildren
   VoiceSettingsRoute: typeof VoiceSettingsRoute
   CertificateTypeRoute: typeof CertificateTypeRoute
   ModuleIdRoute: typeof ModuleIdRoute
@@ -758,6 +793,13 @@ declare module '@tanstack/react-router' {
       path: '/voice-settings'
       fullPath: '/voice-settings'
       preLoaderRoute: typeof VoiceSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/videos': {
+      id: '/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof VideosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/victory': {
@@ -871,6 +913,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/videos/': {
+      id: '/videos/'
+      path: '/'
+      fullPath: '/videos/'
+      preLoaderRoute: typeof VideosIndexRouteImport
+      parentRoute: typeof VideosRoute
     }
     '/parent/': {
       id: '/parent/'
@@ -1033,6 +1082,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleAlphabetIndexRouteImport
       parentRoute: typeof ModuleAlphabetRoute
     }
+    '/videos/watch/$videoId': {
+      id: '/videos/watch/$videoId'
+      path: '/watch/$videoId'
+      fullPath: '/videos/watch/$videoId'
+      preLoaderRoute: typeof VideosWatchVideoIdRouteImport
+      parentRoute: typeof VideosRoute
+    }
     '/module/stories/favorites': {
       id: '/module/stories/favorites'
       path: '/favorites'
@@ -1174,6 +1230,19 @@ const SubscribeRouteWithChildren = SubscribeRoute._addFileChildren(
   SubscribeRouteChildren,
 )
 
+interface VideosRouteChildren {
+  VideosIndexRoute: typeof VideosIndexRoute
+  VideosWatchVideoIdRoute: typeof VideosWatchVideoIdRoute
+}
+
+const VideosRouteChildren: VideosRouteChildren = {
+  VideosIndexRoute: VideosIndexRoute,
+  VideosWatchVideoIdRoute: VideosWatchVideoIdRoute,
+}
+
+const VideosRouteWithChildren =
+  VideosRoute._addFileChildren(VideosRouteChildren)
+
 interface ModuleAlphabetRouteChildren {
   ModuleAlphabetDictionaryRoute: typeof ModuleAlphabetDictionaryRoute
   ModuleAlphabetListenRoute: typeof ModuleAlphabetListenRoute
@@ -1311,6 +1380,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   SubscribeRoute: SubscribeRouteWithChildren,
   VictoryRoute: VictoryRoute,
+  VideosRoute: VideosRouteWithChildren,
   VoiceSettingsRoute: VoiceSettingsRoute,
   CertificateTypeRoute: CertificateTypeRoute,
   ModuleIdRoute: ModuleIdRoute,

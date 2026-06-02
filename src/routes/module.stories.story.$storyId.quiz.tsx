@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-r
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, X } from "lucide-react";
-import { getStory, STORY_QUIZZES, speak } from "@/lib/eduData";
+import { getStoryById, getStoryQuiz } from "@/data/stories";
+import { speak } from "@/lib/eduData";
 import { getChild, setChild } from "@/lib/storage";
 import { Leo } from "@/components/educ/Leo";
 
@@ -11,8 +12,8 @@ export const Route = createFileRoute("/module/stories/story/$storyId/quiz")({ co
 function StoryQuiz() {
   const { storyId } = useParams({ from: "/module/stories/story/$storyId/quiz" });
   const nav = useNavigate();
-  const story = getStory(storyId);
-  const questions = STORY_QUIZZES[storyId] ?? [];
+  const story = getStoryById(storyId);
+  const questions = getStoryQuiz(storyId);
   const [idx, setIdx] = useState(0);
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -89,7 +90,7 @@ function StoryQuiz() {
       <div className="mt-3 text-center text-[48px]">{q.emoji}</div>
 
       <div className="mx-4 mt-4 flex flex-col gap-3">
-        {q.options.map((opt, i) => {
+        {q.options.map((opt: string, i: number) => {
           const isThis = selected === i;
           const showCorrect = selected !== null && i === q.correct;
           const wrong = isThis && i !== q.correct;

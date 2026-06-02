@@ -30,6 +30,23 @@ export type ChildState = {
   creations: Creation[];
   completedFruits: string[];
   completedSyllableLevels: number[];
+  watchedVideos: string[];
+  gameHistory: GameSession[];
+  highScores: HighScores;
+};
+
+export type GameSession = {
+  gameId: string;
+  score: number;
+  starsEarned: number;
+  timestamp: string;
+};
+
+export type HighScores = {
+  memory: { moves: number; time: number; stars: number } | null;
+  find: { totalTime: number; stars: number } | null;
+  puzzle: { moves: number; stars: number } | null;
+  quiz: { score: number; maxStreak: number; stars: number } | null;
 };
 
 export type ParentState = {
@@ -61,6 +78,9 @@ const DEFAULT_CHILD: ChildState = {
   creations: [],
   completedFruits: [],
   completedSyllableLevels: [],
+  watchedVideos: [],
+  gameHistory: [],
+  highScores: { memory: null, find: null, puzzle: null, quiz: null },
 };
 
 const isBrowser = () => typeof window !== "undefined";
@@ -110,6 +130,26 @@ export function addCreation(cr: Omit<Creation, "id" | "timestamp">) {
 export function removeCreation(id: string) {
   const c = getChild();
   return setChild({ creations: c.creations.filter((x) => x.id !== id) });
+}
+
+export function addWatchedVideo(videoId: string) {
+  const c = getChild();
+  if (c.watchedVideos.includes(videoId)) return c;
+  return setChild({ watchedVideos: [...c.watchedVideos, videoId] });
+}
+
+export function recordGameSession(gameId: string, score: number, starsEarned: number) {
+  const c = getChild();
+  const next: GameSession = { gameId, score, starsEarned, timestamp: new Date().toISOString() };
+  return setChild({
+    gameHistory: [next, ...c.gameHistory].slice(0, 30),
+    stars: c.stars + starsEarned,
+  });
+}
+
+export function saveHighScore<K extends keyof HighScores>(key: K, value: HighScores[K]) {
+  const c = getChild();
+  return setChild({ highScores: { ...c.highScores, [key]: value } });
 }
 
 export function getParent(): ParentState {

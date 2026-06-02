@@ -2,14 +2,14 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, Clock, Heart } from "lucide-react";
-import { STORIES } from "@/lib/eduData";
+import { STORIES_DATA as STORIES } from "@/data/stories";
 import { getChild, toggleFavoriteStory } from "@/lib/storage";
 import { BottomNav } from "@/components/educ/BottomNav";
 import { Leo } from "@/components/educ/Leo";
 
 export const Route = createFileRoute("/module/stories/")({ component: StoriesModule });
 
-const CATEGORIES = ["Toutes", "Contes africains", "Bible", "Fables", "Imaginaires"];
+const CATEGORIES = ["Toutes", "Conte africain", "Histoire biblique", "Fable", "EducEnfant Original"];
 
 function StoriesModule() {
   const [cat, setCat] = useState("Toutes");

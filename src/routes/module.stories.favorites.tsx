@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Heart, Clock, Star } from "lucide-react";
-import { STORIES } from "@/lib/eduData";
+import { STORIES_DATA as STORIES } from "@/data/stories";
 import { getChild } from "@/lib/storage";
 import { Leo } from "@/components/educ/Leo";
 import { BottomNav } from "@/components/educ/BottomNav";
