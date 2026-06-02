@@ -132,6 +132,26 @@ export function removeCreation(id: string) {
   return setChild({ creations: c.creations.filter((x) => x.id !== id) });
 }
 
+export function addWatchedVideo(videoId: string) {
+  const c = getChild();
+  if (c.watchedVideos.includes(videoId)) return c;
+  return setChild({ watchedVideos: [...c.watchedVideos, videoId] });
+}
+
+export function recordGameSession(gameId: string, score: number, starsEarned: number) {
+  const c = getChild();
+  const next: GameSession = { gameId, score, starsEarned, timestamp: new Date().toISOString() };
+  return setChild({
+    gameHistory: [next, ...c.gameHistory].slice(0, 30),
+    stars: c.stars + starsEarned,
+  });
+}
+
+export function saveHighScore<K extends keyof HighScores>(key: K, value: HighScores[K]) {
+  const c = getChild();
+  return setChild({ highScores: { ...c.highScores, [key]: value } });
+}
+
 export function getParent(): ParentState {
   return read<ParentState>(KEYS.parent, { firstName: "", email: "", isLoggedIn: false, plan: "free" });
 }
