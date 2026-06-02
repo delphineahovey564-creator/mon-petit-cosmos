@@ -1,119 +1,169 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowLeft, Bookmark, Play, Pause, BookOpen } from "lucide-react";
-import { getStory, speak } from "@/lib/eduData";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, ChevronLeft, ChevronRight, Play, Volume2, VolumeX } from "lucide-react";
+import { getStoryById, getStoryQuiz, type Story } from "@/data/stories";
 import { getChild, setChild } from "@/lib/storage";
+import { speak } from "@/lib/audio";
 
 export const Route = createFileRoute("/module/stories/story/$storyId/")({ component: StoryReader });
 
 function StoryReader() {
   const { storyId } = useParams({ from: "/module/stories/story/$storyId/" });
-  const story = getStory(storyId);
+  const story = getStoryById(storyId);
   const nav = useNavigate();
-  const [playing, setPlaying] = useState(false);
-  const [activeWord, setActiveWord] = useState(-1);
-  const [speed, setSpeed] = useState<0.7 | 1 | 1.3>(1);
-  const [soloMode, setSoloMode] = useState(false);
-  const [tappedIdx, setTappedIdx] = useState(-1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [autoRead, setAutoRead] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const touchStart = useRef<number | null>(null);
 
   if (!story) {
-    return <div className="min-h-screen grid place-items-center bg-[#FFF9F0]"><p className="font-bold">Histoire introuvable</p></div>;
+    return (
+      <div className="min-h-screen grid place-items-center bg-[#FFF9F0]">
+        <p className="font-bold">Histoire introuvable</p>
+        <Link to="/module/stories" className="text-edu-primary font-bold mt-2">← Retour</Link>
+      </div>
+    );
   }
 
-  const words = story.content.split(/\s+/);
+  const page = story.content[currentPage];
+  const total = story.content.length;
+  const isLast = currentPage === total - 1;
 
-  function play() {
+  function readPage(text: string) {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(story!.content);
-    u.lang = "fr-FR"; u.rate = speed; u.pitch = 1.1;
-    let idx = 0;
-    u.onboundary = (e) => { if (e.name === "word") { setActiveWord(idx); idx++; } };
-    u.onend = () => { setPlaying(false); setActiveWord(-1); };
+    setIsPlaying(true);
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "fr-FR"; u.rate = 0.75; u.pitch = 1.15;
+    u.onend = () => {
+      setIsPlaying(false);
+      if (autoRead) setTimeout(() => goNext(), 1000);
+    };
     window.speechSynthesis.speak(u);
-    setPlaying(true);
   }
-  function pause() { window.speechSynthesis?.cancel(); setPlaying(false); }
-  function cycleSpeed() { setSpeed((s) => (s === 1 ? 0.7 : s === 0.7 ? 1.3 : 1)); }
+
+  useEffect(() => {
+    if (!autoRead) return;
+    const t = setTimeout(() => readPage(page.text), 800);
+    return () => { clearTimeout(t); window.speechSynthesis?.cancel(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, autoRead]);
+
+  function goNext() {
+    if (isLast) return finish();
+    setCurrentPage((p) => Math.min(total - 1, p + 1));
+  }
+  function goPrev() { setCurrentPage((p) => Math.max(0, p - 1)); }
+
   function finish() {
     const c = getChild();
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
     setChild({
       stars: c.stars + story!.stars,
       progress: { ...c.progress, stories: Math.min(100, c.progress.stories + 8) },
-      activities: [{ id: Date.now().toString(), moduleId: "stories", title: `Histoire : ${story!.title}`, starsEarned: story!.stars, timestamp: new Date().toISOString() }, ...c.activities].slice(0, 20),
+      activities: [
+        { id: Date.now().toString(), moduleId: "stories", title: `Histoire : ${story!.title}`, starsEarned: story!.stars, timestamp: new Date().toISOString() },
+        ...c.activities,
+      ].slice(0, 20),
     });
-    nav({ to: "/victory", search: { moduleName: "Histoires", starsEarned: story!.stars, achievementText: `Tu as lu "${story!.title}" !`, nextRoute: "/module/stories" } });
+    const hasQuiz = (getStoryQuiz(story!.id) || []).length > 0;
+    nav({ to: hasQuiz ? "/module/stories/story/$storyId/quiz" : "/victory",
+      params: hasQuiz ? { storyId: story!.id } : undefined as any,
+      search: hasQuiz ? undefined : { moduleName: "Histoires", starsEarned: story!.stars, achievementText: `Tu as lu "${story!.title}" !`, nextRoute: "/module/stories" } as any });
+  }
+
+  function onTouchStart(e: React.TouchEvent) { touchStart.current = e.touches[0].clientX; }
+  function onTouchEnd(e: React.TouchEvent) {
+    if (touchStart.current == null) return;
+    const dx = e.changedTouches[0].clientX - touchStart.current;
+    if (Math.abs(dx) > 60) { dx < 0 ? goNext() : goPrev(); }
+    touchStart.current = null;
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF9F0] pb-32">
+    <div className="min-h-screen bg-[#FFF9F0] pb-28" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      {/* progress bar */}
+      <div className="h-1 w-full bg-[#F3F4F6]">
+        <motion.div className="h-full bg-edu-primary" animate={{ width: `${((currentPage + 1) / total) * 100}%` }} transition={{ duration: 0.4 }} />
+      </div>
+
       <header className="h-14 px-4 flex items-center justify-between bg-white border-b border-[#F3F4F6]">
         <button onClick={() => nav({ to: "/module/stories" })}><ArrowLeft size={24} color="#FF6B35" /></button>
         <h1 className="font-bold text-[16px] text-[#1A1A2E] truncate max-w-[60%]">{story.title}</h1>
-        <button><Bookmark size={22} color="#9CA3AF" /></button>
+        <button onClick={() => setAutoRead((v) => !v)} aria-label="Lecture auto">
+          {autoRead ? <Volume2 size={22} color="#FF6B35" /> : <VolumeX size={22} color="#9CA3AF" />}
+        </button>
       </header>
 
-      <div className="mx-4 mt-4 rounded-[24px] p-6 text-center" style={{ background: story.bg, minHeight: 180 }}>
-        <div className="text-[64px] leading-none">{story.emoji}</div>
-        <h2 className="mt-3 font-black text-[22px] text-[#1A1A2E]">{story.title}</h2>
-        <span className="inline-block mt-2 bg-white text-[#6B7280] font-bold text-[10px] rounded-full px-2 py-0.5">{story.category}</span>
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div key={currentPage}
+          initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -30, opacity: 0 }}
+          transition={{ duration: 0.3 }}>
 
-      <div className="mx-4 mt-4 bg-white rounded-[20px] shadow-edu-card p-4 flex items-center gap-3">
-        <button onClick={playing ? pause : play} disabled={soloMode}
-          className="w-14 h-14 rounded-full bg-edu-primary text-white grid place-items-center shadow-edu-btn"
-          style={{ opacity: soloMode ? 0.3 : 1 }}>
-          {playing ? <Pause size={24} /> : <Play size={24} fill="white" />}
-        </button>
-        <div className="flex-1">
-          <div className="h-1.5 rounded-full bg-[#F3F4F6] overflow-hidden">
-            <div className="h-full bg-edu-primary" style={{ width: `${activeWord >= 0 ? (activeWord / words.length) * 100 : 0}%` }} />
-          </div>
-          <p className="mt-1 text-[12px] text-[#9CA3AF] font-medium">{story.duration}</p>
-        </div>
-        <button onClick={cycleSpeed} className="px-3 py-1.5 rounded-full border-[1.5px] border-[#E5E7EB] font-bold text-[12px]">{speed}×</button>
-      </div>
-
-      <div className="mx-4 mt-3 bg-white rounded-[14px] shadow-edu-card p-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BookOpen size={16} color="#6B7280" />
-          <span className="font-semibold text-[14px] text-[#6B7280]">Lire tout seul</span>
-        </div>
-        <button onClick={() => setSoloMode((v) => !v)} className="relative w-11 h-6 rounded-full transition-colors" style={{ background: soloMode ? "#FF6B35" : "#E5E7EB" }}>
-          <span className="absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all" style={{ left: soloMode ? "22px" : "2px" }} />
-        </button>
-      </div>
-
-      <div className="mx-4 mt-4 bg-white rounded-[20px] shadow-edu-card p-5">
-        <div className="flex flex-wrap gap-1 leading-[1.8]">
-          {words.map((w, i) => (
-            <span key={i}
-              onClick={() => { if (soloMode) { speak(w.replace(/[.,!?]/g, ""), { rate: 0.7 }); setTappedIdx(i); setTimeout(() => setTappedIdx(-1), 500); } }}
-              className={`text-[16px] font-semibold transition-colors ${soloMode ? "cursor-pointer" : ""} ${i === activeWord || i === tappedIdx ? "bg-[#FFE14D] rounded font-bold px-1" : "text-[#1A1A2E]"}`}>
-              {w}
+          {/* illustration */}
+          <div className="relative mx-4 mt-4 rounded-[20px] grid place-items-center" style={{ background: story.bg, height: 180 }}>
+            <span className="text-[80px] leading-none">{page.illustration}</span>
+            <span className="absolute top-2 right-2 bg-white text-[#1A1A2E] font-extrabold text-[12px] rounded-full px-2.5 py-1 shadow-edu-card">
+              {currentPage + 1} / {total}
             </span>
+          </div>
+
+          {/* text */}
+          <div className="relative mx-4 mt-3 bg-white rounded-[20px] shadow-edu-card p-5 pr-16">
+            <PageText text={page.text} highlight={page.highlightWord} />
+            <button onClick={() => readPage(page.text)}
+              className="absolute right-3 top-3 w-[52px] h-[52px] rounded-full bg-edu-primary text-white grid place-items-center shadow-edu-btn active:scale-95"
+              aria-label="Écouter">
+              <Play size={22} fill="white" className={isPlaying ? "animate-pulse" : ""} />
+            </button>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* nav controls */}
+      <div className="mx-4 mt-5 flex items-center justify-between">
+        <button onClick={goPrev} disabled={currentPage === 0}
+          className="w-12 h-12 rounded-full bg-white shadow-edu-card grid place-items-center disabled:opacity-30">
+          <ChevronLeft size={24} color="#FF6B35" />
+        </button>
+        <div className="flex items-center gap-1.5">
+          {story.content.map((_, i) => (
+            <button key={i} onClick={() => setCurrentPage(i)}
+              className="rounded-full transition-all"
+              style={{ width: i === currentPage ? 18 : 8, height: 8, background: i === currentPage ? "#FF6B35" : "#E5E7EB" }} />
           ))}
         </div>
-      </div>
-
-      <div className="mx-4 mt-4 rounded-[20px] p-5" style={{ background: "linear-gradient(135deg,#1A1A2E,#2D3748)" }}>
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <span className="inline-block bg-edu-primary text-white font-bold text-[10px] uppercase rounded-full px-2 py-0.5">Quiz</span>
-            <p className="mt-1 font-extrabold text-[16px] text-white">Tu as bien lu ?</p>
-            <p className="font-medium text-[13px] text-white/70">Teste ta compréhension !</p>
-          </div>
-          <Link to="/module/stories/story/$storyId/quiz" params={{ storyId }} className="shrink-0 bg-edu-primary text-white rounded-[12px] px-4 py-2.5 font-bold text-[13px]">
-            Commencer →
-          </Link>
-        </div>
-      </div>
-
-      <div className="mx-4 mt-6">
-        <button onClick={finish} className="w-full h-[52px] rounded-xl bg-edu-primary text-white font-extrabold shadow-edu-btn">
-          J'ai terminé ! ✓
+        <button onClick={goNext}
+          className="w-12 h-12 rounded-full bg-edu-primary text-white grid place-items-center shadow-edu-btn active:scale-95">
+          <ChevronRight size={24} />
         </button>
       </div>
+
+      {isLast && (
+        <div className="mx-4 mt-5">
+          <button onClick={finish} className="w-full h-[52px] rounded-xl bg-edu-primary text-white font-extrabold shadow-edu-btn active:scale-95">
+            {(getStoryQuiz(story.id) || []).length ? "Quiz de l'histoire →" : "J'ai terminé ! ✓"}
+          </button>
+          <p className="mt-3 text-center text-[13px] text-[#6B7280] font-semibold italic">« {story.moral} »</p>
+        </div>
+      )}
     </div>
+  );
+}
+
+function PageText({ text, highlight }: { text: string; highlight?: string }) {
+  const words = text.split(/(\s+)/);
+  const hl = highlight?.toLowerCase().split(/[ ,]+/).filter(Boolean) ?? [];
+  return (
+    <p className="text-[17px] text-[#1A1A2E] font-semibold" style={{ lineHeight: 1.9 }}>
+      {words.map((w, i) => {
+        const clean = w.replace(/[.,!?"']/g, "").toLowerCase();
+        const isHl = hl.includes(clean);
+        return isHl ? (
+          <span key={i} className="font-extrabold rounded px-1" style={{ background: "#FFE14D" }}>{w}</span>
+        ) : <span key={i}>{w}</span>;
+      })}
+    </p>
   );
 }
