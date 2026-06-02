@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VoiceSettingsRouteImport } from './routes/voice-settings'
+import { Route as VideosRouteImport } from './routes/videos'
 import { Route as VictoryRouteImport } from './routes/victory'
 import { Route as SubscribeRouteImport } from './routes/subscribe'
 import { Route as SplashRouteImport } from './routes/splash'
@@ -71,6 +72,11 @@ import { Route as ModuleStoriesStoryStoryIdQuizRouteImport } from './routes/modu
 const VoiceSettingsRoute = VoiceSettingsRouteImport.update({
   id: '/voice-settings',
   path: '/voice-settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideosRoute = VideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VictoryRoute = VictoryRouteImport.update({
@@ -382,6 +388,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/videos': typeof VideosRoute
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
@@ -442,6 +449,7 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/videos': typeof VideosRoute
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
@@ -496,6 +504,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
+  '/videos': typeof VideosRoute
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
@@ -558,6 +567,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
@@ -618,6 +628,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
@@ -671,6 +682,7 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
+    | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
@@ -732,6 +744,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   SubscribeRoute: typeof SubscribeRouteWithChildren
   VictoryRoute: typeof VictoryRoute
+  VideosRoute: typeof VideosRoute
   VoiceSettingsRoute: typeof VoiceSettingsRoute
   CertificateTypeRoute: typeof CertificateTypeRoute
   ModuleIdRoute: typeof ModuleIdRoute
@@ -758,6 +771,13 @@ declare module '@tanstack/react-router' {
       path: '/voice-settings'
       fullPath: '/voice-settings'
       preLoaderRoute: typeof VoiceSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/videos': {
+      id: '/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof VideosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/victory': {
@@ -1311,6 +1331,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   SubscribeRoute: SubscribeRouteWithChildren,
   VictoryRoute: VictoryRoute,
+  VideosRoute: VideosRoute,
   VoiceSettingsRoute: VoiceSettingsRoute,
   CertificateTypeRoute: CertificateTypeRoute,
   ModuleIdRoute: ModuleIdRoute,
