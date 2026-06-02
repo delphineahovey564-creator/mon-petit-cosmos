@@ -27,6 +27,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VideosIndexRouteImport } from './routes/videos.index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
 import { Route as SubscribeSuccessRouteImport } from './routes/subscribe.success'
 import { Route as ParentTourRouteImport } from './routes/parent.tour'
@@ -158,6 +159,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const VideosIndexRoute = VideosIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VideosRoute,
 } as any)
 const ParentIndexRoute = ParentIndexRouteImport.update({
   id: '/parent/',
@@ -388,7 +394,7 @@ export interface FileRoutesByFullPath {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
-  '/videos': typeof VideosRoute
+  '/videos': typeof VideosRouteWithChildren
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
@@ -407,6 +413,7 @@ export interface FileRoutesByFullPath {
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent/': typeof ParentIndexRoute
+  '/videos/': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
@@ -449,7 +456,6 @@ export interface FileRoutesByTo {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
-  '/videos': typeof VideosRoute
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
@@ -462,6 +468,7 @@ export interface FileRoutesByTo {
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent': typeof ParentIndexRoute
+  '/videos': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
@@ -504,7 +511,7 @@ export interface FileRoutesById {
   '/splash': typeof SplashRoute
   '/subscribe': typeof SubscribeRouteWithChildren
   '/victory': typeof VictoryRoute
-  '/videos': typeof VideosRoute
+  '/videos': typeof VideosRouteWithChildren
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
   '/module/$id': typeof ModuleIdRoute
@@ -523,6 +530,7 @@ export interface FileRoutesById {
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
   '/parent/': typeof ParentIndexRoute
+  '/videos/': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
   '/module/alphabet/listen': typeof ModuleAlphabetListenRoute
   '/module/alphabet/review': typeof ModuleAlphabetReviewRoute
@@ -586,6 +594,7 @@ export interface FileRouteTypes {
     | '/parent/tour'
     | '/subscribe/success'
     | '/parent/'
+    | '/videos/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
@@ -628,7 +637,6 @@ export interface FileRouteTypes {
     | '/splash'
     | '/subscribe'
     | '/victory'
-    | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
     | '/module/$id'
@@ -641,6 +649,7 @@ export interface FileRouteTypes {
     | '/parent/tour'
     | '/subscribe/success'
     | '/parent'
+    | '/videos'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
@@ -701,6 +710,7 @@ export interface FileRouteTypes {
     | '/parent/tour'
     | '/subscribe/success'
     | '/parent/'
+    | '/videos/'
     | '/module/alphabet/dictionary'
     | '/module/alphabet/listen'
     | '/module/alphabet/review'
@@ -744,7 +754,7 @@ export interface RootRouteChildren {
   SplashRoute: typeof SplashRoute
   SubscribeRoute: typeof SubscribeRouteWithChildren
   VictoryRoute: typeof VictoryRoute
-  VideosRoute: typeof VideosRoute
+  VideosRoute: typeof VideosRouteWithChildren
   VoiceSettingsRoute: typeof VoiceSettingsRoute
   CertificateTypeRoute: typeof CertificateTypeRoute
   ModuleIdRoute: typeof ModuleIdRoute
@@ -891,6 +901,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/videos/': {
+      id: '/videos/'
+      path: '/'
+      fullPath: '/videos/'
+      preLoaderRoute: typeof VideosIndexRouteImport
+      parentRoute: typeof VideosRoute
     }
     '/parent/': {
       id: '/parent/'
@@ -1194,6 +1211,17 @@ const SubscribeRouteWithChildren = SubscribeRoute._addFileChildren(
   SubscribeRouteChildren,
 )
 
+interface VideosRouteChildren {
+  VideosIndexRoute: typeof VideosIndexRoute
+}
+
+const VideosRouteChildren: VideosRouteChildren = {
+  VideosIndexRoute: VideosIndexRoute,
+}
+
+const VideosRouteWithChildren =
+  VideosRoute._addFileChildren(VideosRouteChildren)
+
 interface ModuleAlphabetRouteChildren {
   ModuleAlphabetDictionaryRoute: typeof ModuleAlphabetDictionaryRoute
   ModuleAlphabetListenRoute: typeof ModuleAlphabetListenRoute
@@ -1331,7 +1359,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplashRoute: SplashRoute,
   SubscribeRoute: SubscribeRouteWithChildren,
   VictoryRoute: VictoryRoute,
-  VideosRoute: VideosRoute,
+  VideosRoute: VideosRouteWithChildren,
   VoiceSettingsRoute: VoiceSettingsRoute,
   CertificateTypeRoute: CertificateTypeRoute,
   ModuleIdRoute: ModuleIdRoute,
