@@ -90,7 +90,7 @@ function StoryQuiz() {
       <div className="mt-3 text-center text-[48px]">{q.emoji}</div>
 
       <div className="mx-4 mt-4 flex flex-col gap-3">
-        {q.options.map((opt, i) => {
+        {q.options.map((opt: string, i: number) => {
           const isThis = selected === i;
           const showCorrect = selected !== null && i === q.correct;
           const wrong = isThis && i !== q.correct;
