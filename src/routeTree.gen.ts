@@ -51,6 +51,7 @@ import { Route as ModuleNumbersIndexRouteImport } from './routes/module.numbers.
 import { Route as ModuleMathsIndexRouteImport } from './routes/module.maths.index'
 import { Route as ModuleFruitsIndexRouteImport } from './routes/module.fruits.index'
 import { Route as ModuleAlphabetIndexRouteImport } from './routes/module.alphabet.index'
+import { Route as VideosWatchVideoIdRouteImport } from './routes/videos.watch.$videoId'
 import { Route as ModuleStoriesFavoritesRouteImport } from './routes/module.stories.favorites'
 import { Route as ModuleNumbersSequenceRouteImport } from './routes/module.numbers.sequence'
 import { Route as ModuleNumbersCountRouteImport } from './routes/module.numbers.count'
@@ -280,6 +281,11 @@ const ModuleAlphabetIndexRoute = ModuleAlphabetIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ModuleAlphabetRoute,
 } as any)
+const VideosWatchVideoIdRoute = VideosWatchVideoIdRouteImport.update({
+  id: '/watch/$videoId',
+  path: '/watch/$videoId',
+  getParentRoute: () => VideosRoute,
+} as any)
 const ModuleStoriesFavoritesRoute = ModuleStoriesFavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
@@ -424,6 +430,7 @@ export interface FileRoutesByFullPath {
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
+  '/videos/watch/$videoId': typeof VideosWatchVideoIdRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
   '/module/fruits/': typeof ModuleFruitsIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
@@ -479,6 +486,7 @@ export interface FileRoutesByTo {
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
+  '/videos/watch/$videoId': typeof VideosWatchVideoIdRoute
   '/module/alphabet': typeof ModuleAlphabetIndexRoute
   '/module/fruits': typeof ModuleFruitsIndexRoute
   '/module/maths': typeof ModuleMathsIndexRoute
@@ -541,6 +549,7 @@ export interface FileRoutesById {
   '/module/numbers/count': typeof ModuleNumbersCountRoute
   '/module/numbers/sequence': typeof ModuleNumbersSequenceRoute
   '/module/stories/favorites': typeof ModuleStoriesFavoritesRoute
+  '/videos/watch/$videoId': typeof VideosWatchVideoIdRoute
   '/module/alphabet/': typeof ModuleAlphabetIndexRoute
   '/module/fruits/': typeof ModuleFruitsIndexRoute
   '/module/maths/': typeof ModuleMathsIndexRoute
@@ -605,6 +614,7 @@ export interface FileRouteTypes {
     | '/module/numbers/count'
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
+    | '/videos/watch/$videoId'
     | '/module/alphabet/'
     | '/module/fruits/'
     | '/module/maths/'
@@ -660,6 +670,7 @@ export interface FileRouteTypes {
     | '/module/numbers/count'
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
+    | '/videos/watch/$videoId'
     | '/module/alphabet'
     | '/module/fruits'
     | '/module/maths'
@@ -721,6 +732,7 @@ export interface FileRouteTypes {
     | '/module/numbers/count'
     | '/module/numbers/sequence'
     | '/module/stories/favorites'
+    | '/videos/watch/$videoId'
     | '/module/alphabet/'
     | '/module/fruits/'
     | '/module/maths/'
@@ -1070,6 +1082,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleAlphabetIndexRouteImport
       parentRoute: typeof ModuleAlphabetRoute
     }
+    '/videos/watch/$videoId': {
+      id: '/videos/watch/$videoId'
+      path: '/watch/$videoId'
+      fullPath: '/videos/watch/$videoId'
+      preLoaderRoute: typeof VideosWatchVideoIdRouteImport
+      parentRoute: typeof VideosRoute
+    }
     '/module/stories/favorites': {
       id: '/module/stories/favorites'
       path: '/favorites'
@@ -1213,10 +1232,12 @@ const SubscribeRouteWithChildren = SubscribeRoute._addFileChildren(
 
 interface VideosRouteChildren {
   VideosIndexRoute: typeof VideosIndexRoute
+  VideosWatchVideoIdRoute: typeof VideosWatchVideoIdRoute
 }
 
 const VideosRouteChildren: VideosRouteChildren = {
   VideosIndexRoute: VideosIndexRoute,
+  VideosWatchVideoIdRoute: VideosWatchVideoIdRoute,
 }
 
 const VideosRouteWithChildren =
