@@ -142,6 +142,24 @@ function Home() {
           </div>
         </section>
 
+        {/* Quick actions */}
+        <section className="px-4 mt-3 grid grid-cols-2 gap-3">
+          <Link to="/games" className="rounded-[18px] p-4 text-white shadow-edu-card flex items-center gap-3" style={{ background: "linear-gradient(135deg,#FF6B35,#FF8C42)" }}>
+            <span className="text-[28px]">🎮</span>
+            <div>
+              <p className="font-extrabold text-[14px] leading-tight">Mini-jeux</p>
+              <p className="font-semibold text-[11px] opacity-90">4 jeux fun</p>
+            </div>
+          </Link>
+          <Link to="/videos" className="rounded-[18px] p-4 text-white shadow-edu-card flex items-center gap-3" style={{ background: "linear-gradient(135deg,#2EC4B6,#26A69A)" }}>
+            <span className="text-[28px]">📺</span>
+            <div>
+              <p className="font-extrabold text-[14px] leading-tight">Vidéos</p>
+              <p className="font-semibold text-[11px] opacity-90">Apprends en regardant</p>
+            </div>
+          </Link>
+        </section>
+
         {/* Section header */}
         <div className="px-5 mt-6 flex items-center justify-between">
           <h2 className="text-edu-dark font-extrabold text-[22px]">Mes activités</h2>
