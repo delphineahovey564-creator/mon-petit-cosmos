@@ -7,13 +7,15 @@ export interface VoiceProfile {
   description: string;
   emoji: string;
   color: string;
+  gender: "male" | "female";
 }
 
+// Default = Léo (male) so variety is obvious at first launch
 export const VOICE_PROFILES: VoiceProfile[] = [
-  { name: "auto_fr",         displayName: "Léo 🦁",    lang: "fr-FR", pitch: 1.4, rate: 0.75, description: "Voix douce et lente",     emoji: "🦁", color: "#FFB3BA" },
-  { name: "auto_fr_fast",    displayName: "Stella ⭐", lang: "fr-FR", pitch: 1.6, rate: 0.9,  description: "Voix vive et joyeuse",    emoji: "⭐", color: "#FFE14D" },
-  { name: "auto_fr_deep",    displayName: "Max 🐻",    lang: "fr-FR", pitch: 0.9, rate: 0.7,  description: "Voix grave et calme",     emoji: "🐻", color: "#B5EAD7" },
-  { name: "auto_fr_whisper", displayName: "Luna 🌙",   lang: "fr-FR", pitch: 1.2, rate: 0.65, description: "Voix douce et posée",     emoji: "🌙", color: "#C7CEEA" },
+  { name: "leo",    displayName: "Léo 🦁",    lang: "fr-FR", pitch: 0.80, rate: 0.78, description: "Voix grave et rassurante", emoji: "🦁", color: "#FFB3BA", gender: "male"   },
+  { name: "max",    displayName: "Max 🐻",    lang: "fr-FR", pitch: 0.70, rate: 0.75, description: "Voix profonde et calme",   emoji: "🐻", color: "#B5EAD7", gender: "male"   },
+  { name: "stella", displayName: "Stella ⭐", lang: "fr-FR", pitch: 1.55, rate: 0.85, description: "Voix vive et joyeuse",     emoji: "⭐", color: "#FFE14D", gender: "female" },
+  { name: "luna",   displayName: "Luna 🌙",   lang: "fr-FR", pitch: 1.25, rate: 0.72, description: "Voix douce et posée",      emoji: "🌙", color: "#C7CEEA", gender: "female" },
 ];
 
 const KEY = "educenfant_voice_profile";
@@ -67,14 +69,20 @@ class AudioEngine {
     } catch {}
   }
 
-  private getBestVoice(lang: string): SpeechSynthesisVoice | null {
-    let voice = this.voices.find((v) => v.lang === lang);
-    if (!voice) voice = this.voices.find((v) => v.lang.startsWith(lang.split("-")[0]));
-    return voice || this.voices[0] || null;
+  getBestVoice(gender: "male" | "female" = "female"): SpeechSynthesisVoice | null {
+    if (this.voices.length === 0) return null;
+    const female = ["female", "femme", "féminin", "amelie", "amélie", "alice", "marie", "julie", "audrey", "céline"];
+    const male   = ["male", "homme", "masculin", "thomas", "pierre", "jean", "nicolas", "henri", "google french male"];
+    const kw = gender === "female" ? female : male;
+    const fr = this.voices.filter((v) => v.lang.toLowerCase().startsWith("fr"));
+    const match = fr.find((v) => kw.some((k) => v.name.toLowerCase().includes(k)));
+    if (match) return match;
+    return fr[0] || this.voices[0] || null;
   }
 
   speak(text: string, options?: { lang?: string; pitch?: number; rate?: number; onEnd?: () => void; onStart?: () => void }): void {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    if (!text?.trim()) return;
     try {
       window.speechSynthesis.cancel();
       const p = this.selectedProfile;
@@ -84,13 +92,16 @@ class AudioEngine {
       u.rate = options?.rate ?? p.rate;
       u.volume = 1.0;
       if (this.voices.length > 0) {
-        const v = this.getBestVoice(u.lang);
+        const v = this.getBestVoice(p.gender);
         if (v) u.voice = v;
       }
       if (options?.onStart) u.onstart = options.onStart;
       if (options?.onEnd) u.onend = options.onEnd;
-      u.onerror = (e) => console.warn("[Audio] Speech error:", e.error);
-      setTimeout(() => window.speechSynthesis.speak(u), 100);
+      u.onerror = (e) => {
+        if (e.error !== "canceled" && e.error !== "interrupted") console.warn("[Audio]", e.error);
+      };
+      const delay = this.isMobile ? 150 : 50;
+      setTimeout(() => { try { window.speechSynthesis.speak(u); } catch {} }, delay);
     } catch {}
   }
 
