@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ChevronLeft, ChevronRight, Play, Volume2, VolumeX } from "lucide-react";
-import { getStoryById, getStoryQuiz, type Story } from "@/data/stories";
+import { ArrowLeft, ChevronLeft, ChevronRight, Pause, Play, Volume2, VolumeX } from "lucide-react";
+import { getStoryById, getStoryQuiz } from "@/data/stories";
 import { getChild, setChild } from "@/lib/storage";
-import { speak } from "@/lib/audio";
+import { storyAudio } from "@/lib/audio";
 
 export const Route = createFileRoute("/module/stories/story/$storyId/")({ component: StoryReader });
 
@@ -15,6 +15,7 @@ function StoryReader() {
   const [currentPage, setCurrentPage] = useState(0);
   const [autoRead, setAutoRead] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [activeWordIndex, setActiveWordIndex] = useState(-1);
   const touchStart = useRef<number | null>(null);
 
   if (!story) {
@@ -29,26 +30,44 @@ function StoryReader() {
   const page = story.content[currentPage];
   const total = story.content.length;
   const isLast = currentPage === total - 1;
+  const words = useMemo(() => page.text.split(/\s+/).filter(Boolean), [page]);
+  const hlSet = useMemo(() => {
+    const s = new Set<string>();
+    (page.highlightWord?.toLowerCase().split(/[ ,]+/).filter(Boolean) ?? []).forEach((w) => s.add(w));
+    return s;
+  }, [page]);
 
-  function readPage(text: string) {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    setIsPlaying(true);
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "fr-FR"; u.rate = 0.75; u.pitch = 1.15;
-    u.onend = () => {
+  function handlePlayPage() {
+    if (isPlaying) {
+      storyAudio.pause();
       setIsPlaying(false);
-      if (autoRead) setTimeout(() => goNext(), 1000);
-    };
-    window.speechSynthesis.speak(u);
+      return;
+    }
+    setIsPlaying(true);
+    storyAudio.play(
+      page.text,
+      (idx) => setActiveWordIndex(idx),
+      () => {
+        setIsPlaying(false);
+        setActiveWordIndex(-1);
+        if (autoRead && !isLast) setTimeout(() => goNext(), 1500);
+      },
+    );
   }
 
+  // Stop audio + auto-restart on page change
   useEffect(() => {
-    if (!autoRead) return;
-    const t = setTimeout(() => readPage(page.text), 800);
-    return () => { clearTimeout(t); window.speechSynthesis?.cancel(); };
+    storyAudio.stop();
+    setIsPlaying(false);
+    setActiveWordIndex(-1);
+    if (autoRead) {
+      const t = setTimeout(() => handlePlayPage(), 800);
+      return () => clearTimeout(t);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, autoRead]);
+  }, [currentPage]);
+
+  useEffect(() => () => storyAudio.stop(), []);
 
   function goNext() {
     if (isLast) return finish();
@@ -58,7 +77,7 @@ function StoryReader() {
 
   function finish() {
     const c = getChild();
-    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+    storyAudio.stop();
     setChild({
       stars: c.stars + story!.stars,
       progress: { ...c.progress, stories: Math.min(100, c.progress.stories + 8) },
@@ -109,14 +128,53 @@ function StoryReader() {
             </span>
           </div>
 
-          {/* text */}
-          <div className="relative mx-4 mt-3 bg-white rounded-[20px] shadow-edu-card p-5 pr-16">
-            <PageText text={page.text} highlight={page.highlightWord} />
-            <button onClick={() => readPage(page.text)}
-              className="absolute right-3 top-3 w-[52px] h-[52px] rounded-full bg-edu-primary text-white grid place-items-center shadow-edu-btn active:scale-95"
-              aria-label="Écouter">
-              <Play size={22} fill="white" className={isPlaying ? "animate-pulse" : ""} />
-            </button>
+          {/* text with word-by-word highlight */}
+          <div className="mx-4 mt-3 bg-white rounded-[20px] shadow-edu-card p-5">
+            <p className="text-[17px] text-[#1A1A2E] font-semibold" style={{ lineHeight: 1.9 }}>
+              {words.map((w, i) => {
+                const clean = w.replace(/[.,!?"']/g, "").toLowerCase();
+                const isActive = i === activeWordIndex;
+                const isHl = hlSet.has(clean);
+                return (
+                  <span
+                    key={i}
+                    className="rounded transition-colors"
+                    style={{
+                      background: isActive ? "#FFE14D" : isHl ? "#FFF3B0" : "transparent",
+                      padding: isActive || isHl ? "0 3px" : 0,
+                      fontWeight: isActive ? 800 : 600,
+                      marginRight: 4,
+                    }}
+                  >{w}</span>
+                );
+              })}
+            </p>
+          </div>
+
+          {/* audio control bar */}
+          <div className="mx-4 mt-3 bg-white rounded-[20px] shadow-edu-card p-3 flex items-center gap-3">
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              onClick={handlePlayPage}
+              className="w-[52px] h-[52px] rounded-full grid place-items-center text-white shrink-0"
+              style={{ background: isPlaying ? "#E55A2B" : "#FF6B35", boxShadow: "0 4px 12px rgba(255,107,53,0.3)" }}
+              aria-label={isPlaying ? "Pause" : "Lire"}
+            >
+              {isPlaying ? <Pause size={22} fill="white" /> : <Play size={22} fill="white" />}
+            </motion.button>
+            <div className="flex-1 min-w-0">
+              <div className="h-1.5 bg-[#F3F4F6] rounded-full overflow-hidden">
+                <motion.div className="h-full bg-edu-primary"
+                  animate={{ width: isPlaying && activeWordIndex >= 0 ? `${((activeWordIndex + 1) / words.length) * 100}%` : "0%" }}
+                  transition={{ duration: 0.15 }} />
+              </div>
+              <div className="flex justify-between mt-1">
+                <span className="text-[11px] text-[#9CA3AF] font-medium">
+                  {isPlaying ? "Lecture en cours…" : "Appuie pour écouter"}
+                </span>
+                <span className="text-[11px] text-[#9CA3AF]">{words.length} mots</span>
+              </div>
+            </div>
           </div>
         </motion.div>
       </AnimatePresence>
@@ -152,18 +210,3 @@ function StoryReader() {
   );
 }
 
-function PageText({ text, highlight }: { text: string; highlight?: string }) {
-  const words = text.split(/(\s+)/);
-  const hl = highlight?.toLowerCase().split(/[ ,]+/).filter(Boolean) ?? [];
-  return (
-    <p className="text-[17px] text-[#1A1A2E] font-semibold" style={{ lineHeight: 1.9 }}>
-      {words.map((w, i) => {
-        const clean = w.replace(/[.,!?"']/g, "").toLowerCase();
-        const isHl = hl.includes(clean);
-        return isHl ? (
-          <span key={i} className="font-extrabold rounded px-1" style={{ background: "#FFE14D" }}>{w}</span>
-        ) : <span key={i}>{w}</span>;
-      })}
-    </p>
-  );
-}

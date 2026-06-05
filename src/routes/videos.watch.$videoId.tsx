@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Youtube } from "lucide-react";
 import { getVideoById, getVideosByModule } from "@/data/videos";
 import { addWatchedVideo } from "@/lib/storage";
@@ -10,6 +10,7 @@ function VideoPlayer() {
   const { videoId } = useParams({ from: "/videos/watch/$videoId" });
   const video = getVideoById(videoId);
   const nav = useNavigate();
+  const [videoError, setVideoError] = useState(false);
   useEffect(() => { if (video) addWatchedVideo(video.id); }, [video]);
 
   if (!video) return <div className="min-h-screen grid place-items-center text-white bg-black"><Link to="/videos" className="text-edu-primary">← Retour</Link></div>;
@@ -25,12 +26,25 @@ function VideoPlayer() {
       </header>
 
       <div className="w-full" style={{ aspectRatio: "16/9" }}>
-        <iframe
-          src={`https://www.youtube.com/embed/${video.youtubeId}?rel=0&modestbranding=1&playsinline=1&controls=1&autoplay=1&origin=${origin}`}
-          className="w-full h-full border-0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen title={video.title}
-        />
+        {videoError ? (
+          <div className="w-full h-full bg-[#1A1A2E] rounded-2xl flex flex-col items-center justify-center gap-3 p-5">
+            <span className="text-5xl">📺</span>
+            <p className="text-white font-bold text-center text-[15px]">Vidéo non disponible pour le moment.</p>
+            <a
+              href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
+              target="_blank" rel="noopener noreferrer"
+              className="bg-[#FF0000] text-white rounded-xl px-5 py-2.5 font-bold text-[14px]"
+            >Ouvrir sur YouTube →</a>
+          </div>
+        ) : (
+          <iframe
+            src={`https://www.youtube.com/embed/${video.youtubeId}?rel=0&modestbranding=1&playsinline=1&controls=1&autoplay=1&origin=${origin}`}
+            className="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen title={video.title}
+            onError={() => setVideoError(true)}
+          />
+        )}
       </div>
 
       <div className="-mt-2 rounded-t-[24px] bg-[#FFF9F0] p-5 min-h-[60vh]">

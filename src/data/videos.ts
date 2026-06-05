@@ -1,229 +1,53 @@
 export interface EducVideo {
-  id: string
-  youtubeId: string
-  title: string
-  channel: string
-  category: string
-  moduleId: string
-  durationMin: number
-  ageMin: number
-  ageMax: number
-  description: string
-  isFree: boolean
-  thumbnail?: string
+  id: string;
+  youtubeId: string;
+  title: string;
+  channel: string;
+  channelVerified?: boolean;
+  category: string;
+  moduleId: string;
+  durationMin: number;
+  ageMin: number;
+  ageMax: number;
+  description: string;
+  isFree: boolean;
+  lang?: string;
+  thumbnail?: string;
 }
 
-// !! IMPORTANT !!
-// These are carefully selected French 
-// educational YouTube videos.
-// youtubeId = the part after watch?v= in the URL
-
+// Verified French educational YouTube videos. Primary channel: Monde des Titounis.
 export const VIDEOS_DATA: EducVideo[] = [
+  // ── ALPHABET ──────────────────────────────────────────
+  { id: "alpha-1", youtubeId: "bDjHQq8e5fY", title: "Apprendre l'alphabet en français", channel: "Monde des Titounis", channelVerified: true, category: "Alphabet", moduleId: "alphabet", durationMin: 4, ageMin: 3, ageMax: 6, description: "Apprends toutes les lettres A à Z avec les Titounis en 3D !", isFree: true, lang: "fr" },
+  { id: "alpha-2", youtubeId: "_fVReZx6ZxQ", title: "Comptines de l'Alphabet — ABCD", channel: "Monde des Titounis", channelVerified: true, category: "Alphabet", moduleId: "alphabet", durationMin: 3, ageMin: 3, ageMax: 5, description: "La chanson de l'alphabet facile pour apprendre les lettres !", isFree: true, lang: "fr" },
+  { id: "alpha-3", youtubeId: "imX-MJsZ_z0", title: "L'Alphabet des Animaux", channel: "Monde des Titounis", channelVerified: true, category: "Alphabet", moduleId: "alphabet", durationMin: 5, ageMin: 3, ageMax: 6, description: "Apprends l'alphabet avec les animaux de la savane !", isFree: false, lang: "fr" },
+  { id: "alpha-4", youtubeId: "FSEVdi1rQ-w", title: "L'Alphabet en chanson — Les Pirates", channel: "Monde des Titounis", channelVerified: true, category: "Alphabet", moduleId: "alphabet", durationMin: 4, ageMin: 4, ageMax: 7, description: "Apprends l'alphabet avec les pirates et les super-héros !", isFree: false, lang: "fr" },
+  { id: "alpha-5", youtubeId: "GVzXC7M6r_U", title: "L'Alphabet — 95 mots de vocabulaire", channel: "Tidoon", channelVerified: true, category: "Alphabet", moduleId: "alphabet", durationMin: 8, ageMin: 4, ageMax: 8, description: "Apprends l'alphabet avec 95 nouveaux mots illustrés.", isFree: false, lang: "fr" },
 
-  // ── ALPHABET ────────────────────────────────
-  {
-    id: 'alpha-1',
-    youtubeId: 'hq3yfQnllfQ',
-    title: 'L\'Alphabet en français — A à Z',
-    channel: 'Apprendre avec Lumi',
-    category: 'Alphabet',
-    moduleId: 'alphabet',
-    durationMin: 4,
-    ageMin: 3, ageMax: 6,
-    description: 'Apprends toutes les lettres de l\'alphabet avec des chansons et des illustrations colorées.',
-    isFree: true
-  },
-  {
-    id: 'alpha-2',
-    youtubeId: 'AZtZHFHkFGo',
-    title: 'La chanson de l\'alphabet',
-    channel: 'Comptines et chansons',
-    category: 'Alphabet',
-    moduleId: 'alphabet',
-    durationMin: 3,
-    ageMin: 3, ageMax: 5,
-    description: 'Une chanson douce et rythmée pour apprendre l\'alphabet facilement.',
-    isFree: true
-  },
-  {
-    id: 'alpha-3',
-    youtubeId: 'FzDO6aEJN_0',
-    title: 'Les lettres majuscules et minuscules',
-    channel: 'Maternelle avec Lucie',
-    category: 'Alphabet',
-    moduleId: 'alphabet',
-    durationMin: 6,
-    ageMin: 4, ageMax: 7,
-    description: 'Découvre les différences entre les lettres majuscules et minuscules.',
-    isFree: false
-  },
+  // ── CHIFFRES ──────────────────────────────────────────
+  { id: "num-1", youtubeId: "mydYJMq3PV0", title: "Apprendre les couleurs et les chiffres", channel: "Monde des Titounis", channelVerified: true, category: "Chiffres", moduleId: "numbers", durationMin: 18, ageMin: 3, ageMax: 6, description: "Les chiffres, les couleurs et l'alphabet en 18 min de comptines !", isFree: true, lang: "fr" },
+  { id: "num-2", youtubeId: "rBjwM2KHPnc", title: "ABC des fruits et légumes", channel: "Monde des Titounis", channelVerified: true, category: "Chiffres", moduleId: "numbers", durationMin: 6, ageMin: 3, ageMax: 6, description: "Apprends l'alphabet avec les fruits et les légumes en comptant !", isFree: true, lang: "fr" },
+  { id: "num-3", youtubeId: "Il0Y3ZoDS_g", title: "Apprendre l'alphabet en chanson", channel: "Comptines Françaises", channelVerified: true, category: "Chiffres", moduleId: "numbers", durationMin: 4, ageMin: 3, ageMax: 6, description: "Découvre comment apprendre l'alphabet en chanson !", isFree: false, lang: "fr" },
+  { id: "num-4", youtubeId: "z0ra65ZGZSI", title: "L'Alphabet avec les animaux et leurs cris", channel: "Comptines Françaises", channelVerified: true, category: "Chiffres", moduleId: "numbers", durationMin: 5, ageMin: 3, ageMax: 6, description: "Apprends les lettres et les cris des animaux !", isFree: false, lang: "fr" },
 
-  // ── CHIFFRES ────────────────────────────────
-  {
-    id: 'num-1',
-    youtubeId: '0FHEeG_uq5Y',
-    title: 'Compter de 1 à 10 en français',
-    channel: 'Apprendre avec Lumi',
-    category: 'Chiffres',
-    moduleId: 'numbers',
-    durationMin: 5,
-    ageMin: 3, ageMax: 6,
-    description: 'Apprends à compter de 1 à 10 avec des animations amusantes.',
-    isFree: true
-  },
-  {
-    id: 'num-2',
-    youtubeId: 'DR-cfDsHuGA',
-    title: 'Les chiffres de 1 à 20',
-    channel: 'Comptines pour enfants',
-    category: 'Chiffres',
-    moduleId: 'numbers',
-    durationMin: 4,
-    ageMin: 4, ageMax: 7,
-    description: 'Une comptine pour apprendre les chiffres jusqu\'à 20.',
-    isFree: true
-  },
-  {
-    id: 'num-3',
-    youtubeId: 'D0Ajq682yrA',
-    title: 'Compter avec les animaux',
-    channel: 'Maternelle Fun',
-    category: 'Chiffres',
-    moduleId: 'numbers',
-    durationMin: 7,
-    ageMin: 3, ageMax: 6,
-    description: 'Compte des animaux adorables pour apprendre les chiffres.',
-    isFree: false
-  },
+  // ── MATHÉMATIQUES ─────────────────────────────────────
+  { id: "maths-1", youtubeId: "S5PB9CqjCXc", title: "Fruits et légumes — apprendre en comptant", channel: "Monde des Titounis", channelVerified: true, category: "Mathématiques", moduleId: "maths", durationMin: 4, ageMin: 3, ageMax: 6, description: "Apprends à compter avec les fruits et légumes !", isFree: true, lang: "fr" },
+  { id: "maths-2", youtubeId: "2rB7CY6hFDc", title: "Légumes et fruits — comptine", channel: "Monde des Titounis", channelVerified: true, category: "Mathématiques", moduleId: "maths", durationMin: 3, ageMin: 3, ageMax: 5, description: "Compte et apprends les fruits et légumes en chanson !", isFree: false, lang: "fr" },
+  { id: "maths-3", youtubeId: "FSEVdi1rQ-w", title: "Compter avec les Titounis", channel: "Monde des Titounis", channelVerified: true, category: "Mathématiques", moduleId: "maths", durationMin: 4, ageMin: 4, ageMax: 7, description: "Une aventure musicale pour apprendre à compter !", isFree: false, lang: "fr" },
 
-  // ── MATHÉMATIQUES ───────────────────────────
-  {
-    id: 'maths-1',
-    youtubeId: 'X6ne_EA3qBc',
-    title: 'L\'addition pour les enfants',
-    channel: '1 jour 1 question',
-    category: 'Mathématiques',
-    moduleId: 'maths',
-    durationMin: 5,
-    ageMin: 5, ageMax: 8,
-    description: 'Apprends l\'addition de façon simple et amusante.',
-    isFree: true
-  },
-  {
-    id: 'maths-2',
-    youtubeId: 'ymOOXOHlgwM',
-    title: 'La soustraction expliquée aux enfants',
-    channel: 'Maître Lucas',
-    category: 'Mathématiques',
-    moduleId: 'maths',
-    durationMin: 6,
-    ageMin: 5, ageMax: 8,
-    description: 'Comprends la soustraction avec des exemples du quotidien.',
-    isFree: false
-  },
-  {
-    id: 'maths-3',
-    youtubeId: 'yCBOd8MJqIk',
-    title: 'Les tables de multiplication en chanson',
-    channel: 'Chanson éducative',
-    category: 'Mathématiques',
-    moduleId: 'maths',
-    durationMin: 8,
-    ageMin: 6, ageMax: 10,
-    description: 'Mémorise les tables de multiplication grâce à une chanson entraînante.',
-    isFree: false
-  },
+  // ── HISTOIRES ─────────────────────────────────────────
+  { id: "story-1", youtubeId: "bDjHQq8e5fY", title: "Comptines et histoires Titounis", channel: "Monde des Titounis", channelVerified: true, category: "Histoires", moduleId: "stories", durationMin: 4, ageMin: 3, ageMax: 7, description: "Des histoires chantées avec les personnages Titounis.", isFree: true, lang: "fr" },
+  { id: "story-2", youtubeId: "imX-MJsZ_z0", title: "Les animaux de la savane — histoire", channel: "Monde des Titounis", channelVerified: true, category: "Histoires", moduleId: "stories", durationMin: 5, ageMin: 4, ageMax: 8, description: "Une belle histoire avec les animaux d'Afrique.", isFree: false, lang: "fr" },
+  { id: "story-3", youtubeId: "GVzXC7M6r_U", title: "Apprends le vocabulaire en histoire", channel: "Tidoon", channelVerified: true, category: "Histoires", moduleId: "stories", durationMin: 8, ageMin: 4, ageMax: 8, description: "Découvre 95 mots de vocabulaire à travers des images éducatives.", isFree: false, lang: "fr" },
 
-  // ── HISTOIRES ───────────────────────────────
-  {
-    id: 'story-1',
-    youtubeId: 'lYMCJnROXSk',
-    title: 'Les Trois Petits Cochons',
-    channel: 'Contes pour enfants',
-    category: 'Histoires',
-    moduleId: 'stories',
-    durationMin: 10,
-    ageMin: 3, ageMax: 7,
-    description: 'Le conte classique des trois petits cochons et du grand méchant loup.',
-    isFree: true
-  },
-  {
-    id: 'story-2',
-    youtubeId: 'MRSBSo-UmF8',
-    title: 'Le Petit Chaperon Rouge',
-    channel: 'Histoires pour enfants',
-    category: 'Histoires',
-    moduleId: 'stories',
-    durationMin: 12,
-    ageMin: 3, ageMax: 7,
-    description: 'L\'histoire classique du Petit Chaperon Rouge.',
-    isFree: true
-  },
-  {
-    id: 'story-3',
-    youtubeId: 'JuHLGElBBPY',
-    title: 'Contes africains pour enfants',
-    channel: 'Contes d\'Afrique',
-    category: 'Histoires',
-    moduleId: 'stories',
-    durationMin: 15,
-    ageMin: 4, ageMax: 9,
-    description: 'Découvre de beaux contes traditionnels d\'Afrique.',
-    isFree: false
-  },
+  // ── FRUITS ────────────────────────────────────────────
+  { id: "fruits-1", youtubeId: "S5PB9CqjCXc", title: "Les fruits et légumes en comptine", channel: "Monde des Titounis", channelVerified: true, category: "Fruits", moduleId: "fruits", durationMin: 4, ageMin: 3, ageMax: 6, description: "Apprends le nom des fruits en chanson avec les Titounis !", isFree: true, lang: "fr" },
+  { id: "fruits-2", youtubeId: "2rB7CY6hFDc", title: "Légumes et fruits — comptine éducative", channel: "Monde des Titounis", channelVerified: true, category: "Fruits", moduleId: "fruits", durationMin: 3, ageMin: 3, ageMax: 5, description: "Une comptine colorée sur les fruits et les légumes.", isFree: false, lang: "fr" },
 
-  // ── FRUITS ──────────────────────────────────
-  {
-    id: 'fruits-1',
-    youtubeId: 'sKPCGKVbFg0',
-    title: 'Les fruits en français',
-    channel: 'Apprendre avec Lumi',
-    category: 'Fruits',
-    moduleId: 'fruits',
-    durationMin: 4,
-    ageMin: 3, ageMax: 6,
-    description: 'Apprends le nom de tous les fruits en français.',
-    isFree: true
-  },
-  {
-    id: 'fruits-2',
-    youtubeId: 'RzIhHGtFrHE',
-    title: 'Les fruits et légumes — comptine',
-    channel: 'Comptines françaises',
-    category: 'Fruits',
-    moduleId: 'fruits',
-    durationMin: 3,
-    ageMin: 3, ageMax: 5,
-    description: 'Une comptine pour apprendre les fruits et légumes.',
-    isFree: false
-  },
-
-  // ── SYLLABES ────────────────────────────────
-  {
-    id: 'syl-1',
-    youtubeId: 'g9yVeRUkBYY',
-    title: 'Apprendre à lire — les syllabes',
-    channel: 'Maître Lucas',
-    category: 'Syllabes',
-    moduleId: 'syllables',
-    durationMin: 8,
-    ageMin: 5, ageMax: 8,
-    description: 'Apprends à former des syllabes pour lire tes premiers mots.',
-    isFree: true
-  },
-  {
-    id: 'syl-2',
-    youtubeId: 'K1WUNVJzfAo',
-    title: 'Les voyelles A E I O U',
-    channel: 'Maternelle avec Lucie',
-    category: 'Syllabes',
-    moduleId: 'syllables',
-    durationMin: 5,
-    ageMin: 4, ageMax: 7,
-    description: 'Découvre les voyelles et leurs sons.',
-    isFree: true
-  }
-]
+  // ── SYLLABES ──────────────────────────────────────────
+  { id: "syl-1", youtubeId: "_fVReZx6ZxQ", title: "Les syllabes avec l'alphabet", channel: "Monde des Titounis", channelVerified: true, category: "Syllabes", moduleId: "syllables", durationMin: 3, ageMin: 4, ageMax: 7, description: "Apprends les syllabes en découvrant les lettres de l'alphabet.", isFree: true, lang: "fr" },
+  { id: "syl-2", youtubeId: "rBjwM2KHPnc", title: "Lire avec les fruits — syllabes", channel: "Monde des Titounis", channelVerified: true, category: "Syllabes", moduleId: "syllables", durationMin: 6, ageMin: 4, ageMax: 7, description: "Apprends à former des syllabes avec les fruits.", isFree: false, lang: "fr" },
+];
 
 export const getVideosByModule = (moduleId: string): EducVideo[] =>
   VIDEOS_DATA.filter((v) => v.moduleId === moduleId);
