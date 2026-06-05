@@ -134,3 +134,81 @@ export const unlockAudio = (): void => {
     window.speechSynthesis.speak(u);
   } catch {}
 };
+
+// ── STORY AUDIO ENGINE ────────────────────────────────────────────
+// Reads the entire page as ONE utterance for gap-less narration.
+// Uses onboundary to highlight words.
+class StoryAudioEngine {
+  private isPlaying = false;
+  private onWord: ((i: number) => void) | null = null;
+  private onEnd: (() => void) | null = null;
+  private keepAlive: ReturnType<typeof setInterval> | null = null;
+
+  play(text: string, onWord: (i: number) => void, onEnd: () => void): void {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    try { window.speechSynthesis.cancel(); } catch {}
+    this.isPlaying = false;
+    this.onWord = onWord;
+    this.onEnd = onEnd;
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    setTimeout(() => this.doPlay(text), isAndroid ? 200 : 80);
+  }
+
+  private doPlay(text: string): void {
+    const p = audioEngine.getProfile();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "fr-FR";
+    u.pitch = p.pitch;
+    u.rate = 0.78;
+    u.volume = 1.0;
+    const v = audioEngine.getBestVoice(p.gender);
+    if (v) u.voice = v;
+
+    u.onboundary = (event: SpeechSynthesisEvent) => {
+      if (event.name && event.name !== "word") return;
+      const spoken = text.substring(0, event.charIndex || 0);
+      const idx = spoken.trim().length === 0 ? 0 : spoken.trim().split(/\s+/).length - 1;
+      this.onWord?.(idx);
+    };
+    u.onstart = () => { this.isPlaying = true; };
+    u.onend = () => {
+      this.isPlaying = false;
+      this.clearKeepAlive();
+      this.onWord?.(-1);
+      this.onEnd?.();
+    };
+    u.onerror = (e) => {
+      this.isPlaying = false;
+      this.clearKeepAlive();
+      if (e.error !== "canceled" && e.error !== "interrupted") console.warn("[StoryAudio]", e.error);
+    };
+
+    if (/Android/i.test(navigator.userAgent)) {
+      this.keepAlive = setInterval(() => {
+        if (this.isPlaying && window.speechSynthesis.speaking) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        } else if (!this.isPlaying) {
+          this.clearKeepAlive();
+        }
+      }, 8000);
+    }
+    try { window.speechSynthesis.speak(u); } catch (e) { console.warn("[StoryAudio] speak failed", e); }
+  }
+
+  private clearKeepAlive(): void {
+    if (this.keepAlive) { clearInterval(this.keepAlive); this.keepAlive = null; }
+  }
+
+  pause(): void { try { window.speechSynthesis.pause(); } catch {} this.isPlaying = false; }
+  resume(): void { try { window.speechSynthesis.resume(); } catch {} this.isPlaying = true; }
+  stop(): void {
+    try { window.speechSynthesis.cancel(); } catch {}
+    this.isPlaying = false;
+    this.clearKeepAlive();
+    this.onWord?.(-1);
+  }
+  get playing(): boolean { return this.isPlaying; }
+}
+
+export const storyAudio = new StoryAudioEngine();
