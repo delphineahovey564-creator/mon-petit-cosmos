@@ -63,7 +63,7 @@ function PuzzleGame() {
         const stars = m <= 30 ? 3 : m <= 60 ? 2 : 1;
         recordGameSession("puzzle", Math.max(10, 100 - m), stars);
         const prev = getChild().highScores.puzzle;
-        if (!prev || m < prev.moves) saveHighScore("puzzle", { moves: m, time: 0, stars });
+        if (!prev || m < prev.moves) saveHighScore("puzzle", { moves: m, stars });
       }, 400);
     }
   };
