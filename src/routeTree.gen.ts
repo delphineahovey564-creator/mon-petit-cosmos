@@ -45,6 +45,7 @@ import { Route as ModuleFruitsRouteImport } from './routes/module.fruits'
 import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
+import { Route as GamesMemoryRouteImport } from './routes/games.memory'
 import { Route as CertificateTypeRouteImport } from './routes/certificate.$type'
 import { Route as ModuleSyllablesIndexRouteImport } from './routes/module.syllables.index'
 import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.index'
@@ -252,6 +253,11 @@ const ModuleIdRoute = ModuleIdRouteImport.update({
   path: '/module/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamesMemoryRoute = GamesMemoryRouteImport.update({
+  id: '/memory',
+  path: '/memory',
+  getParentRoute: () => GamesRoute,
+} as any)
 const CertificateTypeRoute = CertificateTypeRouteImport.update({
   id: '/certificate/$type',
   path: '/certificate/$type',
@@ -393,7 +399,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
-  '/games': typeof GamesRoute
+  '/games': typeof GamesRouteWithChildren
   '/home': typeof HomeRoute
   '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
@@ -410,6 +416,7 @@ export interface FileRoutesByFullPath {
   '/videos': typeof VideosRouteWithChildren
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
+  '/games/memory': typeof GamesMemoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -457,7 +464,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
-  '/games': typeof GamesRoute
+  '/games': typeof GamesRouteWithChildren
   '/home': typeof HomeRoute
   '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
@@ -473,6 +480,7 @@ export interface FileRoutesByTo {
   '/victory': typeof VictoryRoute
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
+  '/games/memory': typeof GamesMemoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
   '/parent/activites': typeof ParentActivitesRoute
@@ -514,7 +522,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
-  '/games': typeof GamesRoute
+  '/games': typeof GamesRouteWithChildren
   '/home': typeof HomeRoute
   '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
@@ -531,6 +539,7 @@ export interface FileRoutesById {
   '/videos': typeof VideosRouteWithChildren
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
+  '/games/memory': typeof GamesMemoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -597,6 +606,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
+    | '/games/memory'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -660,6 +670,7 @@ export interface FileRouteTypes {
     | '/victory'
     | '/voice-settings'
     | '/certificate/$type'
+    | '/games/memory'
     | '/module/$id'
     | '/module/drawing'
     | '/parent/activites'
@@ -717,6 +728,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
+    | '/games/memory'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -765,7 +777,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BadgesRoute: typeof BadgesRoute
   CreateProfileRoute: typeof CreateProfileRoute
-  GamesRoute: typeof GamesRoute
+  GamesRoute: typeof GamesRouteWithChildren
   HomeRoute: typeof HomeRoute
   InviteRoute: typeof InviteRoute
   LeaderboardRoute: typeof LeaderboardRoute
@@ -1053,6 +1065,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/games/memory': {
+      id: '/games/memory'
+      path: '/memory'
+      fullPath: '/games/memory'
+      preLoaderRoute: typeof GamesMemoryRouteImport
+      parentRoute: typeof GamesRoute
+    }
     '/certificate/$type': {
       id: '/certificate/$type'
       path: '/certificate/$type'
@@ -1238,6 +1257,16 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface GamesRouteChildren {
+  GamesMemoryRoute: typeof GamesMemoryRoute
+}
+
+const GamesRouteChildren: GamesRouteChildren = {
+  GamesMemoryRoute: GamesMemoryRoute,
+}
+
+const GamesRouteWithChildren = GamesRoute._addFileChildren(GamesRouteChildren)
+
 interface SubscribeRouteChildren {
   SubscribeSuccessRoute: typeof SubscribeSuccessRoute
 }
@@ -1387,7 +1416,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BadgesRoute: BadgesRoute,
   CreateProfileRoute: CreateProfileRoute,
-  GamesRoute: GamesRoute,
+  GamesRoute: GamesRouteWithChildren,
   HomeRoute: HomeRoute,
   InviteRoute: InviteRoute,
   LeaderboardRoute: LeaderboardRoute,
@@ -1423,13 +1452,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
