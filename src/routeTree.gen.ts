@@ -45,6 +45,7 @@ import { Route as ModuleFruitsRouteImport } from './routes/module.fruits'
 import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
+import { Route as GamesQuizRouteImport } from './routes/games.quiz'
 import { Route as GamesPuzzleRouteImport } from './routes/games.puzzle'
 import { Route as GamesMemoryRouteImport } from './routes/games.memory'
 import { Route as GamesFindRouteImport } from './routes/games.find'
@@ -255,6 +256,11 @@ const ModuleIdRoute = ModuleIdRouteImport.update({
   path: '/module/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamesQuizRoute = GamesQuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => GamesRoute,
+} as any)
 const GamesPuzzleRoute = GamesPuzzleRouteImport.update({
   id: '/puzzle',
   path: '/puzzle',
@@ -431,6 +437,7 @@ export interface FileRoutesByFullPath {
   '/games/find': typeof GamesFindRoute
   '/games/memory': typeof GamesMemoryRoute
   '/games/puzzle': typeof GamesPuzzleRoute
+  '/games/quiz': typeof GamesQuizRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -497,6 +504,7 @@ export interface FileRoutesByTo {
   '/games/find': typeof GamesFindRoute
   '/games/memory': typeof GamesMemoryRoute
   '/games/puzzle': typeof GamesPuzzleRoute
+  '/games/quiz': typeof GamesQuizRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
   '/parent/activites': typeof ParentActivitesRoute
@@ -558,6 +566,7 @@ export interface FileRoutesById {
   '/games/find': typeof GamesFindRoute
   '/games/memory': typeof GamesMemoryRoute
   '/games/puzzle': typeof GamesPuzzleRoute
+  '/games/quiz': typeof GamesQuizRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
   '/module/drawing': typeof ModuleDrawingRoute
@@ -627,6 +636,7 @@ export interface FileRouteTypes {
     | '/games/find'
     | '/games/memory'
     | '/games/puzzle'
+    | '/games/quiz'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -693,6 +703,7 @@ export interface FileRouteTypes {
     | '/games/find'
     | '/games/memory'
     | '/games/puzzle'
+    | '/games/quiz'
     | '/module/$id'
     | '/module/drawing'
     | '/parent/activites'
@@ -753,6 +764,7 @@ export interface FileRouteTypes {
     | '/games/find'
     | '/games/memory'
     | '/games/puzzle'
+    | '/games/quiz'
     | '/module/$id'
     | '/module/alphabet'
     | '/module/drawing'
@@ -1089,6 +1101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/games/quiz': {
+      id: '/games/quiz'
+      path: '/quiz'
+      fullPath: '/games/quiz'
+      preLoaderRoute: typeof GamesQuizRouteImport
+      parentRoute: typeof GamesRoute
+    }
     '/games/puzzle': {
       id: '/games/puzzle'
       path: '/puzzle'
@@ -1299,12 +1318,14 @@ interface GamesRouteChildren {
   GamesFindRoute: typeof GamesFindRoute
   GamesMemoryRoute: typeof GamesMemoryRoute
   GamesPuzzleRoute: typeof GamesPuzzleRoute
+  GamesQuizRoute: typeof GamesQuizRoute
 }
 
 const GamesRouteChildren: GamesRouteChildren = {
   GamesFindRoute: GamesFindRoute,
   GamesMemoryRoute: GamesMemoryRoute,
   GamesPuzzleRoute: GamesPuzzleRoute,
+  GamesQuizRoute: GamesQuizRoute,
 }
 
 const GamesRouteWithChildren = GamesRoute._addFileChildren(GamesRouteChildren)
