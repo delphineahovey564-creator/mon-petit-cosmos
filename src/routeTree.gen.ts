@@ -46,6 +46,7 @@ import { Route as ModuleDrawingRouteImport } from './routes/module.drawing'
 import { Route as ModuleAlphabetRouteImport } from './routes/module.alphabet'
 import { Route as ModuleIdRouteImport } from './routes/module.$id'
 import { Route as GamesMemoryRouteImport } from './routes/games.memory'
+import { Route as GamesFindRouteImport } from './routes/games.find'
 import { Route as CertificateTypeRouteImport } from './routes/certificate.$type'
 import { Route as ModuleSyllablesIndexRouteImport } from './routes/module.syllables.index'
 import { Route as ModuleStoriesIndexRouteImport } from './routes/module.stories.index'
@@ -258,6 +259,11 @@ const GamesMemoryRoute = GamesMemoryRouteImport.update({
   path: '/memory',
   getParentRoute: () => GamesRoute,
 } as any)
+const GamesFindRoute = GamesFindRouteImport.update({
+  id: '/find',
+  path: '/find',
+  getParentRoute: () => GamesRoute,
+} as any)
 const CertificateTypeRoute = CertificateTypeRouteImport.update({
   id: '/certificate/$type',
   path: '/certificate/$type',
@@ -416,6 +422,7 @@ export interface FileRoutesByFullPath {
   '/videos': typeof VideosRouteWithChildren
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
+  '/games/find': typeof GamesFindRoute
   '/games/memory': typeof GamesMemoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
@@ -480,6 +487,7 @@ export interface FileRoutesByTo {
   '/victory': typeof VictoryRoute
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
+  '/games/find': typeof GamesFindRoute
   '/games/memory': typeof GamesMemoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/drawing': typeof ModuleDrawingRoute
@@ -539,6 +547,7 @@ export interface FileRoutesById {
   '/videos': typeof VideosRouteWithChildren
   '/voice-settings': typeof VoiceSettingsRoute
   '/certificate/$type': typeof CertificateTypeRoute
+  '/games/find': typeof GamesFindRoute
   '/games/memory': typeof GamesMemoryRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
@@ -606,6 +615,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
+    | '/games/find'
     | '/games/memory'
     | '/module/$id'
     | '/module/alphabet'
@@ -670,6 +680,7 @@ export interface FileRouteTypes {
     | '/victory'
     | '/voice-settings'
     | '/certificate/$type'
+    | '/games/find'
     | '/games/memory'
     | '/module/$id'
     | '/module/drawing'
@@ -728,6 +739,7 @@ export interface FileRouteTypes {
     | '/videos'
     | '/voice-settings'
     | '/certificate/$type'
+    | '/games/find'
     | '/games/memory'
     | '/module/$id'
     | '/module/alphabet'
@@ -1072,6 +1084,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GamesMemoryRouteImport
       parentRoute: typeof GamesRoute
     }
+    '/games/find': {
+      id: '/games/find'
+      path: '/find'
+      fullPath: '/games/find'
+      preLoaderRoute: typeof GamesFindRouteImport
+      parentRoute: typeof GamesRoute
+    }
     '/certificate/$type': {
       id: '/certificate/$type'
       path: '/certificate/$type'
@@ -1258,10 +1277,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface GamesRouteChildren {
+  GamesFindRoute: typeof GamesFindRoute
   GamesMemoryRoute: typeof GamesMemoryRoute
 }
 
 const GamesRouteChildren: GamesRouteChildren = {
+  GamesFindRoute: GamesFindRoute,
   GamesMemoryRoute: GamesMemoryRoute,
 }
 
