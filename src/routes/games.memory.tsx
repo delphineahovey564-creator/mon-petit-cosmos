@@ -1,202 +1,182 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, Timer, Target } from "lucide-react";
-import { audioEngine } from "@/lib/audio";
-import { recordGameSession, saveHighScore, getChild } from "@/lib/storage";
+import React, { useState, useEffect, useRef } from 'react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/games/memory")({ component: MemoryGame });
+export const Route = createFileRoute('/games/memory')({ component: MemoryGame });
 
 const PAIRS = [
-  { emoji: "🦁", word: "Lion" },
-  { emoji: "🐘", word: "Éléphant" },
-  { emoji: "🦒", word: "Girafe" },
-  { emoji: "🐸", word: "Grenouille" },
-  { emoji: "🍎", word: "Pomme" },
-  { emoji: "🍌", word: "Banane" },
-  { emoji: "🥭", word: "Mangue" },
-  { emoji: "⭐", word: "Étoile" },
-  { emoji: "🦋", word: "Papillon" },
-  { emoji: "🌙", word: "Lune" },
-  { emoji: "🐬", word: "Dauphin" },
-  { emoji: "🌳", word: "Arbre" },
+  { emoji: '🦁', word: 'Lion' },
+  { emoji: '🐘', word: 'Éléphant' },
+  { emoji: '🍎', word: 'Pomme' },
+  { emoji: '🍌', word: 'Banane' },
+  { emoji: '⭐', word: 'Étoile' },
+  { emoji: '🦋', word: 'Papillon' },
+  { emoji: '🌙', word: 'Lune' },
+  { emoji: '🐬', word: 'Dauphin' },
 ];
 
-const CONFIGS = {
-  easy:   { pairs: 6,  cols: 3, label: "Facile 🟢" },
-  medium: { pairs: 8,  cols: 4, label: "Moyen 🟡" },
-  hard:   { pairs: 12, cols: 4, label: "Difficile 🔴" },
-} as const;
-
-type Diff = keyof typeof CONFIGS;
-type Card = { uid: number; pairId: number; emoji: string; word: string };
-
-const shuffle = <T,>(a: T[]): T[] => {
-  const x = [...a];
-  for (let i = x.length - 1; i > 0; i--) {
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [x[i], x[j]] = [x[j], x[i]];
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  return x;
-};
+  return a;
+}
+
+type Card = { id: number; pairId: number; emoji: string; word: string };
 
 function MemoryGame() {
-  const nav = useNavigate();
-  const [phase, setPhase] = useState<"setup" | "playing" | "win">("setup");
-  const [difficulty, setDifficulty] = useState<Diff>("easy");
+  const navigate = useNavigate();
+  const [phase, setPhase] = useState<'menu' | 'play' | 'win'>('menu');
   const [cards, setCards] = useState<Card[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
-  const [matched, setMatched] = useState<Set<number>>(new Set());
+  const [matched, setMatched] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
-  const [locked, setLocked] = useState(false);
-  const [secs, setSecs] = useState(0);
+  const [lock, setLock] = useState(false);
+  const [seconds, setSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const recordedRef = useRef(false);
 
-  useEffect(() => {
-    if (phase === "playing") {
-      timerRef.current = setInterval(() => setSecs((s) => s + 1), 1000);
-    }
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [phase]);
-
-  const startGame = () => {
-    const cfg = CONFIGS[difficulty];
-    const pool = shuffle(PAIRS).slice(0, cfg.pairs);
+  function startGame(pairCount: number) {
+    const pool = shuffle(PAIRS).slice(0, pairCount);
     const deck: Card[] = [];
     pool.forEach((p, pid) => {
-      deck.push({ uid: pid * 2, pairId: pid, ...p });
-      deck.push({ uid: pid * 2 + 1, pairId: pid, ...p });
+      deck.push({ id: pid * 2, pairId: pid, ...p });
+      deck.push({ id: pid * 2 + 1, pairId: pid, ...p });
     });
     setCards(shuffle(deck));
-    setFlipped([]); setMatched(new Set()); setMoves(0); setSecs(0); setLocked(false);
-    recordedRef.current = false;
-    setPhase("playing");
-    audioEngine.speak("Trouve les paires identiques !", { rate: 0.85 });
-  };
+    setFlipped([]); setMatched([]); setMoves(0); setSeconds(0); setLock(false);
+    setPhase('play');
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => setSeconds((s) => s + 1), 1000);
+  }
 
-  const tapCard = (uid: number) => {
-    if (locked || matched.has(uid) || flipped.includes(uid) || flipped.length === 2) return;
-    const next = [...flipped, uid];
+  function tapCard(id: number) {
+    if (lock || matched.includes(id) || flipped.includes(id) || flipped.length >= 2) return;
+    const next = [...flipped, id];
     setFlipped(next);
     if (next.length === 2) {
       setMoves((m) => m + 1);
-      setLocked(true);
+      setLock(true);
       const [a, b] = next;
-      const ca = cards.find((c) => c.uid === a)!;
-      const cb = cards.find((c) => c.uid === b)!;
+      const ca = cards.find((c) => c.id === a)!;
+      const cb = cards.find((c) => c.id === b)!;
       if (ca.pairId === cb.pairId) {
+        const nm = [...matched, a, b];
         setTimeout(() => {
-          const nm = new Set(matched); nm.add(a); nm.add(b);
-          setMatched(nm); setFlipped([]); setLocked(false);
-          audioEngine.speak(ca.word, { pitch: 1.4, rate: 0.9 });
-          if (nm.size === cards.length && !recordedRef.current) {
-            recordedRef.current = true;
+          setMatched(nm); setFlipped([]); setLock(false);
+          if (nm.length === cards.length) {
             if (timerRef.current) clearInterval(timerRef.current);
-            const time = Math.round((Date.now() - 0) / 1000);
-            const stars = moves <= cards.length ? 3 : moves <= cards.length * 1.5 ? 2 : 1;
-            recordGameSession("memory", Math.max(10, 100 - moves), stars);
-            const prev = getChild().highScores.memory;
-            if (!prev || moves < prev.moves) saveHighScore("memory", { moves: moves + 1, time: secs, stars });
-            setPhase("win");
-            audioEngine.speak("Bravo ! Tu as gagné !", { pitch: 1.5, rate: 0.85 });
+            setPhase('win');
           }
         }, 500);
       } else {
-        setTimeout(() => { setFlipped([]); setLocked(false); }, 900);
+        setTimeout(() => { setFlipped([]); setLock(false); }, 900);
       }
     }
-  };
+  }
 
-  const cfg = CONFIGS[difficulty];
+  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); }, []);
 
-  if (phase === "setup") {
+  const stars = Math.max(3, 16 - Math.floor(moves / 2));
+
+  if (phase === 'menu') {
     return (
-      <div className="min-h-screen bg-edu-bg max-w-[430px] mx-auto" style={{ fontFamily: "Nunito, sans-serif" }}>
-        <header className="flex items-center gap-3 px-5 py-4">
-          <button onClick={() => nav({ to: "/games" })}><ArrowLeft size={24} color="#1A1A2E" /></button>
-          <span className="font-extrabold text-[18px] text-edu-dark">Memory</span>
-        </header>
-        <div className="mx-4 mb-5 rounded-[24px] p-7 text-center text-white" style={{ background: "linear-gradient(135deg,#FF6B35,#FFB347)" }}>
-          <div className="text-[56px]">🧠</div>
-          <div className="font-black text-[26px] mt-2">Memory</div>
-          <div className="font-medium text-[14px] opacity-90 mt-1">Retourne 2 cartes et trouve les paires !</div>
+      <div style={S.page}>
+        <button onClick={() => navigate({ to: '/games' })} style={S.back}>← Retour</button>
+        <div style={{ ...S.hero, background: 'linear-gradient(135deg,#FF6B35,#FFB347)' }}>
+          <div style={S.heroIcon}>🧠</div>
+          <div style={S.heroTitle}>Memory</div>
+          <div style={S.heroSub}>Retourne 2 cartes et trouve les paires identiques !</div>
         </div>
-        <div className="px-4">
-          <div className="font-extrabold text-[18px] text-edu-dark mb-3">Difficulté</div>
-          <div className="flex gap-2.5">
-            {(Object.keys(CONFIGS) as Diff[]).map((d) => (
-              <button key={d} onClick={() => setDifficulty(d)} className="flex-1 rounded-2xl py-3.5 px-2 text-center border-2 font-bold text-[13px] active:scale-95 transition"
-                style={{ borderColor: difficulty === d ? "#FF6B35" : "#E5E7EB", background: difficulty === d ? "#FFF0E8" : "#fff", color: difficulty === d ? "#FF6B35" : "#6B7280" }}>
-                <div>{CONFIGS[d].label}</div>
-                <div className="font-medium text-[11px] text-[#9CA3AF] mt-1">{CONFIGS[d].pairs} paires</div>
+        <div style={S.section}>
+          <div style={S.label}>Choisis la difficulté :</div>
+          <div style={{ display: 'flex', gap: 10 }}>
+            {[
+              { label: '🟢 Facile', pairs: 4, note: '4 paires' },
+              { label: '🟡 Moyen', pairs: 6, note: '6 paires' },
+              { label: '🔴 Difficile', pairs: 8, note: '8 paires' },
+            ].map((d) => (
+              <button key={d.label} onClick={() => startGame(d.pairs)} style={S.diffBtn}>
+                <div style={{ fontWeight: 800, fontSize: 13 }}>{d.label}</div>
+                <div style={{ fontWeight: 500, fontSize: 11, color: '#9CA3AF', marginTop: 4 }}>{d.note}</div>
               </button>
             ))}
           </div>
         </div>
-        <div className="px-4 pt-6">
-          <button onClick={startGame} className="w-full h-14 rounded-[14px] text-white font-extrabold text-[17px] shadow-edu-card" style={{ background: "#FF6B35" }}>Commencer ! 🚀</button>
-        </div>
       </div>
     );
   }
 
-  if (phase === "win") {
-    const stars = moves <= cfg.pairs ? 3 : moves <= cfg.pairs * 1.5 ? 2 : 1;
+  if (phase === 'win') {
     return (
-      <div className="min-h-screen bg-white max-w-[430px] mx-auto flex flex-col items-center justify-center px-6 py-8 text-center" style={{ fontFamily: "Nunito, sans-serif" }}>
-        <motion.div initial={{ scale: 0 }} animate={{ scale: [0, 1.3, 1] }} transition={{ duration: 0.5 }}>
-          <div className="text-[80px]">🎉</div>
-        </motion.div>
-        <div className="font-black text-[34px] mt-3" style={{ color: "#FF6B35" }}>Bravo !</div>
-        <div className="font-semibold text-[16px] text-edu-muted mt-1">Tu as trouvé toutes les paires !</div>
-        <div className="bg-edu-bg rounded-[20px] px-7 py-5 my-6 w-full flex justify-around">
-          <div className="text-center"><div className="font-black text-[28px] text-edu-dark">{moves}</div><div className="font-medium text-[12px] text-[#9CA3AF]">Coups</div></div>
-          <div className="text-center"><div className="font-black text-[28px] text-edu-dark">{secs}s</div><div className="font-medium text-[12px] text-[#9CA3AF]">Temps</div></div>
-          <div className="text-center"><div className="font-black text-[28px]" style={{ color: "#FF6B35" }}>+{stars}⭐</div><div className="font-medium text-[12px] text-[#9CA3AF]">Étoiles</div></div>
+      <div style={{ ...S.page, alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ fontSize: 80 }}>🎉</div>
+        <div style={{ fontWeight: 900, fontSize: 32, color: '#FF6B35', margin: '12px 0 4px' }}>Bravo !</div>
+        <div style={{ color: '#6B7280', fontSize: 15, marginBottom: 20 }}>Tu as trouvé toutes les paires !</div>
+        <div style={S.winCard}>
+          <div style={S.stat}><span style={S.statNum}>{moves}</span><span style={S.statLbl}>coups</span></div>
+          <div style={S.stat}><span style={S.statNum}>{seconds}s</span><span style={S.statLbl}>temps</span></div>
+          <div style={S.stat}><span style={{ ...S.statNum, color: '#FF6B35' }}>+{stars}⭐</span><span style={S.statLbl}>étoiles</span></div>
         </div>
-        <button onClick={startGame} className="w-full h-[52px] rounded-[14px] text-white font-extrabold text-[16px] mb-3" style={{ background: "#FF6B35" }}>Rejouer 🔄</button>
-        <button onClick={() => nav({ to: "/games" })} className="w-full h-12 rounded-[14px] bg-white border-[1.5px] border-[#E5E7EB] text-edu-muted font-bold text-[15px]">Menu des jeux</button>
+        <button onClick={() => startGame(cards.length / 2)} style={S.btn}>🔄 Rejouer</button>
+        <button onClick={() => navigate({ to: '/games' })} style={S.btnOutline}>Menu des jeux</button>
       </div>
     );
   }
 
+  const cols = 4;
   return (
-    <div className="min-h-screen bg-edu-bg max-w-[430px] mx-auto pb-5" style={{ fontFamily: "Nunito, sans-serif" }}>
-      <header className="flex items-center justify-between px-4 py-3 bg-white" style={{ boxShadow: "0 2px 8px rgba(0,0,0,.05)" }}>
-        <button onClick={() => nav({ to: "/games" })}><ArrowLeft size={22} color="#6B7280" /></button>
-        <div className="flex gap-4 items-center">
-          <div className="flex items-center gap-1"><Target size={16} color="#FF6B35" /><span className="font-bold text-[14px] text-edu-dark">{moves}</span></div>
-          <div className="flex items-center gap-1"><Timer size={16} color="#9CA3AF" /><span className="font-bold text-[14px] text-edu-muted">{secs}s</span></div>
-          <div className="rounded-full px-2.5 py-1 font-bold text-[13px]" style={{ background: "#FFF0E8", color: "#FF6B35" }}>{matched.size / 2}/{cfg.pairs}</div>
-        </div>
-      </header>
-      <div className="grid gap-2 p-4" style={{ gridTemplateColumns: `repeat(${cfg.cols},1fr)` }}>
+    <div style={S.page}>
+      <div style={S.statsBar}>
+        <button onClick={() => { if (timerRef.current) clearInterval(timerRef.current); setPhase('menu'); }} style={S.backSm}>←</button>
+        <span style={{ fontWeight: 700, fontSize: 14, color: '#1A1A2E' }}>⚡ {moves} coups</span>
+        <span style={{ fontWeight: 700, fontSize: 14, color: '#9CA3AF' }}>⏱ {seconds}s</span>
+        <span style={{ fontWeight: 700, fontSize: 13, color: '#FF6B35' }}>{matched.length / 2}/{cards.length / 2} paires</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 8, padding: 16 }}>
         {cards.map((card) => {
-          const isFlipped = flipped.includes(card.uid);
-          const isMatched = matched.has(card.uid);
-          const faceUp = isFlipped || isMatched;
+          const faceUp = flipped.includes(card.id) || matched.includes(card.id);
+          const isMatched = matched.includes(card.id);
           return (
-            <motion.div key={card.uid} onClick={() => tapCard(card.uid)} whileTap={{ scale: faceUp ? 1 : 0.93 }}
-              className="aspect-square rounded-[14px] flex flex-col items-center justify-center font-extrabold shadow-edu-card"
-              style={{
-                background: isMatched ? "#E8F5E9" : faceUp ? "#FFFFFF" : "linear-gradient(135deg,#FF6B35,#FFB347)",
-                border: isMatched ? "2px solid #4CAF50" : faceUp ? "2px solid #F3F4F6" : "none",
-                color: faceUp ? "#1A1A2E" : "white",
-                cursor: faceUp ? "default" : "pointer",
-              }}>
+            <div key={card.id} onClick={() => tapCard(card.id)} style={{
+              aspectRatio: '1', borderRadius: 14, cursor: faceUp ? 'default' : 'pointer',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+              background: faceUp ? isMatched ? '#E8F5E9' : 'white' : 'linear-gradient(135deg,#FF6B35,#FFB347)',
+              border: isMatched ? '2px solid #4CAF50' : '2px solid #F3F4F6',
+              boxShadow: '0 3px 10px rgba(0,0,0,.08)', transition: 'background 0.25s', userSelect: 'none',
+            }}>
               {faceUp ? (
                 <>
-                  <span className="text-[28px] leading-none">{card.emoji}</span>
-                  <span className="font-bold text-[9px] mt-1" style={{ color: isMatched ? "#4CAF50" : "#9CA3AF" }}>{card.word}</span>
+                  <span style={{ fontSize: 28 }}>{card.emoji}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: isMatched ? '#4CAF50' : '#9CA3AF', marginTop: 2 }}>{card.word}</span>
                 </>
               ) : (
-                <div className="w-8 h-8 rounded-full grid place-items-center font-black" style={{ background: "rgba(255,255,255,.3)" }}>E</div>
+                <span style={{ fontWeight: 900, fontSize: 18, color: 'rgba(255,255,255,.5)' }}>?</span>
               )}
-            </motion.div>
+            </div>
           );
         })}
       </div>
     </div>
   );
 }
+
+const S: Record<string, React.CSSProperties> = {
+  page: { background: '#FFF9F0', minHeight: '100vh', maxWidth: 430, margin: '0 auto', fontFamily: 'Nunito, sans-serif', display: 'flex', flexDirection: 'column', paddingBottom: 20 },
+  back: { background: 'none', border: 'none', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 16, color: '#FF6B35', padding: '16px 20px', cursor: 'pointer', textAlign: 'left' },
+  backSm: { background: 'none', border: 'none', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 20, color: '#6B7280', cursor: 'pointer' },
+  hero: { margin: '0 16px 16px', borderRadius: 24, padding: 28, textAlign: 'center', color: 'white' },
+  heroIcon: { fontSize: 56 },
+  heroTitle: { fontWeight: 900, fontSize: 26, marginTop: 8 },
+  heroSub: { fontWeight: 500, fontSize: 14, opacity: 0.85, marginTop: 4 },
+  section: { padding: '0 16px', marginTop: 8 },
+  label: { fontWeight: 800, fontSize: 17, color: '#1A1A2E', marginBottom: 12 },
+  diffBtn: { flex: 1, padding: '14px 8px', borderRadius: 16, border: '2px solid #E5E7EB', background: 'white', cursor: 'pointer', fontFamily: 'Nunito, sans-serif', textAlign: 'center' },
+  statsBar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,.06)' },
+  winCard: { background: '#FFF0E8', borderRadius: 20, padding: '18px 28px', marginBottom: 20, display: 'flex', gap: 24 },
+  stat: { display: 'flex', flexDirection: 'column', alignItems: 'center' },
+  statNum: { fontWeight: 900, fontSize: 28, color: '#1A1A2E' },
+  statLbl: { fontWeight: 500, fontSize: 12, color: '#9CA3AF' },
+  btn: { width: '100%', height: 52, background: '#FF6B35', borderRadius: 14, border: 'none', color: 'white', fontFamily: 'Nunito, sans-serif', fontWeight: 800, fontSize: 16, cursor: 'pointer', marginBottom: 10 },
+  btnOutline: { width: '100%', height: 48, background: 'white', borderRadius: 14, border: '1.5px solid #E5E7EB', color: '#6B7280', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 15, cursor: 'pointer' },
+};

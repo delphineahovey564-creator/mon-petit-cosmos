@@ -1,195 +1,190 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
-import { audioEngine } from "@/lib/audio";
-import { recordGameSession, saveHighScore, getChild } from "@/lib/storage";
+import React, { useState, useEffect, useMemo } from 'react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/games/quiz")({ component: ChronoQuiz });
+export const Route = createFileRoute('/games/quiz')({ component: QuizGame });
 
-type Q = { cat: string; q: string; visual: string; opts: string[]; ans: number; explain: string };
-
-const BANK: Q[] = [
-  { cat: "🔤 Alphabet", q: "Quelle lettre vient après D ?", visual: "D → ?", opts: ["C","E","F","B"], ans: 1, explain: "L'alphabet: A B C D E F..." },
-  { cat: "🔤 Alphabet", q: "Quel animal commence par L ?", visual: "L... ?", opts: ["Éléphant","Bateau","Lion","Girafe"], ans: 2, explain: "Lion commence par L !" },
-  { cat: "🔤 Alphabet", q: "Combien de lettres dans l'alphabet ?", visual: "A → Z = ?", opts: ["24","25","26","28"], ans: 2, explain: "26 lettres de A à Z !" },
-  { cat: "🔤 Alphabet", q: "Quelle est la 1ère lettre ?", visual: "? B C D...", opts: ["Z","M","A","E"], ans: 2, explain: "A est la 1ère lettre !" },
-  { cat: "🔤 Alphabet", q: "Quel mot commence par E ?", visual: "E... ?", opts: ["Lion","Girafe","Éléphant","Zèbre"], ans: 2, explain: "Éléphant commence par E !" },
-  { cat: "🔢 Chiffres", q: "Combien font 3 + 4 ?", visual: "🍎🍎🍎 + 🍎🍎🍎🍎", opts: ["6","7","8","5"], ans: 1, explain: "3 + 4 = 7 !" },
-  { cat: "🔢 Chiffres", q: "Combien font 10 - 3 ?", visual: "10 - 3 = ?", opts: ["6","8","7","9"], ans: 2, explain: "10 - 3 = 7 !" },
-  { cat: "🔢 Chiffres", q: "Quel chiffre vient après 9 ?", visual: "7 → 8 → 9 → ?", opts: ["11","10","12","8"], ans: 1, explain: "Après 9 vient 10 !" },
-  { cat: "🔢 Chiffres", q: "Combien de pattes a un lion ?", visual: "🦁 = ? pattes", opts: ["2","6","4","8"], ans: 2, explain: "Un lion a 4 pattes !" },
-  { cat: "🔢 Chiffres", q: "Combien font 2 × 5 ?", visual: "2 × 5 = ?", opts: ["8","10","7","12"], ans: 1, explain: "2 × 5 = 10 !" },
-  { cat: "🍎 Fruits", q: "Quel est ce fruit ?", visual: "🥭", opts: ["Banane","Mangue","Orange","Citron"], ans: 1, explain: "C'est une mangue !" },
-  { cat: "🍎 Fruits", q: "Quel fruit est jaune et long ?", visual: "Jaune + Long = ?", opts: ["Pomme","Raisin","Banane","Pêche"], ans: 2, explain: "La banane est jaune et longue !" },
-  { cat: "🍎 Fruits", q: "De quelle couleur est une orange ?", visual: "🍊 = ?", opts: ["Rouge","Vert","Orange","Jaune"], ans: 2, explain: "L'orange est orange !" },
-  { cat: "🦁 Animaux", q: "Quel animal est le roi de la savane ?", visual: "👑 + Savane = ?", opts: ["Éléphant","Girafe","Lion","Zèbre"], ans: 2, explain: "Le lion est le roi de la savane !" },
-  { cat: "🦁 Animaux", q: "Quel animal a le plus long cou ?", visual: "Long cou = ?", opts: ["Éléphant","Girafe","Hippo","Rhino"], ans: 1, explain: "La girafe a le plus long cou !" },
+const BANK = [
+  { cat:'🔤', q:'Quelle lettre vient après D ?', opts:['C','E','F','B'], ans:1 },
+  { cat:'🔤', q:"Quel animal commence par L ?", opts:['Éléphant','Bateau','Lion','Girafe'], ans:2 },
+  { cat:'🔤', q:"Combien de lettres dans l'alphabet ?", opts:['24','25','26','28'], ans:2 },
+  { cat:'🔤', q:"Quelle est la 1ère lettre de l'alphabet ?", opts:['Z','M','A','E'], ans:2 },
+  { cat:'🔤', q:'Quel mot commence par E ?', opts:['Lion','Girafe','Éléphant','Zèbre'], ans:2 },
+  { cat:'🔢', q:'Combien font 3 + 4 ?', opts:['6','7','8','5'], ans:1 },
+  { cat:'🔢', q:'Combien font 10 - 3 ?', opts:['6','8','7','9'], ans:2 },
+  { cat:'🔢', q:'Quel chiffre vient après 9 ?', opts:['11','10','12','8'], ans:1 },
+  { cat:'🔢', q:'Combien de pattes a un lion ?', opts:['2','6','4','8'], ans:2 },
+  { cat:'🔢', q:'Combien font 2 × 5 ?', opts:['8','10','7','12'], ans:1 },
+  { cat:'🍎', q:'Quel fruit est 🥭 ?', opts:['Banane','Mangue','Orange','Citron'], ans:1 },
+  { cat:'🍎', q:'Quel fruit est jaune et long ?', opts:['Pomme','Raisin','Banane','Pêche'], ans:2 },
+  { cat:'🍎', q:'De quelle couleur est une 🍊 ?', opts:['Rouge','Vert','Orange','Jaune'], ans:2 },
+  { cat:'🦁', q:'Quel animal est le roi de la savane ?', opts:['Éléphant','Girafe','Lion','Zèbre'], ans:2 },
+  { cat:'🦁', q:'Quel animal a le plus long cou ?', opts:['Éléphant','Girafe','Hippo','Rhino'], ans:1 },
 ];
 
-const shuffle = <T,>(a: T[]): T[] => {
-  const x = [...a];
-  for (let i = x.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [x[i], x[j]] = [x[j], x[i]]; }
-  return x;
-};
+function shuffle<T>(a: T[]): T[] {
+  const arr = [...a];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
-const TOTAL = 15;
-const TIME_PER_Q = 10;
+const TOTAL = 10;
+const TIME = 10;
 
-function ChronoQuiz() {
-  const nav = useNavigate();
-  const [phase, setPhase] = useState<"intro" | "playing" | "win">("intro");
-  const questions = useMemo(() => shuffle(BANK).slice(0, TOTAL), []);
+function QuizGame() {
+  const navigate = useNavigate();
+  const [phase, setPhase] = useState<'menu'|'play'|'win'>('menu');
+  const [seed, setSeed] = useState(0);
+  const questions = useMemo(() => shuffle(BANK).slice(0, TOTAL), [seed]);
   const [qIdx, setQIdx] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(TIME_PER_Q);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState(TIME);
+  const [selected, setSelected] = useState<number|null>(null);
   const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [maxStreak, setMaxStreak] = useState(0);
   const [results, setResults] = useState<boolean[]>([]);
 
   useEffect(() => {
-    if (phase !== "playing" || selected !== null) return;
-    if (timeLeft <= 0) { handleAnswer(-1); return; }
+    if (phase !== 'play') return;
+    if (selected !== null) return;
+    if (timeLeft <= 0) { answer(-1); return; }
     const t = setTimeout(() => setTimeLeft((tl) => tl - 1), 1000);
     return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, phase, selected]);
 
   useEffect(() => {
-    if (phase === "playing") {
-      setTimeLeft(TIME_PER_Q); setSelected(null);
-      const q = questions[qIdx];
-      if (q) setTimeout(() => audioEngine.speak(q.q, { rate: 0.82 }), 500);
-    }
+    if (phase === 'play') { setTimeLeft(TIME); setSelected(null); }
   }, [qIdx, phase]);
 
-  const handleAnswer = (optIdx: number) => {
+  function startGame() {
+    setSeed((s) => s + 1);
+    setQIdx(0); setScore(0); setResults([]); setSelected(null); setTimeLeft(TIME);
+    setPhase('play');
+  }
+
+  function answer(optIdx: number) {
     if (selected !== null) return;
     setSelected(optIdx);
-    const q = questions[qIdx]; const ok = optIdx === q.ans;
-    let newScore = score, newStreak = streak, newMax = maxStreak;
-    if (ok) {
-      newStreak = streak + 1; newMax = Math.max(maxStreak, newStreak);
-      newScore = score + 2 + (newStreak >= 3 ? 1 : 0);
-      setStreak(newStreak); setMaxStreak(newMax); setScore(newScore);
-      setResults((r) => [...r, true]); audioEngine.speak("Correct !", { pitch: 1.5, rate: 0.9 });
-    } else {
-      setStreak(0); setResults((r) => [...r, false]);
-      audioEngine.speak(optIdx === -1 ? "Temps écoulé !" : "Faux ! " + q.explain, { pitch: 1.0, rate: 0.8 });
-    }
+    const ok = optIdx === questions[qIdx].ans;
+    if (ok) setScore((s) => s + 2);
+    setResults((r) => [...r, ok]);
     setTimeout(() => {
-      if (qIdx >= TOTAL - 1) {
-        const stars = newScore >= 25 ? 3 : newScore >= 18 ? 2 : 1;
-        recordGameSession("quiz", newScore, stars);
-        const prev = getChild().highScores.quiz;
-        if (!prev || newScore > prev.score) saveHighScore("quiz", { score: newScore, maxStreak: newMax, stars });
-        setPhase("win");
-      } else setQIdx((i) => i + 1);
-    }, 1600);
-  };
+      if (qIdx >= TOTAL - 1) setPhase('win');
+      else setQIdx((i) => i + 1);
+    }, 1400);
+  }
 
-  if (phase === "intro") return (
-    <div className="min-h-screen bg-edu-bg max-w-[430px] mx-auto" style={{ fontFamily: "Nunito, sans-serif" }}>
-      <header className="flex items-center gap-3 px-5 py-4">
-        <button onClick={() => nav({ to: "/games" })}><ArrowLeft size={24} color="#1A1A2E" /></button>
-        <span className="font-extrabold text-[18px] text-edu-dark">Chrono Quiz</span>
-      </header>
-      <div className="mx-4 mb-5 rounded-[24px] p-7 text-center text-white" style={{ background: "linear-gradient(135deg,#FFB347,#FFDAC1)" }}>
-        <div className="text-[56px]">⏱️</div>
-        <div className="font-black text-[24px] mt-2">Chrono Quiz</div>
-        <div className="font-medium text-[14px] opacity-90 mt-1">15 questions · 10 secondes chacune !</div>
+  const timerColor = timeLeft > 6 ? '#4CAF50' : timeLeft > 3 ? '#FFB347' : '#FF5252';
+  const circumference = 2 * Math.PI * 38;
+
+  if (phase === 'menu') return (
+    <div style={QS.page}>
+      <button onClick={() => navigate({ to: '/games' })} style={QS.back}>← Retour</button>
+      <div style={{ ...QS.hero, background: 'linear-gradient(135deg,#FFB347,#FFDAC1)' }}>
+        <div style={{ fontSize: 56 }}>⏱️</div>
+        <div style={{ fontWeight: 900, fontSize: 24, marginTop: 8, color: 'white' }}>Chrono Quiz</div>
+        <div style={{ fontWeight: 500, fontSize: 14, opacity: 0.9, marginTop: 4, color: 'white' }}>{TOTAL} questions · {TIME} secondes chacune !</div>
       </div>
-      <div className="px-4">
-        <div className="bg-white rounded-[20px] p-5 shadow-edu-card">
-          {[["⏰","10 secondes par question"],["🔥","Série = points bonus"],["🏆","15 questions · score max 45 pts"]].map(([i, t]) => (
-            <div key={t} className="flex items-center gap-3 mb-2.5">
-              <span className="text-[22px]">{i}</span>
-              <span className="font-semibold text-[14px] text-edu-muted">{t}</span>
+      <div style={{ padding: '0 16px' }}>
+        <div style={QS.howCard}>
+          {[['⏰',`${TIME} secondes par question`],['✅','2 points par bonne réponse'],['🏆',`${TOTAL} questions au total`]].map(([i,t]) => (
+            <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+              <span style={{ fontSize: 22 }}>{i}</span>
+              <span style={{ fontWeight: 600, fontSize: 14, color: '#6B7280' }}>{t}</span>
             </div>
           ))}
         </div>
       </div>
-      <div className="px-4 pt-6">
-        <button onClick={() => setPhase("playing")} className="w-full h-14 rounded-[14px] text-white font-extrabold text-[17px] shadow-edu-card" style={{ background: "#FFB347" }}>Commencer ! 🚀</button>
+      <div style={{ padding: '20px 16px 0' }}>
+        <button onClick={startGame} style={{ ...QS.btn, background: '#FFB347', boxShadow: '0 6px 16px rgba(255,179,71,.3)' }}>Commencer ! 🚀</button>
       </div>
     </div>
   );
 
-  if (phase === "win") {
-    const perf = score >= 25 ? { label: "GÉNIAL ! 🎯", color: "#FF6B35" }
-      : score >= 18 ? { label: "EXCELLENT ! 🏆", color: "#4CAF50" }
-      : score >= 10 ? { label: "BIEN JOUÉ ! ⭐", color: "#2EC4B6" }
-      : { label: "CONTINUE ! 💪", color: "#FFB347" };
+  if (phase === 'win') {
+    const pct = Math.round((score / (TOTAL * 2)) * 100);
+    const label = pct >= 80 ? '🎯 GÉNIAL !' : pct >= 60 ? '🏆 EXCELLENT !' : pct >= 40 ? '⭐ BIEN JOUÉ !' : '💪 CONTINUE !';
     return (
-      <div className="min-h-screen bg-white max-w-[430px] mx-auto flex flex-col items-center justify-center px-6 py-8 text-center" style={{ fontFamily: "Nunito, sans-serif" }}>
-        <div className="text-[72px]">🏆</div>
-        <div className="font-black text-[30px] mt-3" style={{ color: perf.color }}>{perf.label}</div>
-        <div className="rounded-[20px] p-5 my-5 w-full bg-[#F9FAFB]">
-          <div className="flex justify-around">
-            <div className="text-center"><div className="font-black text-[32px]" style={{ color: "#FF6B35" }}>{score}</div><div className="font-medium text-[12px] text-[#9CA3AF]">Points</div></div>
-            <div className="text-center"><div className="font-black text-[32px] text-edu-dark">{results.filter(Boolean).length}/15</div><div className="font-medium text-[12px] text-[#9CA3AF]">Bonnes rép.</div></div>
-            <div className="text-center"><div className="font-black text-[32px]" style={{ color: "#FF5252" }}>🔥{maxStreak}</div><div className="font-medium text-[12px] text-[#9CA3AF]">Meilleure série</div></div>
-          </div>
-          <div className="mt-3 flex gap-1 justify-center flex-wrap">
-            {results.map((ok, i) => <div key={i} className="w-4 h-4 rounded-full" style={{ background: ok ? "#4CAF50" : "#FF5252" }} />)}
+      <div style={{ ...QS.page, alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ fontSize: 80 }}>🏆</div>
+        <div style={{ fontWeight: 900, fontSize: 28, color: '#FFB347', margin: '12px 0 4px' }}>{label}</div>
+        <div style={{ color: '#6B7280', fontSize: 15, marginBottom: 20 }}>{results.filter(Boolean).length}/{TOTAL} bonnes réponses</div>
+        <div style={{ background: '#FFF3E0', borderRadius: 20, padding: '20px 32px', marginBottom: 20, textAlign: 'center' }}>
+          <div style={{ fontWeight: 900, fontSize: 40, color: '#FF6B35' }}>{score} pts</div>
+          <div style={{ fontWeight: 900, fontSize: 24, color: '#FF6B35', marginTop: 4 }}>+{score * 2}⭐</div>
+          <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginTop: 10, flexWrap: 'wrap' }}>
+            {results.map((ok, i) => (
+              <div key={i} style={{ width: 14, height: 14, borderRadius: '50%', background: ok ? '#4CAF50' : '#FF5252' }} />
+            ))}
           </div>
         </div>
-        <div className="font-black text-[28px] mb-5" style={{ color: "#FF6B35" }}>+{score * 2}⭐</div>
-        <button onClick={() => { setQIdx(0); setScore(0); setStreak(0); setMaxStreak(0); setResults([]); setPhase("playing"); }} className="w-full h-[52px] rounded-[14px] text-white font-extrabold text-[16px] mb-3" style={{ background: "#FFB347" }}>Rejouer 🔄</button>
-        <button onClick={() => nav({ to: "/games" })} className="w-full h-12 rounded-[14px] bg-white border-[1.5px] border-[#E5E7EB] text-edu-muted font-bold text-[15px]">Menu des jeux</button>
+        <button onClick={startGame} style={{ ...QS.btn, background: '#FFB347', marginBottom: 10 }}>🔄 Rejouer</button>
+        <button onClick={() => navigate({ to: '/games' })} style={QS.btnOut}>Menu des jeux</button>
       </div>
     );
   }
 
   const q = questions[qIdx];
-  const timerColor = timeLeft > 6 ? "#4CAF50" : timeLeft > 3 ? "#FFB347" : "#FF5252";
-  const circumference = 2 * Math.PI * 38;
-
   return (
-    <div className="min-h-screen bg-edu-bg max-w-[430px] mx-auto pb-5" style={{ fontFamily: "Nunito, sans-serif" }}>
-      <header className="flex items-center justify-between px-4 py-2.5 bg-white" style={{ boxShadow: "0 2px 8px rgba(0,0,0,.05)" }}>
-        <button onClick={() => nav({ to: "/games" })}><ArrowLeft size={22} color="#6B7280" /></button>
-        <div className="rounded-full px-3 py-1 font-bold text-[13px]" style={{ background: "#FFF0E8", color: "#FF6B35" }}>{qIdx + 1} / {TOTAL}</div>
-        {streak >= 2 ? <div className="font-extrabold text-[13px]" style={{ color: "#FF6B35" }}>🔥 {streak} série</div> : <div className="w-6" />}
-      </header>
-      <div className="flex justify-center mt-4">
-        <svg width="90" height="90" viewBox="0 0 90 90">
-          <circle cx="45" cy="45" r="38" fill="none" stroke="#F3F4F6" strokeWidth="7" />
-          <circle cx="45" cy="45" r="38" fill="none" stroke={timerColor} strokeWidth="7"
-            strokeDasharray={circumference} strokeDashoffset={circumference * (1 - timeLeft / TIME_PER_Q)}
-            strokeLinecap="round" transform="rotate(-90 45 45)" style={{ transition: "stroke-dashoffset 0.8s linear, stroke 0.3s" }} />
-          <text x="45" y="52" textAnchor="middle" fontFamily="Nunito" fontWeight="900" fontSize="26" fill={timerColor}>{timeLeft}</text>
+    <div style={QS.page}>
+      <div style={QS.topBar}>
+        <button onClick={() => navigate({ to: '/games' })} style={QS.backSm}>←</button>
+        <div style={{ background: '#FFF0E8', borderRadius: 999, padding: '4px 14px', fontWeight: 700, fontSize: 13, color: '#FF6B35' }}>{qIdx + 1}/{TOTAL}</div>
+        <div style={{ fontWeight: 800, fontSize: 14, color: '#FF6B35' }}>{score} pts</div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
+        <svg width="88" height="88" viewBox="0 0 88 88">
+          <circle cx="44" cy="44" r="38" fill="none" stroke="#F3F4F6" strokeWidth="7" />
+          <circle cx="44" cy="44" r="38" fill="none" stroke={timerColor} strokeWidth="7"
+            strokeDasharray={circumference} strokeDashoffset={circumference * (1 - timeLeft / TIME)}
+            strokeLinecap="round" transform="rotate(-90 44 44)"
+            style={{ transition: 'stroke-dashoffset 0.8s linear, stroke 0.3s' }} />
+          <text x="44" y="51" textAnchor="middle" fontFamily="Nunito" fontWeight="900" fontSize="26" fill={timerColor}>{timeLeft}</text>
         </svg>
       </div>
-      <div className="text-center mt-1.5">
-        <span className="rounded-full px-3 py-1 font-bold text-[12px] text-edu-muted bg-[#F3F4F6]">{q.cat}</span>
+      <div style={{ margin: '10px 16px', background: 'white', borderRadius: 24, padding: 20, textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,.08)' }}>
+        <div style={{ background: '#F3F4F6', display: 'inline-block', borderRadius: 999, padding: '3px 12px', fontWeight: 700, fontSize: 12, color: '#6B7280', marginBottom: 10 }}>{q.cat}</div>
+        <div style={{ fontWeight: 800, fontSize: 18, color: '#1A1A2E', lineHeight: 1.4 }}>{q.q}</div>
       </div>
-      <AnimatePresence mode="wait">
-        <motion.div key={qIdx} initial={{ x: 60, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -60, opacity: 0 }} transition={{ duration: 0.25 }}
-          className="mx-4 my-3 bg-white rounded-[24px] shadow-edu-card p-5 text-center">
-          <div className="text-[44px] leading-none mb-2.5">{q.visual.length <= 4 && /\p{Emoji}/u.test(q.visual) ? q.visual : ""}</div>
-          <div className="font-extrabold text-[17px] text-edu-dark leading-[1.4]">{q.q}</div>
-          {q.visual.length > 4 && (
-            <div className="mt-2 font-bold text-[14px] rounded-[10px] px-3 py-1.5 inline-block" style={{ background: "#FFF0E8", color: "#FF6B35" }}>{q.visual}</div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-      <div className="grid grid-cols-2 gap-2.5 px-4">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, padding: '0 16px' }}>
         {q.opts.map((opt, i) => {
-          const isSelected = selected === i, isCorrect = i === q.ans;
-          const bg = selected !== null ? (isCorrect ? "#4CAF50" : isSelected ? "#FF5252" : "white") : "white";
-          const color = selected !== null && (isCorrect || isSelected) ? "white" : "#1A1A2E";
+          const isSel = selected === i;
+          const isCorrect = i === q.ans;
+          const bg = selected !== null
+            ? isCorrect ? '#4CAF50' : isSel ? '#FF5252' : 'white'
+            : 'white';
+          const color = selected !== null && (isCorrect || isSel) ? 'white' : '#1A1A2E';
           return (
-            <motion.button key={i} onClick={() => handleAnswer(i)} disabled={selected !== null} whileTap={{ scale: 0.94 }}
-              animate={isSelected && !isCorrect ? { x: [0, -6, 6, -6, 0] } : { x: 0 }}
-              className="h-[58px] rounded-[14px] border-[1.5px] flex items-center gap-2.5 px-3.5"
-              style={{ borderColor: selected !== null ? (isCorrect ? "#4CAF50" : isSelected ? "#FF5252" : "#E5E7EB") : "#E5E7EB", background: bg, cursor: selected !== null ? "default" : "pointer" }}>
-              <span className="font-extrabold text-[13px] min-w-4" style={{ color: selected !== null && (isCorrect || isSelected) ? "rgba(255,255,255,.7)" : "#9CA3AF" }}>{["A","B","C","D"][i]}.</span>
-              <span className="font-bold text-[14px]" style={{ color }}>{opt}</span>
-            </motion.button>
+            <button key={i} onClick={() => answer(i)} disabled={selected !== null} style={{
+              height: 58, borderRadius: 14,
+              border: `1.5px solid ${selected !== null ? (isCorrect ? '#4CAF50' : isSel ? '#FF5252' : '#E5E7EB') : '#E5E7EB'}`,
+              background: bg, color, display: 'flex', alignItems: 'center', gap: 10, padding: '0 14px',
+              cursor: selected !== null ? 'default' : 'pointer', fontFamily: 'Nunito, sans-serif',
+              transition: 'background 0.2s, border-color 0.2s', userSelect: 'none',
+            }}>
+              <span style={{ fontWeight: 800, fontSize: 13, color: selected !== null && (isCorrect || isSel) ? 'rgba(255,255,255,.7)' : '#9CA3AF', minWidth: 18 }}>{['A','B','C','D'][i]}.</span>
+              <span style={{ fontWeight: 700, fontSize: 14 }}>{opt}</span>
+            </button>
           );
         })}
+      </div>
+      <div style={{ display: 'flex', gap: 4, justifyContent: 'center', marginTop: 16, flexWrap: 'wrap' }}>
+        {Array.from({ length: TOTAL }).map((_, i) => (
+          <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: i < results.length ? (results[i] ? '#4CAF50' : '#FF5252') : i === qIdx ? '#FFB347' : '#E5E7EB' }} />
+        ))}
       </div>
     </div>
   );
 }
+
+const QS: Record<string, React.CSSProperties> = {
+  page: { background: '#FFF9F0', minHeight: '100vh', maxWidth: 430, margin: '0 auto', fontFamily: 'Nunito, sans-serif', display: 'flex', flexDirection: 'column', paddingBottom: 20 },
+  back: { background: 'none', border: 'none', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 16, color: '#FFB347', padding: '16px 20px', cursor: 'pointer', textAlign: 'left' },
+  backSm: { background: 'none', border: 'none', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 20, color: '#6B7280', cursor: 'pointer' },
+  topBar: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,.05)' },
+  hero: { margin: '0 16px 16px', borderRadius: 24, padding: 28, textAlign: 'center' },
+  howCard: { background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 4px 20px rgba(0,0,0,.06)' },
+  btn: { width: '100%', height: 52, borderRadius: 14, border: 'none', color: 'white', fontFamily: 'Nunito, sans-serif', fontWeight: 800, fontSize: 16, cursor: 'pointer' },
+  btnOut: { width: '100%', height: 48, background: 'white', borderRadius: 14, border: '1.5px solid #E5E7EB', color: '#6B7280', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 15, cursor: 'pointer' },
+};
