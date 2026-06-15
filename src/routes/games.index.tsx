@@ -5,7 +5,7 @@ import { BottomNav } from "@/components/educ/BottomNav";
 import { GAME_META } from "@/data/games";
 import { getChild } from "@/lib/storage";
 
-export const Route = createFileRoute("/games")({ component: GamesHub });
+export const Route = createFileRoute("/games/")({ component: GamesHub });
 
 function GamesHub() {
   const nav = useNavigate();

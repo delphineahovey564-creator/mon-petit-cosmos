@@ -24,12 +24,12 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as InviteRouteImport } from './routes/invite'
 import { Route as HomeRouteImport } from './routes/home'
-import { Route as GamesRouteImport } from './routes/games'
 import { Route as CreateProfileRouteImport } from './routes/create-profile'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VideosIndexRouteImport } from './routes/videos.index'
 import { Route as ParentIndexRouteImport } from './routes/parent.index'
+import { Route as GamesIndexRouteImport } from './routes/games.index'
 import { Route as SubscribeSuccessRouteImport } from './routes/subscribe.success'
 import { Route as ParentTourRouteImport } from './routes/parent.tour'
 import { Route as ParentSettingsRouteImport } from './routes/parent.settings'
@@ -151,11 +151,6 @@ const HomeRoute = HomeRouteImport.update({
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GamesRoute = GamesRouteImport.update({
-  id: '/games',
-  path: '/games',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CreateProfileRoute = CreateProfileRouteImport.update({
   id: '/create-profile',
   path: '/create-profile',
@@ -179,6 +174,11 @@ const VideosIndexRoute = VideosIndexRouteImport.update({
 const ParentIndexRoute = ParentIndexRouteImport.update({
   id: '/parent/',
   path: '/parent/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GamesIndexRoute = GamesIndexRouteImport.update({
+  id: '/games/',
+  path: '/games/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SubscribeSuccessRoute = SubscribeSuccessRouteImport.update({
@@ -257,24 +257,24 @@ const ModuleIdRoute = ModuleIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const GamesQuizRoute = GamesQuizRouteImport.update({
-  id: '/quiz',
-  path: '/quiz',
-  getParentRoute: () => GamesRoute,
+  id: '/games/quiz',
+  path: '/games/quiz',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const GamesPuzzleRoute = GamesPuzzleRouteImport.update({
-  id: '/puzzle',
-  path: '/puzzle',
-  getParentRoute: () => GamesRoute,
+  id: '/games/puzzle',
+  path: '/games/puzzle',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const GamesMemoryRoute = GamesMemoryRouteImport.update({
-  id: '/memory',
-  path: '/memory',
-  getParentRoute: () => GamesRoute,
+  id: '/games/memory',
+  path: '/games/memory',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const GamesFindRoute = GamesFindRouteImport.update({
-  id: '/find',
-  path: '/find',
-  getParentRoute: () => GamesRoute,
+  id: '/games/find',
+  path: '/games/find',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CertificateTypeRoute = CertificateTypeRouteImport.update({
   id: '/certificate/$type',
@@ -417,7 +417,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
-  '/games': typeof GamesRouteWithChildren
   '/home': typeof HomeRoute
   '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
@@ -453,6 +452,7 @@ export interface FileRoutesByFullPath {
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
+  '/games/': typeof GamesIndexRoute
   '/parent/': typeof ParentIndexRoute
   '/videos/': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
@@ -485,7 +485,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
-  '/games': typeof GamesRouteWithChildren
   '/home': typeof HomeRoute
   '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
@@ -514,6 +513,7 @@ export interface FileRoutesByTo {
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
+  '/games': typeof GamesIndexRoute
   '/parent': typeof ParentIndexRoute
   '/videos': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
@@ -546,7 +546,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/create-profile': typeof CreateProfileRoute
-  '/games': typeof GamesRouteWithChildren
   '/home': typeof HomeRoute
   '/invite': typeof InviteRoute
   '/leaderboard': typeof LeaderboardRoute
@@ -582,6 +581,7 @@ export interface FileRoutesById {
   '/parent/settings': typeof ParentSettingsRoute
   '/parent/tour': typeof ParentTourRoute
   '/subscribe/success': typeof SubscribeSuccessRoute
+  '/games/': typeof GamesIndexRoute
   '/parent/': typeof ParentIndexRoute
   '/videos/': typeof VideosIndexRoute
   '/module/alphabet/dictionary': typeof ModuleAlphabetDictionaryRoute
@@ -616,7 +616,6 @@ export interface FileRouteTypes {
     | '/'
     | '/badges'
     | '/create-profile'
-    | '/games'
     | '/home'
     | '/invite'
     | '/leaderboard'
@@ -652,6 +651,7 @@ export interface FileRouteTypes {
     | '/parent/settings'
     | '/parent/tour'
     | '/subscribe/success'
+    | '/games/'
     | '/parent/'
     | '/videos/'
     | '/module/alphabet/dictionary'
@@ -684,7 +684,6 @@ export interface FileRouteTypes {
     | '/'
     | '/badges'
     | '/create-profile'
-    | '/games'
     | '/home'
     | '/invite'
     | '/leaderboard'
@@ -713,6 +712,7 @@ export interface FileRouteTypes {
     | '/parent/settings'
     | '/parent/tour'
     | '/subscribe/success'
+    | '/games'
     | '/parent'
     | '/videos'
     | '/module/alphabet/dictionary'
@@ -744,7 +744,6 @@ export interface FileRouteTypes {
     | '/'
     | '/badges'
     | '/create-profile'
-    | '/games'
     | '/home'
     | '/invite'
     | '/leaderboard'
@@ -780,6 +779,7 @@ export interface FileRouteTypes {
     | '/parent/settings'
     | '/parent/tour'
     | '/subscribe/success'
+    | '/games/'
     | '/parent/'
     | '/videos/'
     | '/module/alphabet/dictionary'
@@ -813,7 +813,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BadgesRoute: typeof BadgesRoute
   CreateProfileRoute: typeof CreateProfileRoute
-  GamesRoute: typeof GamesRouteWithChildren
   HomeRoute: typeof HomeRoute
   InviteRoute: typeof InviteRoute
   LeaderboardRoute: typeof LeaderboardRoute
@@ -830,6 +829,10 @@ export interface RootRouteChildren {
   VideosRoute: typeof VideosRouteWithChildren
   VoiceSettingsRoute: typeof VoiceSettingsRoute
   CertificateTypeRoute: typeof CertificateTypeRoute
+  GamesFindRoute: typeof GamesFindRoute
+  GamesMemoryRoute: typeof GamesMemoryRoute
+  GamesPuzzleRoute: typeof GamesPuzzleRoute
+  GamesQuizRoute: typeof GamesQuizRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
   ModuleDrawingRoute: typeof ModuleDrawingRoute
@@ -844,6 +847,7 @@ export interface RootRouteChildren {
   ParentReglagesRoute: typeof ParentReglagesRoute
   ParentSettingsRoute: typeof ParentSettingsRoute
   ParentTourRoute: typeof ParentTourRoute
+  GamesIndexRoute: typeof GamesIndexRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
 
@@ -954,13 +958,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/games': {
-      id: '/games'
-      path: '/games'
-      fullPath: '/games'
-      preLoaderRoute: typeof GamesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/create-profile': {
       id: '/create-profile'
       path: '/create-profile'
@@ -994,6 +991,13 @@ declare module '@tanstack/react-router' {
       path: '/parent'
       fullPath: '/parent/'
       preLoaderRoute: typeof ParentIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/games/': {
+      id: '/games/'
+      path: '/games'
+      fullPath: '/games/'
+      preLoaderRoute: typeof GamesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/subscribe/success': {
@@ -1103,31 +1107,31 @@ declare module '@tanstack/react-router' {
     }
     '/games/quiz': {
       id: '/games/quiz'
-      path: '/quiz'
+      path: '/games/quiz'
       fullPath: '/games/quiz'
       preLoaderRoute: typeof GamesQuizRouteImport
-      parentRoute: typeof GamesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/games/puzzle': {
       id: '/games/puzzle'
-      path: '/puzzle'
+      path: '/games/puzzle'
       fullPath: '/games/puzzle'
       preLoaderRoute: typeof GamesPuzzleRouteImport
-      parentRoute: typeof GamesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/games/memory': {
       id: '/games/memory'
-      path: '/memory'
+      path: '/games/memory'
       fullPath: '/games/memory'
       preLoaderRoute: typeof GamesMemoryRouteImport
-      parentRoute: typeof GamesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/games/find': {
       id: '/games/find'
-      path: '/find'
+      path: '/games/find'
       fullPath: '/games/find'
       preLoaderRoute: typeof GamesFindRouteImport
-      parentRoute: typeof GamesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/certificate/$type': {
       id: '/certificate/$type'
@@ -1314,22 +1318,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface GamesRouteChildren {
-  GamesFindRoute: typeof GamesFindRoute
-  GamesMemoryRoute: typeof GamesMemoryRoute
-  GamesPuzzleRoute: typeof GamesPuzzleRoute
-  GamesQuizRoute: typeof GamesQuizRoute
-}
-
-const GamesRouteChildren: GamesRouteChildren = {
-  GamesFindRoute: GamesFindRoute,
-  GamesMemoryRoute: GamesMemoryRoute,
-  GamesPuzzleRoute: GamesPuzzleRoute,
-  GamesQuizRoute: GamesQuizRoute,
-}
-
-const GamesRouteWithChildren = GamesRoute._addFileChildren(GamesRouteChildren)
-
 interface SubscribeRouteChildren {
   SubscribeSuccessRoute: typeof SubscribeSuccessRoute
 }
@@ -1479,7 +1467,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BadgesRoute: BadgesRoute,
   CreateProfileRoute: CreateProfileRoute,
-  GamesRoute: GamesRouteWithChildren,
   HomeRoute: HomeRoute,
   InviteRoute: InviteRoute,
   LeaderboardRoute: LeaderboardRoute,
@@ -1496,6 +1483,10 @@ const rootRouteChildren: RootRouteChildren = {
   VideosRoute: VideosRouteWithChildren,
   VoiceSettingsRoute: VoiceSettingsRoute,
   CertificateTypeRoute: CertificateTypeRoute,
+  GamesFindRoute: GamesFindRoute,
+  GamesMemoryRoute: GamesMemoryRoute,
+  GamesPuzzleRoute: GamesPuzzleRoute,
+  GamesQuizRoute: GamesQuizRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
   ModuleDrawingRoute: ModuleDrawingRoute,
@@ -1510,18 +1501,9 @@ const rootRouteChildren: RootRouteChildren = {
   ParentReglagesRoute: ParentReglagesRoute,
   ParentSettingsRoute: ParentSettingsRoute,
   ParentTourRoute: ParentTourRoute,
+  GamesIndexRoute: GamesIndexRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
