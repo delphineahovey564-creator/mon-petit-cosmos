@@ -15,6 +15,7 @@ import { loadTheme } from "@/lib/darkMode";
 import { seedNotifications } from "@/lib/notifications";
 import { Toaster } from "@/components/ui/sonner";
 import { unlockAudio } from "@/lib/audio";
+import InstallPrompt from "@/components/InstallPrompt";
 
 function NotFoundComponent() {
   return (
@@ -77,7 +78,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" },
+      { name: "theme-color", content: "#FF6B35" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "EducEnfant" },
+      { name: "mobile-web-app-capable", content: "yes" },
       { title: "EducEnfant — Apprendre en jouant" },
       { name: "description", content: "Des jeux éducatifs créatifs pour les enfants de 3 à 10 ans." },
       { property: "og:title", content: "EducEnfant — Apprendre en jouant" },
@@ -92,6 +98,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.json" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "icon", href: "/favicon.ico" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" },
@@ -140,6 +149,7 @@ function RootComponent() {
       <Outlet />
       <BadgeUnlockModal />
       <Toaster />
+      <InstallPrompt />
     </QueryClientProvider>
   );
 }
