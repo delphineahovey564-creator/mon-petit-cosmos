@@ -7,14 +7,11 @@ import { ExerciseToolbar } from "@/components/educ/ExerciseToolbar";
 import { TOOLS, STAMPS, BG_COLORS } from "@/lib/eduData";
 import { exportDrawingPDF } from "@/lib/pdfExport";
 import { getChild, addCreation } from "@/lib/storage";
+import { ANIMAL_LIST } from "@/data/animals";
 
 export const Route = createFileRoute("/module/drawing")({ component: DrawingCanvas });
 
 const CATEGORIES = [
-  { title: "Animaux africains", pill: "#D4EDDA", items: [
-    { name: "Lion", emoji: "🦁" }, { name: "Éléphant", emoji: "🐘" },
-    { name: "Girafe", emoji: "🦒" }, { name: "Zèbre", emoji: "🦓" },
-    { name: "Hippopotame", emoji: "🦛" }, { name: "Flamant", emoji: "🦩" }] },
   { title: "Alphabet illustré", pill: "#FFB3BA", items: [
     { name: "A comme Arbre", emoji: "🌳" }, { name: "B comme Ballon", emoji: "🎈" },
     { name: "C comme Chat", emoji: "🐱" }, { name: "L comme Lion", emoji: "🦁" },
@@ -63,6 +60,28 @@ function DrawingCanvas() {
 
       {tab === "galerie" ? (
         <div className="mt-4">
+          <div className="mt-5">
+            <div className="px-4 mb-2.5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full" style={{ background: "#D4EDDA" }} />
+                <span className="font-bold text-[14px] text-[#1A1A2E]">Animaux à tracer</span>
+              </div>
+              <span className="text-[12px] font-bold text-[#FF6B35]">SVG ✨</span>
+            </div>
+            <div className="pl-4 flex gap-2.5 overflow-x-auto pb-2 pr-4">
+              {ANIMAL_LIST.map((a) => (
+                <button
+                  key={a.id}
+                  onClick={() => nav({ to: "/module/drawing/animal/$animalId", params: { animalId: a.id } })}
+                  className="shrink-0 w-[120px] h-[120px] rounded-[20px] flex flex-col items-center justify-center"
+                  style={{ background: a.color }}
+                >
+                  <span style={{ fontSize: 56, lineHeight: 1 }}>{a.emoji}</span>
+                  <span className="mt-1 font-bold text-[13px] text-[#1A1A2E]">{a.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
           {CATEGORIES.map((cat) => (
             <div key={cat.title} className="mt-5">
               <div className="px-4 mb-2.5 flex items-center justify-between">

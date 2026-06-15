@@ -72,6 +72,7 @@ import { Route as ModuleStoriesStoryStoryIdRouteImport } from './routes/module.s
 import { Route as ModuleNumbersNumberNumRouteImport } from './routes/module.numbers.number.$num'
 import { Route as ModuleMathsExerciseTypeRouteImport } from './routes/module.maths.exercise.$type'
 import { Route as ModuleFruitsFruitIdRouteImport } from './routes/module.fruits.fruit.$id'
+import { Route as ModuleDrawingAnimalAnimalIdRouteImport } from './routes/module.drawing.animal.$animalId'
 import { Route as ModuleAlphabetLetterLetterRouteImport } from './routes/module.alphabet.letter.$letter'
 import { Route as ModuleStoriesStoryStoryIdIndexRouteImport } from './routes/module.stories.story.$storyId.index'
 import { Route as ModuleStoriesStoryStoryIdQuizRouteImport } from './routes/module.stories.story.$storyId.quiz'
@@ -394,6 +395,12 @@ const ModuleFruitsFruitIdRoute = ModuleFruitsFruitIdRouteImport.update({
   path: '/fruit/$id',
   getParentRoute: () => ModuleFruitsRoute,
 } as any)
+const ModuleDrawingAnimalAnimalIdRoute =
+  ModuleDrawingAnimalAnimalIdRouteImport.update({
+    id: '/animal/$animalId',
+    path: '/animal/$animalId',
+    getParentRoute: () => ModuleDrawingRoute,
+  } as any)
 const ModuleAlphabetLetterLetterRoute =
   ModuleAlphabetLetterLetterRouteImport.update({
     id: '/letter/$letter',
@@ -439,7 +446,7 @@ export interface FileRoutesByFullPath {
   '/games/quiz': typeof GamesQuizRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
-  '/module/drawing': typeof ModuleDrawingRoute
+  '/module/drawing': typeof ModuleDrawingRouteWithChildren
   '/module/fruits': typeof ModuleFruitsRouteWithChildren
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
@@ -473,6 +480,7 @@ export interface FileRoutesByFullPath {
   '/module/stories/': typeof ModuleStoriesIndexRoute
   '/module/syllables/': typeof ModuleSyllablesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/drawing/animal/$animalId': typeof ModuleDrawingAnimalAnimalIdRoute
   '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
@@ -505,7 +513,7 @@ export interface FileRoutesByTo {
   '/games/puzzle': typeof GamesPuzzleRoute
   '/games/quiz': typeof GamesQuizRoute
   '/module/$id': typeof ModuleIdRoute
-  '/module/drawing': typeof ModuleDrawingRoute
+  '/module/drawing': typeof ModuleDrawingRouteWithChildren
   '/parent/activites': typeof ParentActivitesRoute
   '/parent/progression': typeof ParentProgressionRoute
   '/parent/rapport': typeof ParentRapportRoute
@@ -534,6 +542,7 @@ export interface FileRoutesByTo {
   '/module/stories': typeof ModuleStoriesIndexRoute
   '/module/syllables': typeof ModuleSyllablesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/drawing/animal/$animalId': typeof ModuleDrawingAnimalAnimalIdRoute
   '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
@@ -568,7 +577,7 @@ export interface FileRoutesById {
   '/games/quiz': typeof GamesQuizRoute
   '/module/$id': typeof ModuleIdRoute
   '/module/alphabet': typeof ModuleAlphabetRouteWithChildren
-  '/module/drawing': typeof ModuleDrawingRoute
+  '/module/drawing': typeof ModuleDrawingRouteWithChildren
   '/module/fruits': typeof ModuleFruitsRouteWithChildren
   '/module/maths': typeof ModuleMathsRouteWithChildren
   '/module/numbers': typeof ModuleNumbersRouteWithChildren
@@ -602,6 +611,7 @@ export interface FileRoutesById {
   '/module/stories/': typeof ModuleStoriesIndexRoute
   '/module/syllables/': typeof ModuleSyllablesIndexRoute
   '/module/alphabet/letter/$letter': typeof ModuleAlphabetLetterLetterRoute
+  '/module/drawing/animal/$animalId': typeof ModuleDrawingAnimalAnimalIdRoute
   '/module/fruits/fruit/$id': typeof ModuleFruitsFruitIdRoute
   '/module/maths/exercise/$type': typeof ModuleMathsExerciseTypeRoute
   '/module/numbers/number/$num': typeof ModuleNumbersNumberNumRoute
@@ -672,6 +682,7 @@ export interface FileRouteTypes {
     | '/module/stories/'
     | '/module/syllables/'
     | '/module/alphabet/letter/$letter'
+    | '/module/drawing/animal/$animalId'
     | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
@@ -733,6 +744,7 @@ export interface FileRouteTypes {
     | '/module/stories'
     | '/module/syllables'
     | '/module/alphabet/letter/$letter'
+    | '/module/drawing/animal/$animalId'
     | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
@@ -800,6 +812,7 @@ export interface FileRouteTypes {
     | '/module/stories/'
     | '/module/syllables/'
     | '/module/alphabet/letter/$letter'
+    | '/module/drawing/animal/$animalId'
     | '/module/fruits/fruit/$id'
     | '/module/maths/exercise/$type'
     | '/module/numbers/number/$num'
@@ -835,7 +848,7 @@ export interface RootRouteChildren {
   GamesQuizRoute: typeof GamesQuizRoute
   ModuleIdRoute: typeof ModuleIdRoute
   ModuleAlphabetRoute: typeof ModuleAlphabetRouteWithChildren
-  ModuleDrawingRoute: typeof ModuleDrawingRoute
+  ModuleDrawingRoute: typeof ModuleDrawingRouteWithChildren
   ModuleFruitsRoute: typeof ModuleFruitsRouteWithChildren
   ModuleMathsRoute: typeof ModuleMathsRouteWithChildren
   ModuleNumbersRoute: typeof ModuleNumbersRouteWithChildren
@@ -1294,6 +1307,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleFruitsFruitIdRouteImport
       parentRoute: typeof ModuleFruitsRoute
     }
+    '/module/drawing/animal/$animalId': {
+      id: '/module/drawing/animal/$animalId'
+      path: '/animal/$animalId'
+      fullPath: '/module/drawing/animal/$animalId'
+      preLoaderRoute: typeof ModuleDrawingAnimalAnimalIdRouteImport
+      parentRoute: typeof ModuleDrawingRoute
+    }
     '/module/alphabet/letter/$letter': {
       id: '/module/alphabet/letter/$letter'
       path: '/letter/$letter'
@@ -1363,6 +1383,18 @@ const ModuleAlphabetRouteChildren: ModuleAlphabetRouteChildren = {
 
 const ModuleAlphabetRouteWithChildren = ModuleAlphabetRoute._addFileChildren(
   ModuleAlphabetRouteChildren,
+)
+
+interface ModuleDrawingRouteChildren {
+  ModuleDrawingAnimalAnimalIdRoute: typeof ModuleDrawingAnimalAnimalIdRoute
+}
+
+const ModuleDrawingRouteChildren: ModuleDrawingRouteChildren = {
+  ModuleDrawingAnimalAnimalIdRoute: ModuleDrawingAnimalAnimalIdRoute,
+}
+
+const ModuleDrawingRouteWithChildren = ModuleDrawingRoute._addFileChildren(
+  ModuleDrawingRouteChildren,
 )
 
 interface ModuleFruitsRouteChildren {
@@ -1489,7 +1521,7 @@ const rootRouteChildren: RootRouteChildren = {
   GamesQuizRoute: GamesQuizRoute,
   ModuleIdRoute: ModuleIdRoute,
   ModuleAlphabetRoute: ModuleAlphabetRouteWithChildren,
-  ModuleDrawingRoute: ModuleDrawingRoute,
+  ModuleDrawingRoute: ModuleDrawingRouteWithChildren,
   ModuleFruitsRoute: ModuleFruitsRouteWithChildren,
   ModuleMathsRoute: ModuleMathsRouteWithChildren,
   ModuleNumbersRoute: ModuleNumbersRouteWithChildren,
