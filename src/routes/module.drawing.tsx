@@ -7,14 +7,11 @@ import { ExerciseToolbar } from "@/components/educ/ExerciseToolbar";
 import { TOOLS, STAMPS, BG_COLORS } from "@/lib/eduData";
 import { exportDrawingPDF } from "@/lib/pdfExport";
 import { getChild, addCreation } from "@/lib/storage";
+import { ANIMAL_LIST } from "@/data/animals";
 
 export const Route = createFileRoute("/module/drawing")({ component: DrawingCanvas });
 
 const CATEGORIES = [
-  { title: "Animaux africains", pill: "#D4EDDA", items: [
-    { name: "Lion", emoji: "🦁" }, { name: "Éléphant", emoji: "🐘" },
-    { name: "Girafe", emoji: "🦒" }, { name: "Zèbre", emoji: "🦓" },
-    { name: "Hippopotame", emoji: "🦛" }, { name: "Flamant", emoji: "🦩" }] },
   { title: "Alphabet illustré", pill: "#FFB3BA", items: [
     { name: "A comme Arbre", emoji: "🌳" }, { name: "B comme Ballon", emoji: "🎈" },
     { name: "C comme Chat", emoji: "🐱" }, { name: "L comme Lion", emoji: "🦁" },
